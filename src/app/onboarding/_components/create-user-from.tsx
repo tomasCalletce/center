@@ -15,10 +15,20 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { formUsersSchema } from "~/server/db/schemas/users";
+import { toast } from "sonner";
+import { completeOnboarding } from "~/app/onboarding/_actions/clerk-onboarding";
+import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const formSchema = formUsersSchema;
 
 export function CreateUserForm() {
+  const [loading, setLoading] = useState(false);
+
+  const { user } = useUser();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,7 +37,26 @@ export function CreateUserForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    setLoading(true);
+    try {
+      const completeRes = await completeOnboarding({
+        user: {
+          name: values.name,
+        },
+      });
+
+      toast.success("User created!");
+      form.reset();
+
+      if (completeRes?.message) {
+        await user?.reload();
+        router.push("/");
+      }
+    } catch {
+      toast.error("Could not create user.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
