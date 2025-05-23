@@ -15,11 +15,14 @@
 	},
 	"dependencies": {
 		"@clerk/nextjs": "^6.20.0",
+		"@neondatabase/serverless": "^1.0.0",
 		"@t3-oss/env-nextjs": "^0.12.0",
 		"@tanstack/react-query": "^5.69.0",
 		"@trpc/client": "^11.0.0",
 		"@trpc/react-query": "^11.0.0",
 		"@trpc/server": "^11.0.0",
+		"drizzle-orm": "^0.43.1",
+		"drizzle-zod": "^0.8.2",
 		"next": "^15.2.3",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
@@ -33,8 +36,10 @@
 		"@types/node": "^20.14.10",
 		"@types/react": "^19.0.0",
 		"@types/react-dom": "^19.0.0",
+		"drizzle-kit": "^0.31.1",
 		"postcss": "^8.5.3",
 		"tailwindcss": "^4.0.15",
+		"tsx": "^4.19.4",
 		"typescript": "^5.8.2"
 	},
 	"ct3aMetadata": {
