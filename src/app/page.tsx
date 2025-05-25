@@ -1,12 +1,6 @@
 import Link from "next/link";
 import { HydrateClient } from "~/trpc/server";
 import { Footer } from "~/app/_components/footer";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
 import { Button, buttonVariants } from "~/components/ui/button";
 
 export default async function Home() {
