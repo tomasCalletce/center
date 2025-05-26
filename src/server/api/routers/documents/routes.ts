@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
-import { create } from "~/server/api/routers/user/procedures/create";
+import { createCV } from "~/server/api/routers/documents/procedures/create-cv";
 
-export const userRouter = createTRPCRouter({
-  create,
+export const documentsRouter = createTRPCRouter({
+  createCV: createCV,
 });

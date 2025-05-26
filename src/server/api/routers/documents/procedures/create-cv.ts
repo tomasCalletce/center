@@ -4,7 +4,7 @@ import { documents } from "~/server/db/schemas/documents";
 import { TRPCError } from "@trpc/server";
 import { db } from "~/server/db/connection";
 
-export const create = protectedProcedure
+export const createCV = protectedProcedure
   .input(verifyDocumentsSchema)
   .mutation(async ({ input, ctx }) => {
     const [newCV] = await db
