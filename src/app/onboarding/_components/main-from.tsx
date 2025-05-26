@@ -21,8 +21,6 @@ export function MainOnboardingForm() {
   return (
     <div>
       {user.publicMetadata.onboardingStatus === undefined && <UploadCV />}
-      {user.publicMetadata.onboardingStatus ===
-        ONBOARDING_STATUS.INTERVIEW_PENDING && <>que mas</>}
     </div>
   );
 }

@@ -37,10 +37,10 @@ export const UploadCV = () => {
 
       if (
         response.publicMetadata?.onboardingStatus ===
-        ONBOARDING_STATUS.INTERVIEW_PENDING
+        ONBOARDING_STATUS.COMPLETED
       ) {
         await user?.reload();
-        router.push("/onboarding");
+        router.push("/");
       }
     } catch (error) {
       console.error("Upload failed:", error);

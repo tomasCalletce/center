@@ -32,7 +32,6 @@ export default async function Home() {
                   ACC<span className="text-primary">.</span>
                 </h1>
               </div>
-
               <div>
                 <p className="text-3xl md:text-4xl font-medium">
                   Find work in the most promising startups.
@@ -44,7 +43,7 @@ export default async function Home() {
                     variant: "default",
                     className: "text-lg",
                   })}
-                  href="/challenges"
+                  href="/onboarding"
                 >
                   Participate in challenges
                 </Link>
