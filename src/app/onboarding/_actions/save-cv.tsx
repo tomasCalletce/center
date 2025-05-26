@@ -39,8 +39,8 @@ export async function saveCv(formData: FormData) {
   });
 
   return {
-    blob,
-    documentMutation,
+    blob: blob,
+    documentMutation: documentMutation,
     publicMetadata: metadataResponse.publicMetadata,
   };
 }

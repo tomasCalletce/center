@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { saveCv } from "~/app/onboarding/_actions/save-cv";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 export const UploadCV = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,9 +35,12 @@ export const UploadCV = () => {
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
 
-      if (response?.message) {
+      if (
+        response.publicMetadata?.onboardingStatus ===
+        ONBOARDING_STATUS.INTERVIEW_PENDING
+      ) {
         await user?.reload();
-        router.push("/");
+        router.push("/onboarding");
       }
     } catch (error) {
       console.error("Upload failed:", error);
