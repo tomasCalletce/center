@@ -8,6 +8,13 @@ const isPublicRoute = createRouteMatcher(["/"]);
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { userId, sessionClaims, redirectToSignIn } = await auth();
 
+  if (
+    !sessionClaims?.metadata?.isAdmin &&
+    req.nextUrl.pathname.startsWith("/admin")
+  ) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   // For users visiting /onboarding, don't try to redirect
   if (userId && isOnboardingRoute(req)) {
     return NextResponse.next();
