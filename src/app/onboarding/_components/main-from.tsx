@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { UploadCV } from "~/app/onboarding/_components/upload-cv";
+import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 export function MainOnboardingForm() {
   const { user, isLoaded } = useUser();
@@ -20,6 +21,8 @@ export function MainOnboardingForm() {
   return (
     <div>
       {user.publicMetadata.onboardingStatus === undefined && <UploadCV />}
+      {user.publicMetadata.onboardingStatus ===
+        ONBOARDING_STATUS.INTERVIEW_PENDING && <>que mas</>}
     </div>
   );
 }

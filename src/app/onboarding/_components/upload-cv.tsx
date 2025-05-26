@@ -3,12 +3,17 @@
 import { useState, useRef } from "react";
 import { Upload, FileText, X, FileUp, ArrowRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { SaveCV } from "~/app/onboarding/_actions/save-cv";
+import { saveCv } from "~/app/onboarding/_actions/save-cv";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export const UploadCV = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  const { user } = useUser();
+  const router = useRouter();
 
   const handleFileChange = (file: File | null) => {
     if (file && file.type === "application/pdf") {
@@ -21,12 +26,18 @@ export const UploadCV = () => {
 
     setIsUploading(true);
     const formData = new FormData();
-    formData.append("image", selectedFile);
+    formData.append("file", selectedFile);
 
     try {
-      await SaveCV(formData);
+      const response = await saveCv(formData);
+
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
+
+      if (response?.message) {
+        await user?.reload();
+        router.push("/");
+      }
     } catch (error) {
       console.error("Upload failed:", error);
     } finally {
@@ -35,7 +46,7 @@ export const UploadCV = () => {
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-md">
       <div className="mb-4">
         <div className="flex items-center gap-2 mb-2">
           <FileUp className="h-5 w-5 text-primary" />
@@ -93,7 +104,7 @@ export const UploadCV = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-500 hover:text-destructive hover:bg-transparent"
+              className="text-gray-500 hover:text-destructive cursor-pointer hover:bg-transparent"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedFile(null);
@@ -108,7 +119,7 @@ export const UploadCV = () => {
       </div>
 
       {selectedFile && (
-        <div className="mt-4 rounded-md bg-muted/50 p-3 border border-border space-y-2">
+        <div className="mt-4 rounded-md bg-muted/50 p-3 border border-border space-y-4">
           <div className="flex items-start gap-2">
             <div className="mt-0.5">
               <FileText className="h-4 w-4 text-primary" />
@@ -123,7 +134,7 @@ export const UploadCV = () => {
           </div>
           <Button
             onClick={handleUpload}
-            disabled={isUploading}
+            isLoading={isUploading}
             className="w-full cursor-pointer"
           >
             Next

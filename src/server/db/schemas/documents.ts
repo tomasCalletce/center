@@ -10,20 +10,22 @@ export const documentStatusEnumSchema = pgEnum("document_status", [
   "REJECTED",
 ]);
 
+export const contentTypeEnum = z.enum(["application/pdf"]);
+export const contentTypeValues = contentTypeEnum.Values;
+export const contentTypeEnumSchema = pgEnum("content_type", [
+  "application/pdf",
+]);
+
 export const documentTypeEnum = z.enum(["CV"]);
 export const documentTypeValues = documentTypeEnum.Values;
 export const documentTypeEnumSchema = pgEnum("document_type", ["CV"]);
-
-export const fileTypeEnum = z.enum(["application/pdf"]);
-export const fileTypeValues = fileTypeEnum.Values;
-export const fileTypeEnumSchema = pgEnum("file_type", ["application/pdf"]);
 
 export const documents = pgTable("documents", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
   pathname: varchar("pathname", { length: 255 }).notNull(),
   type: documentTypeEnumSchema("type").notNull(),
-  fileType: fileTypeEnumSchema("file_type").notNull(),
+  content_type: varchar("content_type", { length: 255 }).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

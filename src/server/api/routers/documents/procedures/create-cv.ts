@@ -13,9 +13,10 @@ export const createCV = protectedProcedure
         _clerk: ctx.auth.userId,
         pathname: input.pathname,
         type: input.type,
-        fileType: input.fileType,
+        content_type: input.content_type,
       })
       .returning({ id: documents.id });
+
     if (!newCV) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
