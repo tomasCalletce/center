@@ -43,7 +43,7 @@ export default async function Home() {
                     variant: "default",
                     className: "text-lg",
                   })}
-                  href="/onboarding"
+                  href="/dashboard"
                 >
                   Participate in challenges
                 </Link>
