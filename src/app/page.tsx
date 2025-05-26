@@ -1,11 +1,27 @@
 import Link from "next/link";
 import { HydrateClient } from "~/trpc/server";
 import { Footer } from "~/app/_components/footer";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 export default async function Home() {
   return (
     <HydrateClient>
+      <header className="flex justify-end items-center p-4 gap-4 h-16">
+        <SignedOut>
+          <SignInButton />
+          <SignUpButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </header>
       <main className="min-h-screen bg-background text-foreground">
         {/* First Hero Section */}
         <section className="py-24 md:py-32">

@@ -24,9 +24,7 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <ClerkProvider>
         <TRPCReactProvider>
-          <body>
-            <main>{children}</main>
-          </body>
+          <body>{children}</body>
         </TRPCReactProvider>
       </ClerkProvider>
     </html>

@@ -1,17 +1,22 @@
-import { CreateUserForm } from "~/app/onboarding/_components/create-user-from";
+import { MainOnboardingForm } from "~/app/onboarding/_components/main-from";
+import { HydrateClient } from "~/trpc/server";
+import { StepIndicator } from "~/app/onboarding/_components/step-indicator";
 
 export default function OnboardingComponent() {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center p-8">
-      <div className="w-full max-w-md space-y-8">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-            Comenzar
+    <HydrateClient>
+      <div className="flex min-h-screen flex-col">
+        <header className="relative border-b border-dashed border-primary/20 bg-background px-8 py-4">
+          <h1 className="text-xl font-medium tracking-wide text-primary/80">
+            Center Onboarding
           </h1>
-          <p className="text-zinc-600">Crea tu organización para continuar</p>
-        </div>
-        <CreateUserForm />
+        </header>
+        <main className="flex flex-1 items-center justify-center px-4">
+          <MainOnboardingForm />
+        </main>
+
+        <StepIndicator />
       </div>
-    </div>
+    </HydrateClient>
   );
 }
