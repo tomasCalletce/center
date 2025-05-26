@@ -1,4 +1,4 @@
-import { pgTable, timestamp, varchar, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, varchar, pgEnum, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -19,7 +19,7 @@ export const fileTypeValues = fileTypeEnum.Values;
 export const fileTypeEnumSchema = pgEnum("file_type", ["application/pdf"]);
 
 export const documents = pgTable("documents", {
-  id: varchar("id", { length: 32 }).primaryKey().notNull(),
+  id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
   pathname: varchar("pathname", { length: 255 }).notNull(),
   type: documentTypeEnumSchema("type").notNull(),
@@ -28,4 +28,9 @@ export const documents = pgTable("documents", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifyDocumentsSchema = createInsertSchema(documents);
+export const verifyDocumentsSchema = createInsertSchema(documents).omit({
+  id: true,
+  _clerk: true,
+  created_at: true,
+  updated_at: true,
+});
