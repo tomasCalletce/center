@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { db } from "~/server/db/connection";
 import { challenges } from "~/server/db/schemas/challenges";
 
-export const createCV = protectedProcedure.mutation(async ({ input, ctx }) => {
+export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
   const [newDocument] = await db
     .insert(assets)
     .values({
