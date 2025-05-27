@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { assets } from "./asset";
 
 export const challengeVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
 export const challengeVisibilityValues = challengeVisibilityEnum.Values;
@@ -20,7 +21,9 @@ export const challengeVisibilityEnumSchema = pgEnum("challenge_visibility", [
 export const challenges = pgTable("challenges", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
-  _document: varchar("_document", { length: 32 }).notNull(),
+  _asset: uuid("_asset")
+    .notNull()
+    .references(() => assets.id),
   title: varchar("title", { length: 255 }).notNull(),
   markdown: text("markdown"),
   price_pool: integer("price_pool").notNull(),
