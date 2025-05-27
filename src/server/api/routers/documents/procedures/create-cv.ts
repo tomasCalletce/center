@@ -16,7 +16,6 @@ export const createCV = protectedProcedure
         content_type: input.content_type,
       })
       .returning({ id: documents.id });
-
     if (!newCV) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
