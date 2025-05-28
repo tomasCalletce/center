@@ -6,6 +6,7 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Navigation } from "~/components/ui/navigation";
+import { RecentChallenges } from "~/app/(candidate)/dashboard/_components/recent-challenges";
 
 export default async function Home() {
   return (
@@ -19,7 +20,9 @@ export default async function Home() {
           </BreadcrumbList>
         </Breadcrumb>
       </Navigation>
-      <div className="w-full px-6 py-4">que mas</div>
+      <div className="w-full px-6 py-4">
+        <RecentChallenges />
+      </div>
     </HydrateClient>
   );
 }
