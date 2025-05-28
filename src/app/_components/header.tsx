@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 
 export function Header() {
   return (
@@ -11,7 +11,7 @@ export function Header() {
         </Link>
       </div>
       <div className="flex items-center gap-4">
-        <SignedOut>
+        {/* <SignedOut>
           <SignInButton mode="modal">
             <Button className="cursor-pointer" variant="ghost" size="sm">
               Sign In
@@ -30,7 +30,13 @@ export function Header() {
           >
             Dashboard
           </Link>
-        </SignedIn>
+        </SignedIn> */}
+        <Button className="cursor-pointer" variant="ghost" size="sm">
+          Sign In
+        </Button>
+        <Button className="cursor-pointer" variant="default" size="sm">
+          Sign Up
+        </Button>
       </div>
     </header>
   );

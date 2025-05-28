@@ -6,9 +6,9 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
-  title: "ACC - Competition Based Hiring",
+  title: "ACC - Skill Based Hiring",
   description:
-    "Revolutionizing recruitment through competition-based hiring. Find the best talent through skills-based evaluation.",
+    "Revolutionizing recruitment through skill-based hiring. Find the best talent through hackathon style challenges.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
