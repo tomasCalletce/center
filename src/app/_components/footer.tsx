@@ -8,8 +8,7 @@ export const Footer = () => {
           <div className="space-y-3">
             <h3 className="text-base font-medium">ACC.</h3>
             <p className="text-sm text-muted-foreground">
-              Connecting talent with opportunities through competition-based
-              hiring.
+              Connecting talent with opportunities through skill based hiring.
             </p>
           </div>
 
@@ -26,15 +25,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
+                  href="mailto:team@letsacc.com"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Contact
@@ -52,22 +43,6 @@ export const Footer = () => {
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  FAQ
                 </a>
               </li>
             </ul>

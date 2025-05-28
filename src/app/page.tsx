@@ -51,7 +51,7 @@ export default async function Home() {
                   </Link>
 
                   <Link
-                    href="#how-it-works"
+                    href="mailto:team@letsacc.com"
                     className={buttonVariants({
                       variant: "outline",
                       size: "default",
