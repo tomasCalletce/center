@@ -11,6 +11,7 @@ export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
       _clerk: ctx.auth.userId,
       pathname:
         "WhatsApp%20Image%202025-05-01%20at%2014.22.35-aVQ6qXrhhThJFUhfW4dBP0Ku5ar2S5.jpeg",
+      url: "https://ow7zxw0pjoyp0q71.public.blob.vercel-storage.com/WhatsApp%20Image%202025-05-01%20at%2014.22.35-aVQ6qXrhhThJFUhfW4dBP0Ku5ar2S5.jpeg",
       content_type: "image/jpeg",
     })
     .returning({ id: assets.id });

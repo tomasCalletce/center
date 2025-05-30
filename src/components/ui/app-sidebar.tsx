@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  GalleryVerticalEnd,
-  Settings2,
-  SquareTerminal,
+  Trophy,
+  LayoutDashboard,
+  Search,
+  User,
+  Settings,
+  FileText,
+  Target,
+  Bookmark,
 } from "lucide-react";
 import { NavMain } from "~/components/ui/nav-main";
 import { NavUser } from "~/components/ui/nav-user";
@@ -21,106 +22,80 @@ import {
 } from "~/components/ui/sidebar";
 
 const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
       isActive: true,
+    },
+    {
+      title: "Challenges",
+      url: "/challenges",
+      icon: Target,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Browse All",
+          url: "/challenges",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Active",
+          url: "/challenges/active",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Completed",
+          url: "/challenges/completed",
+        },
+        {
+          title: "Saved",
+          url: "/challenges/saved",
         },
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      title: "Leaderboard",
+      url: "/leaderboard",
+      icon: Trophy,
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
+      title: "Profile",
+      url: "/profile",
+      icon: User,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "Overview",
+          url: "/profile",
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: "Resume",
+          url: "/profile/resume",
         },
         {
-          title: "Tutorials",
-          url: "#",
+          title: "Skills",
+          url: "/profile/skills",
         },
         {
-          title: "Changelog",
-          url: "#",
+          title: "Achievements",
+          url: "/profile/achievements",
         },
       ],
     },
     {
       title: "Settings",
-      url: "#",
-      icon: Settings2,
+      url: "/settings",
+      icon: Settings,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "Account",
+          url: "/settings/account",
         },
         {
-          title: "Team",
-          url: "#",
+          title: "Notifications",
+          url: "/settings/notifications",
         },
         {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: "Privacy",
+          url: "/settings/privacy",
         },
       ],
     },
@@ -131,8 +106,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="px-2">
-          <h2 className="text-xl font-bold">ACC</h2>
+        <div className="px-2 py-2">
+          <h2 className="text-xl font-bold">
+            ACC<span className="text-primary">.</span>
+          </h2>
+          <p className="text-xs text-muted-foreground mt-1">Talent Platform</p>
         </div>
       </SidebarHeader>
       <SidebarContent>

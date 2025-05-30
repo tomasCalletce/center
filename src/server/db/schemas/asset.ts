@@ -12,6 +12,7 @@ export const assets = pgTable("assets", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
   pathname: varchar("pathname", { length: 255 }).notNull(),
+  url: varchar("url", { length: 255 }).notNull(),
   content_type: assetContentTypeEnumSchema("content_type").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),

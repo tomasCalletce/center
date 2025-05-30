@@ -21,8 +21,11 @@ export const all = protectedProcedure
         id: challenges.id,
         title: challenges.title,
         deadline_at: challenges.deadline_at,
+        price_pool: challenges.price_pool,
+        price_pool_currency: challenges.price_pool_currency,
         asset: {
           pathname: assets.pathname,
+          url: assets.url,
         },
       })
       .from(challenges)
