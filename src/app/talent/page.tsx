@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Navigation } from "~/components/ui/navigation";
-import { UpcomingChallenges } from "~/app/(candidate)/dashboard/_components/upcoming-challenges";
+import { UpcomingChallenges } from "~/app/talent/_components/upcoming-challenges";
 import { Zap } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -26,7 +26,6 @@ export default async function Home() {
       </Navigation>
 
       <div className="w-full px-6 py-6 space-y-10">
-        {/* Welcome Section */}
         <div className="space-y-2">
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -35,16 +34,16 @@ export default async function Home() {
                 <Zap className="h-6 w-6 text-primary" />
               </div>
             </div>
-            <div className="space-y-1">
+            <div>
               <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text">
                 Welcome back, {user?.firstName}!
               </h1>
+              <p className="text-muted-foreground  leading-relaxed">
+                Ready to showcase your skills? Check out the latest challenges
+                and opportunities below.
+              </p>
             </div>
           </div>
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            Ready to showcase your skills? Check out the latest challenges and
-            opportunities below.
-          </p>
         </div>
         <UpcomingChallenges />
       </div>
