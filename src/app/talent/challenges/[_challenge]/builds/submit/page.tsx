@@ -6,12 +6,9 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Navigation } from "~/components/ui/navigation";
+import { MainSubmitBuildForm } from "~/app/talent/challenges/[_challenge]/builds/submit/_components/main-form";
 
-export default async function SubmitBuildPage({
-  params,
-}: {
-  params: Promise<{ _challenge: string }>;
-}) {
+export default async function SubmitBuildPage() {
   return (
     <HydrateClient>
       <Navigation>
@@ -23,7 +20,9 @@ export default async function SubmitBuildPage({
           </BreadcrumbList>
         </Breadcrumb>
       </Navigation>
-      <div className="w-full px-6 py-6 space-y-6"></div>
+      <div className="w-full px-6 py-6 space-y-6">
+        <MainSubmitBuildForm />
+      </div>
     </HydrateClient>
   );
 }
