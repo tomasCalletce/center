@@ -3,7 +3,6 @@
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { UploadCV } from "~/app/onboarding/_components/upload-cv";
-import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 export function MainOnboardingForm() {
   const { user, isLoaded } = useUser();

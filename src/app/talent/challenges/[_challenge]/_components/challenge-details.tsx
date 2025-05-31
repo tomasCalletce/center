@@ -115,9 +115,9 @@ export const ChallengeDetails = async ({
         <div className="p-6 border-t">
           <Link
             className={cn(buttonVariants({ variant: "default" }), "w-full")}
-            href={`/talent/challenges/${challenge.id}`}
+            href={`/talent/challenges/${challenge.id}/builds/submit`}
           >
-            Join Challenge
+            Submit Build
             <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
