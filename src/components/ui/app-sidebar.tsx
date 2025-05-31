@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import Link from "next/link";
 import { LayoutDashboard, User } from "lucide-react";
 import { NavMain } from "~/components/ui/nav-main";
 import { NavUser } from "~/components/ui/nav-user";
@@ -46,12 +46,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="px-2 py-2">
+        <Link href="/talent" className="px-2 py-2">
           <h2 className="text-xl font-bold">
             ACC<span className="text-primary">.</span>
           </h2>
           <p className="text-xs text-muted-foreground mt-1">Talent Platform</p>
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
