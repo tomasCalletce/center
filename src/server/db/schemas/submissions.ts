@@ -36,3 +36,9 @@ export const verifySubmissionsSchema = createInsertSchema(submissions).omit({
   created_at: true,
   updated_at: true,
 });
+
+export const formSubmissionSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  _logo_image: z.string().min(1, "Logo image is required"),
+});

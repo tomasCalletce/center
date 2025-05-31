@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ClerkProvider } from "@clerk/nextjs";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
   title: "ACC - Skill Based Hiring",
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <ClerkProvider>
         <TRPCReactProvider>
-          <body>{children}</body>
+          <NuqsAdapter>
+            <body>{children}</body>
+          </NuqsAdapter>
         </TRPCReactProvider>
       </ClerkProvider>
     </html>
