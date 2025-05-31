@@ -38,8 +38,8 @@ export const ChallengeDetails = async ({
         className="col-span-3 relative"
       >
         <Image
-          src={challenge.asset.url}
-          alt={challenge.title}
+          src={challenge.image.url}
+          alt={challenge.image.alt}
           fill
           className="object-cover rounded-xl"
           priority

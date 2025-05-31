@@ -1,16 +1,17 @@
 import { pgTable, timestamp, varchar, pgEnum, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { assets } from "~/server/db/schemas/asset";
 
-export const assets = pgTable("assets", {
+export const images = pgTable("images", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
-  pathname: varchar("pathname", { length: 255 }).notNull(),
-  url: varchar("url", { length: 255 }).notNull(),
+  _asset: uuid("_asset").references(() => assets.id),
+  alt: varchar("alt", { length: 500 }).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifyAssetsSchema = createInsertSchema(assets).omit({
+export const verifyImagesSchema = createInsertSchema(images).omit({
   id: true,
   _clerk: true,
   created_at: true,
