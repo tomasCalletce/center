@@ -9,6 +9,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { challenges } from "~/server/db/schemas/challenges";
+import { images } from "~/server/db/schemas/images";
 
 export const submissionVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
 export const submissionVisibilityValues = submissionVisibilityEnum.Values;
@@ -23,7 +24,7 @@ export const submissions = pgTable("submissions", {
   _challenge: uuid("_challenge").references(() => challenges.id),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description"),
-
+  _logo_image: uuid("_logo_image").references(() => images.id),
   status: submissionVisibilityEnumSchema("status").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
