@@ -1,16 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Trophy,
-  LayoutDashboard,
-  Search,
-  User,
-  Settings,
-  FileText,
-  Target,
-  Bookmark,
-} from "lucide-react";
+import { LayoutDashboard, User } from "lucide-react";
 import { NavMain } from "~/components/ui/nav-main";
 import { NavUser } from "~/components/ui/nav-user";
 import {
@@ -25,77 +16,26 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "/talent/",
       icon: LayoutDashboard,
       isActive: true,
     },
     {
-      title: "Challenges",
-      url: "/challenges",
-      icon: Target,
-      items: [
-        {
-          title: "Browse All",
-          url: "/challenges",
-        },
-        {
-          title: "Active",
-          url: "/challenges/active",
-        },
-        {
-          title: "Completed",
-          url: "/challenges/completed",
-        },
-        {
-          title: "Saved",
-          url: "/challenges/saved",
-        },
-      ],
-    },
-    {
-      title: "Leaderboard",
-      url: "/leaderboard",
-      icon: Trophy,
-    },
-    {
       title: "Profile",
-      url: "/profile",
+      url: "/talent/profile",
       icon: User,
       items: [
         {
           title: "Overview",
-          url: "/profile",
+          url: "/talent/profile",
         },
         {
           title: "Resume",
-          url: "/profile/resume",
+          url: "/talent/profile/resume",
         },
         {
           title: "Skills",
-          url: "/profile/skills",
-        },
-        {
-          title: "Achievements",
-          url: "/profile/achievements",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
-      items: [
-        {
-          title: "Account",
-          url: "/settings/account",
-        },
-        {
-          title: "Notifications",
-          url: "/settings/notifications",
-        },
-        {
-          title: "Privacy",
-          url: "/settings/privacy",
+          url: "/talent/profile/skills",
         },
       ],
     },
