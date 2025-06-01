@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { assets } from "./asset";
+import { images } from "~/server/db/schemas/images";
 
 export const challengeVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
 export const challengeVisibilityValues = challengeVisibilityEnum.Values;
@@ -18,16 +18,26 @@ export const challengeVisibilityEnumSchema = pgEnum("challenge_visibility", [
   "HIDDEN",
 ]);
 
+export const challengePricePoolCurrencyEnum = z.enum(["USD"]);
+export const challengePricePoolCurrencyValues =
+  challengePricePoolCurrencyEnum.Values;
+export const challengePricePoolCurrencyEnumSchema = pgEnum(
+  "challenge_price_pool_currency",
+  ["USD"]
+);
+
 export const challenges = pgTable("challenges", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
-  _asset: uuid("_asset")
+  _image: uuid("_image")
     .notNull()
-    .references(() => assets.id),
+    .references(() => images.id),
   title: varchar("title", { length: 255 }).notNull(),
   markdown: text("markdown"),
   price_pool: integer("price_pool").notNull(),
-  price_pool_currency: varchar("price_pool_currency", { length: 3 }).notNull(),
+  price_pool_currency: challengePricePoolCurrencyEnumSchema(
+    "price_pool_currency"
+  ).notNull(),
   visibility: challengeVisibilityEnumSchema("visibility").notNull(),
   deadline_at: timestamp("deadline"),
   created_at: timestamp("created_at").defaultNow().notNull(),

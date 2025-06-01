@@ -1,15 +1,7 @@
 "use client";
 
-import * as React from "react";
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  GalleryVerticalEnd,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import Link from "next/link";
+import { LayoutDashboard, User } from "lucide-react";
 import { NavMain } from "~/components/ui/nav-main";
 import { NavUser } from "~/components/ui/nav-user";
 import {
@@ -21,106 +13,29 @@ import {
 } from "~/components/ui/sidebar";
 
 const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Dashboard",
+      url: "/talent/",
+      icon: LayoutDashboard,
       isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
+      title: "Profile",
+      url: "/talent/profile",
+      icon: User,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Overview",
+          url: "/talent/profile",
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: "Resume",
+          url: "/talent/profile/resume",
         },
         {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: "Skills",
+          url: "/talent/profile/skills",
         },
       ],
     },
@@ -131,9 +46,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="px-2">
-          <h2 className="text-xl font-bold">ACC</h2>
-        </div>
+        <Link href="/talent" className="px-2 py-2">
+          <h2 className="text-xl font-bold">
+            ACC<span className="text-primary">.</span>
+          </h2>
+          <p className="text-xs text-muted-foreground mt-1">Talent Platform</p>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

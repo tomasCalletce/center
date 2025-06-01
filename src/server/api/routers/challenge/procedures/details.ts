@@ -1,23 +1,20 @@
 import { protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db/connection";
-import {
-  challenges,
-  challengeVisibilityValues,
-} from "~/server/db/schemas/challenges";
+import { challenges } from "~/server/db/schemas/challenges";
 import { z } from "zod";
-import { asc, eq } from "drizzle-orm";
-import { assets } from "~/server/db/schemas/asset";
+import { eq } from "drizzle-orm";
 import { images } from "~/server/db/schemas/images";
+import { assets } from "~/server/db/schemas/asset";
+import { TRPCError } from "@trpc/server";
 
-export const all = protectedProcedure
+export const details = protectedProcedure
   .input(
     z.object({
-      limit: z.number().min(1).default(10),
-      offset: z.number().min(0).default(0),
+      _challenge: z.string().uuid(),
     })
   )
   .query(async ({ input }) => {
-    const allChallenges = await db
+    const [challenge] = await db
       .select({
         id: challenges.id,
         title: challenges.title,
@@ -33,10 +30,13 @@ export const all = protectedProcedure
       .from(challenges)
       .innerJoin(images, eq(challenges._image, images.id))
       .innerJoin(assets, eq(images._asset, assets.id))
-      .where(eq(challenges.visibility, challengeVisibilityValues.VISIBLE))
-      .limit(input.limit)
-      .offset(input.offset)
-      .orderBy(asc(challenges.deadline_at));
+      .where(eq(challenges.id, input._challenge));
+    if (!challenge) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Challenge not found",
+      });
+    }
 
-    return allChallenges;
+    return challenge;
   });
