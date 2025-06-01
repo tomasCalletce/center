@@ -14,6 +14,7 @@ export default async function ChallengePage({
 }: {
   params: Promise<{ _challenge: string }>;
 }) {
+  const { _challenge } = await params;
   return (
     <HydrateClient>
       <Navigation>
@@ -26,8 +27,8 @@ export default async function ChallengePage({
         </Breadcrumb>
       </Navigation>
       <div className="w-full px-6 py-6 space-y-6">
-        <ChallengeDetails params={params} />
-        <ChallengeParticipants params={params} />
+        <ChallengeDetails _challenge={_challenge} />
+        <ChallengeParticipants _challenge={_challenge} />
       </div>
     </HydrateClient>
   );

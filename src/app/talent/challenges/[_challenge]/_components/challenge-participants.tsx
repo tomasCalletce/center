@@ -2,13 +2,13 @@ import { Users } from "lucide-react";
 import { api } from "~/trpc/server";
 import { ProfileCard } from "~/components/ui/profile-card";
 
-export const ChallengeParticipants = async ({
-  params,
-}: {
-  params: Promise<{ _challenge: string }>;
-}) => {
-  const { _challenge } = await params;
+interface ChallengeParticipantsProps {
+  _challenge: string;
+}
 
+export const ChallengeParticipants: React.FC<
+  ChallengeParticipantsProps
+> = async ({ _challenge }) => {
   const { data: challengeParticipants } = await api.challenge.participant({
     _challenge,
   });
