@@ -4,7 +4,6 @@ import { HydrateClient } from "~/trpc/server";
 import { Footer } from "~/app/_components/footer";
 import { Header } from "~/app/_components/header";
 import { buttonVariants } from "~/components/ui/button";
-import { ArrowRight, BarChart3, Users, Zap } from "lucide-react";
 
 export default async function Home() {
   return (
