@@ -24,7 +24,6 @@ export default async function Home() {
           </BreadcrumbList>
         </Breadcrumb>
       </Navigation>
-
       <div className="w-full px-6 py-6 space-y-10">
         <div className="space-y-2">
           <div className="flex items-center gap-4">
