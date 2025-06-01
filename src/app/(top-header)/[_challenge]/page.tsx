@@ -11,7 +11,7 @@ import { ChallengeDetails } from "./_components/challenge-details";
 import { ChallengeParticipants } from "./_components/challenge-participants";
 import { api } from "~/trpc/server";
 import { Navigation } from "~/components/ui/navigation";
-import { ChallengeSubmissions } from "~/app/talent/challenges/[_challenge]/_components/challenge-submissions";
+import { ChallengeSubmissions } from "~/app/(top-header)/[_challenge]/_components/challenge-submissions";
 import { Separator } from "~/components/ui/separator";
 
 export default async function ChallengePage({
@@ -24,25 +24,6 @@ export default async function ChallengePage({
   const challenge = await api.challenge.details({ _challenge });
   return (
     <HydrateClient>
-      <Navigation>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/talent">Dashboard</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/talent/challenges">
-                Challenges
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{challenge.title}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </Navigation>
       <div className="w-full px-6 py-6">
         <div className="space-y-6 mb-4">
           <ChallengeDetails _challenge={_challenge} />
