@@ -27,7 +27,7 @@ export default async function ChallengePage({
       </Navigation>
       <div className="w-full px-6 py-6 space-y-6">
         <ChallengeDetails params={params} />
-        <ChallengeParticipants />
+        <ChallengeParticipants params={params} />
       </div>
     </HydrateClient>
   );

@@ -1,12 +1,9 @@
 import { protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db/connection";
-import {
-  challenges,
-  challengeVisibilityValues,
-} from "~/server/db/schemas/challenges";
 import { z } from "zod";
-import { asc, eq } from "drizzle-orm";
-import { assets } from "~/server/db/schemas/asset";
+import { eq } from "drizzle-orm";
+import { submissions } from "~/server/db/schemas/submissions";
+import { clerkClient } from "~/server/api/auth";
 
 export const participant = protectedProcedure
   .input(
@@ -15,5 +12,18 @@ export const participant = protectedProcedure
     })
   )
   .query(async ({ input }) => {
-    return [];
+    const allChallenges = await db
+      .select({
+        id: submissions.id,
+        _clerk: submissions._clerk,
+      })
+      .from(submissions)
+      .where(eq(submissions._challenge, input._challenge))
+      .limit(6);
+
+    const userList = await clerkClient.users.getUserList({
+      userId: allChallenges.map((challenge) => challenge._clerk),
+    });
+
+    return userList;
   });
