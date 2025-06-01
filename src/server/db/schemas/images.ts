@@ -1,6 +1,10 @@
-import { pgTable, timestamp, varchar, pgEnum, uuid } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, varchar, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { assets } from "~/server/db/schemas/asset";
+import {
+  formAssetsSchema,
+  verifyAssetsSchema,
+} from "~/server/db/schemas/asset";
 
 export const images = pgTable("images", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -11,9 +15,23 @@ export const images = pgTable("images", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifyImagesSchema = createInsertSchema(images).omit({
-  id: true,
-  _clerk: true,
-  created_at: true,
-  updated_at: true,
-});
+export const verifyImagesSchema = createInsertSchema(images)
+  .omit({
+    id: true,
+    _clerk: true,
+    created_at: true,
+    updated_at: true,
+  })
+  .extend({
+    verifyAssetsSchema,
+  });
+
+export const formImagesSchema = createInsertSchema(images)
+  .omit({
+    id: true,
+    _clerk: true,
+    _asset: true,
+    created_at: true,
+    updated_at: true,
+  })
+  .extend({ formAssetsSchema });

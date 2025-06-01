@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Navigation } from "~/components/ui/navigation";
-import { MainSubmitBuildForm } from "~/app/talent/challenges/[_challenge]/builds/submit/_components/main-form";
+import { MainSubmitBuildForm } from "~/app/talent/challenges/[_challenge]/builds/submit/_components/main-from";
 
 export default async function SubmitBuildPage() {
   return (

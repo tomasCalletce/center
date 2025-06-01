@@ -16,3 +16,10 @@ export const verifyAssetsSchema = createInsertSchema(assets).omit({
   created_at: true,
   updated_at: true,
 });
+
+export const formAssetsSchema = createInsertSchema(assets).omit({
+  id: true,
+  _clerk: true,
+  created_at: true,
+  updated_at: true,
+});

@@ -12,16 +12,10 @@ export async function uploadImage(formData: FormData) {
 
   const file = formData.get("image") as File;
 
-  if (!file) {
-    return { error: "No file provided" };
-  }
-
-  // Validate file type
   if (!file.type.startsWith("image/")) {
     return { error: "File must be an image" };
   }
 
-  // Validate file size (5MB limit)
   if (file.size > 5 * 1024 * 1024) {
     return { error: "File size must be less than 5MB" };
   }

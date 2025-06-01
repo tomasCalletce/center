@@ -9,7 +9,11 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { challenges } from "~/server/db/schemas/challenges";
-import { images } from "~/server/db/schemas/images";
+import {
+  images,
+  formImagesSchema,
+  verifyImagesSchema,
+} from "~/server/db/schemas/images";
 
 export const submissionVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
 export const submissionVisibilityValues = submissionVisibilityEnum.Values;
@@ -22,23 +26,41 @@ export const submissions = pgTable("submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
   _challenge: uuid("_challenge").references(() => challenges.id),
+  _logo_image: uuid("_logo_image").references(() => images.id),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description"),
-  _logo_image: uuid("_logo_image").references(() => images.id),
+  demo_url: text("demo_url").notNull(),
+  repository_url: text("repository_url").notNull(),
   status: submissionVisibilityEnumSchema("status").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifySubmissionsSchema = createInsertSchema(submissions).omit({
-  id: true,
-  _clerk: true,
-  created_at: true,
-  updated_at: true,
-});
+export const verifySubmissionsSchema = createInsertSchema(submissions)
+  .omit({
+    id: true,
+    _clerk: true,
+    _logo_image: true,
+    created_at: true,
+    updated_at: true,
+  })
+  .extend({
+    verifyImagesSchema,
+  });
 
-export const formSubmissionSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  _logo_image: z.string().min(1, "Logo image is required"),
-});
+export const formSubmissionSchema = createInsertSchema(submissions)
+  .omit({
+    id: true,
+    _clerk: true,
+    _challenge: true,
+    _logo_image: true,
+    demo_url: true,
+    repository_url: true,
+    created_at: true,
+    updated_at: true,
+  })
+  .extend({
+    formImagesSchema,
+    demo_url: z.string().url(),
+    repository_url: z.string().url(),
+  });
