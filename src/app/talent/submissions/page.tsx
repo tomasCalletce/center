@@ -6,13 +6,10 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Navigation } from "~/components/ui/navigation";
-import { UpcomingChallenges } from "~/app/talent/_components/upcoming-challenges";
-import { Zap } from "lucide-react";
-import { currentUser } from "@clerk/nextjs/server";
+import { AllSubmissions } from "~/app/talent/submissions/_components/all-submissions";
+import { Trophy } from "lucide-react";
 
-export default async function Home() {
-  const user = await currentUser();
-
+export default async function Submissions() {
   return (
     <HydrateClient>
       <Navigation>
@@ -30,21 +27,21 @@ export default async function Home() {
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 rounded-xl blur-sm" />
               <div className="relative bg-gradient-to-br from-primary/10 to-primary/20 p-3 rounded-xl border border-primary/30 shadow-sm">
-                <Zap className="h-6 w-6 text-primary" />
+                <Trophy className="h-6 w-6 text-primary" />
               </div>
             </div>
             <div>
               <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text">
-                Welcome back, {user?.firstName}!
+                Your Submissions
               </h1>
-              <p className="text-muted-foreground  leading-relaxed">
-                Ready to showcase your skills? Check out the latest challenges
-                and opportunities below.
+              <p className="text-muted-foreground leading-relaxed">
+                Track all your project submissions and see how your skills are
+                showcased across different challenges.
               </p>
             </div>
           </div>
         </div>
-        <UpcomingChallenges />
+        <AllSubmissions />
       </div>
     </HydrateClient>
   );

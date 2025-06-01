@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, User } from "lucide-react";
+import { LayoutDashboard, User, List } from "lucide-react";
 import { NavMain } from "~/components/ui/nav-main";
 import { NavUser } from "~/components/ui/nav-user";
 import {
@@ -18,6 +18,12 @@ const data = {
       title: "Dashboard",
       url: "/talent/",
       icon: LayoutDashboard,
+      isActive: true,
+    },
+    {
+      title: "Submissions",
+      url: "/talent/submissions",
+      icon: List,
       isActive: true,
     },
     {

@@ -7,12 +7,13 @@ import { formatDistanceToNow, format } from "date-fns";
 import { Clock, ArrowRight, Users, MapPin, Trophy } from "lucide-react";
 import { cn } from "~/lib/utils";
 
-export const ChallengeDetails = async ({
-  params,
-}: {
-  params: Promise<{ _challenge: string }>;
+interface ChallengeDetailsProps {
+  _challenge: string;
+}
+
+export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
+  _challenge,
 }) => {
-  const { _challenge } = await params;
   const challenge = await api.challenge.details({ _challenge });
 
   const timeLeft = challenge.deadline_at
