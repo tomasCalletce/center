@@ -132,17 +132,7 @@ export function MainSubmitBuildForm() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-foreground mb-2">
-          Project Details
-        </h1>
-        <p className="text-muted-foreground">
-          Provide the basic information about your project submission
-        </p>
-      </div>
-
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -223,7 +213,6 @@ export function MainSubmitBuildForm() {
               />
             </div>
 
-            {/* Right Column - Links and Image */}
             <div className="space-y-6">
               <FormField
                 control={form.control}
@@ -357,12 +346,11 @@ export function MainSubmitBuildForm() {
             </div>
           </div>
 
-          {/* Submit */}
           <div className="flex justify-end pt-6 border-t">
             <Button
               isLoading={submitMutation.isPending}
               type="submit"
-              className="px-8"
+              className="px-8 cursor-pointer"
             >
               Submit
             </Button>
