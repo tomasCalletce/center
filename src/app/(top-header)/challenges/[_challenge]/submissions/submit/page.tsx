@@ -1,11 +1,4 @@
 import { HydrateClient } from "~/trpc/server";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "~/components/ui/breadcrumb";
-import { Navigation } from "~/components/ui/navigation";
 import { MainSubmitBuildForm } from "~/app/(top-header)/challenges/[_challenge]/submissions/submit/_components/main-from";
 import { Rocket } from "lucide-react";
 
