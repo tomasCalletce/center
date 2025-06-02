@@ -58,12 +58,12 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center gap-2">
             <SignedOut>
-              <SignInButton mode="modal">
+              <SignInButton>
                 <Button variant="ghost" size="sm" className="h-9 px-4">
                   Sign In
                 </Button>
               </SignInButton>
-              <SignUpButton mode="modal">
+              <SignUpButton>
                 <Button size="sm" className="h-9 px-4">
                   Sign Up
                 </Button>
