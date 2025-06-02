@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
-const isPublicRoute = createRouteMatcher(["/"]);
+const isPublicRoute = createRouteMatcher(["/", "/challenges"]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { userId, sessionClaims, redirectToSignIn } = await auth();

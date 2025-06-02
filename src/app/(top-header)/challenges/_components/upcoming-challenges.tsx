@@ -30,7 +30,7 @@ export const UpcomingChallenges = async () => {
     return (
       <div className="grid grid-cols-4 overflow-hidden rounded-2xl border bg-card shadow-xl h-[500px]">
         <Link
-          href={`/talent/challenges/${challenge.id}`}
+          href={`/challenges/${challenge.id}`}
           className="col-span-3 relative"
         >
           <Image
@@ -106,7 +106,7 @@ export const UpcomingChallenges = async () => {
 
             <Link
               className={cn(buttonVariants({ variant: "default" }), "w-full")}
-              href={`/talent/challenges/${challenge.id}`}
+              href={`/challenges/${challenge.id}`}
             >
               Join Challenge
               <ArrowRight className="ml-1 h-4 w-4" />

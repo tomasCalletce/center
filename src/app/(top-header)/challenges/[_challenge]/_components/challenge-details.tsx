@@ -116,7 +116,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
         <div className="p-6 border-t">
           <Link
             className={cn(buttonVariants({ variant: "default" }), "w-full")}
-            href={`/talent/challenges/${challenge.id}/builds/submit`}
+            href={`/challenges/${challenge.id}/submissions/submit`}
           >
             Submit Build
             <ArrowRight className="ml-1 h-4 w-4" />

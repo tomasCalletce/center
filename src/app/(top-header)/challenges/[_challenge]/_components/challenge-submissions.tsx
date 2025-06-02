@@ -83,7 +83,7 @@ export const ChallengeSubmissions: React.FC<
             return (
               <Link
                 key={submission.id}
-                href={`/talent/challenges/${_challenge}/builds/${submission.id}`}
+                href={`/submissions/${submission.id}`}
                 className="group bg-card border rounded-xl overflow-hidden shadow-sm"
               >
                 {/* Main Content */}
