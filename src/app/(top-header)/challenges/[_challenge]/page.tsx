@@ -11,7 +11,7 @@ import { ChallengeDetails } from "./_components/challenge-details";
 import { ChallengeParticipants } from "./_components/challenge-participants";
 import { api } from "~/trpc/server";
 import { Navigation } from "~/components/ui/navigation";
-import { ChallengeSubmissions } from "~/app/(top-header)/[_challenge]/_components/challenge-submissions";
+import { ChallengeSubmissions } from "~/app/(top-header)/challenges/[_challenge]/_components/challenge-submissions";
 import { Separator } from "~/components/ui/separator";
 
 export default async function ChallengePage({

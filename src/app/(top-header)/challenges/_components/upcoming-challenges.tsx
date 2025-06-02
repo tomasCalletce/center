@@ -30,7 +30,7 @@ export const UpcomingChallenges = async () => {
     return (
       <div className="grid grid-cols-4 overflow-hidden rounded-2xl border bg-card shadow-xl h-[500px]">
         <Link
-          href={`/talent/challenges/${challenge.id}`}
+          href={`/challenges/${challenge.id}`}
           className="col-span-3 relative"
         >
           <Image

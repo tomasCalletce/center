@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Navigation } from "~/components/ui/navigation";
-import { MainSubmitBuildForm } from "~/app/(top-header)/[_challenge]/builds/submit/_components/main-from";
+import { MainSubmitBuildForm } from "~/app/(top-header)/challenges/[_challenge]/builds/submit/_components/main-from";
 import { Rocket } from "lucide-react";
 
 export default async function SubmitBuildPage() {
