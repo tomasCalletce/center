@@ -1,11 +1,4 @@
 import { HydrateClient } from "~/trpc/server";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "~/components/ui/breadcrumb";
-import { Navigation } from "~/components/ui/navigation";
 import { UpcomingChallenges } from "~/app/(top-header)/challenges/_components/upcoming-challenges";
 import { Zap } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
