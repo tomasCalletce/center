@@ -1,11 +1,4 @@
 import { HydrateClient } from "~/trpc/server";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "~/components/ui/breadcrumb";
-import { Navigation } from "~/components/ui/navigation";
 import { AllSubmissions } from "~/app/(top-header)/submissions/_components/all-submissions";
 import { Trophy } from "lucide-react";
 

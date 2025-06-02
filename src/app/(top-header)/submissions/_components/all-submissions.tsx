@@ -1,53 +1,12 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { api } from "~/trpc/react";
-import {
-  Trophy,
-  Eye,
-  Github,
-  ExternalLink,
-  Clock,
-  EyeOff,
-  Loader2,
-} from "lucide-react";
+import { api } from "~/trpc/server";
+import { Trophy, Eye, Github, ExternalLink, Clock, EyeOff } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "~/components/ui/badge";
 
-export const AllSubmissions = () => {
-  const {
-    data: allSubmissions,
-    isLoading,
-    error,
-  } = api.submission.all.useQuery({});
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-        <p className="text-muted-foreground">Loading your submissions...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="relative mb-4">
-          <div className="bg-destructive/10 p-4 rounded-full">
-            <Trophy className="h-8 w-8 text-destructive" />
-          </div>
-        </div>
-        <h3 className="text-lg font-semibold mb-2">
-          Error loading submissions
-        </h3>
-        <p className="text-muted-foreground text-sm max-w-sm">
-          We couldn't load your submissions right now. Please try again later.
-        </p>
-      </div>
-    );
-  }
+export const AllSubmissions = async () => {
+  const allSubmissions = await api.submission.all({});
 
   if (!allSubmissions || allSubmissions.length === 0) {
     return (
