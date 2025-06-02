@@ -6,22 +6,12 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Navigation } from "~/components/ui/navigation";
-import { MainSubmitBuildForm } from "~/app/(top-header)/challenges/[_challenge]/builds/submit/_components/main-from";
+import { MainSubmitBuildForm } from "~/app/(top-header)/challenges/[_challenge]/submissions/submit/_components/main-from";
 import { Rocket } from "lucide-react";
 
 export default async function SubmitBuildPage() {
   return (
     <HydrateClient>
-      <Navigation>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbPage>Dashboard</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </Navigation>
-
       <div className="w-full px-6 py-6 space-y-10">
         <div className="space-y-2">
           <div className="flex items-center gap-4">
@@ -42,7 +32,6 @@ export default async function SubmitBuildPage() {
             </div>
           </div>
         </div>
-
         <MainSubmitBuildForm />
       </div>
     </HydrateClient>

@@ -106,7 +106,7 @@ export const UpcomingChallenges = async () => {
 
             <Link
               className={cn(buttonVariants({ variant: "default" }), "w-full")}
-              href={`/talent/challenges/${challenge.id}`}
+              href={`/challenges/${challenge.id}`}
             >
               Join Challenge
               <ArrowRight className="ml-1 h-4 w-4" />
