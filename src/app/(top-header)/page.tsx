@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { HydrateClient } from "~/trpc/server";
 import { buttonVariants } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
 
 export default async function Home() {
   return (
@@ -61,31 +62,34 @@ export default async function Home() {
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary/10 rounded-full border border-primary"></div>
             </div>
 
-            <div className="md:col-span-6 grid grid-cols-2 gap-3 h-[320px]">
-              <div className="relative h-full rounded-sm overflow-hidden border border-dashed p-1">
-                <Image
-                  src="/team1.png"
-                  alt="Team collaboration"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="grid grid-rows-2 gap-3">
-                <div className="relative rounded-sm overflow-hidden border border-dashed p-1">
+            <div className="md:col-span-6">
+              <div className="space-y-4">
+                <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg">
                   <Image
-                    src="/team2.png"
+                    src="/team1.png"
                     alt="Team collaboration"
                     fill
                     className="object-cover"
                   />
                 </div>
-                <div className="relative rounded-sm overflow-hidden border border-dashed p-1">
-                  <Image
-                    src="/team3.png"
-                    alt="Team collaboration"
-                    fill
-                    className="object-cover"
-                  />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg">
+                    <Image
+                      src="/team2.png"
+                      alt="Developer workspace"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg">
+                    <Image
+                      src="/team3.png"
+                      alt="Remote collaboration"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -93,47 +97,53 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-16 border-b border-dashed">
+      <section className="py-16 border-b">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="relative aspect-video rounded-sm overflow-hidden">
+              <div className="relative aspect-[2/1] rounded-xl overflow-hidden">
                 <Image
                   src="/ai-hackathon.jpeg"
                   alt="AI Hackathon Event"
                   fill
-                  className="object-cover"
+                  className="object-cover object-center"
                 />
               </div>
 
               <div className="space-y-8">
-                <div className="flex items-baseline">
-                  <div className="w-8 h-px bg-primary mr-4"></div>
-                  <h2 className="text-2xl font-medium">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-1 w-8 bg-slate-900 rounded-full" />
+                    <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                      Track Record
+                    </span>
+                  </div>
+
+                  <h2 className="text-3xl font-bold tracking-tight">
                     From the creators of ai-hackathon.co
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 pt-4">
-                  <div className="space-y-1">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2">
                     <div className="text-3xl font-bold">800+</div>
                     <div className="text-sm text-muted-foreground">
                       Participants
                     </div>
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <div className="text-3xl font-bold">$4,000+</div>
                     <div className="text-sm text-muted-foreground">
                       In cash prizes
                     </div>
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <div className="text-3xl font-bold">60+</div>
                     <div className="text-sm text-muted-foreground">
                       Project entries
                     </div>
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <div className="text-3xl font-bold">300K+</div>
                     <div className="text-sm text-muted-foreground">
                       LinkedIn views
