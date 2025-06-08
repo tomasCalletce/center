@@ -31,7 +31,7 @@ export default async function Home() {
               </SignedIn>
               <SignedOut>
                 <div className="space-y-6">
-                  <h1 className="text-5xl font-bold tracking-tight lg:text-7xl">
+                  <h1 className="text-5xl font-bold tracking-tight lg:text-7xl  bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
                     Build. Compete. Connect.
                   </h1>
                   <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">

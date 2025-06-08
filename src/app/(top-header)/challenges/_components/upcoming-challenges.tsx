@@ -24,13 +24,13 @@ export const UpcomingChallenges = async () => {
       <div className="relative overflow-hidden p-12">
         <div className="relative mx-auto max-w-md text-center space-y-8">
           <div className="mx-auto w-fit">
-            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-muted bg-muted/50">
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-dashed bg-muted/50">
               <Calendar className="h-8 w-8 text-muted-foreground" />
             </div>
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-2xl font-semibold tracking-tight">
+            <h3 className="text-2xl font-semibold tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
               No Active Challenges
             </h3>
             <p className="text-muted-foreground leading-relaxed">
