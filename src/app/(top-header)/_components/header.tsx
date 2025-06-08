@@ -1,12 +1,6 @@
 import Link from "next/link";
-import {
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { SignedIn } from "@clerk/nextjs";
+import { buttonVariants } from "~/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
