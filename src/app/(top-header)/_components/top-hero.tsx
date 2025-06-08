@@ -15,7 +15,7 @@ export const TopHero = () => {
               </span>
             </div>
 
-            <h1 className="text-5xl font-bold tracking-tight">
+            <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
               Build and get hired
               <span className="block text-3xl mt-2 font-normal">
                 through skill-based challenges
