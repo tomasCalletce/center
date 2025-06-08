@@ -1,14 +1,57 @@
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "~/trpc/server";
-import { buttonVariants } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import { Clock, ArrowRight, Users, MapPin, Trophy } from "lucide-react";
+import {
+  Clock,
+  ArrowRight,
+  Users,
+  MapPin,
+  Trophy,
+  Calendar,
+  Bell,
+} from "lucide-react";
 import { cn } from "~/lib/utils";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 export const UpcomingChallenges = async () => {
-  const upcomingChallenges = await api.challenge.all({});
+  const upcomingChallenges = await api.public.challenge.all({});
+
+  if (true) {
+    return (
+      <div className="relative overflow-hidden p-12">
+        <div className="relative mx-auto max-w-md text-center space-y-8">
+          <div className="mx-auto w-fit">
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-muted bg-muted/50">
+              <Calendar className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-2xl font-semibold tracking-tight">
+              No Active Challenges
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              We're preparing exciting new challenges for you. Check back soon
+              or get notified when new opportunities become available.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Button className="w-full cursor-pointer">
+              <Bell className="mr-2 h-4 w-4" />
+              Get Notified
+            </Button>
+            <p className="text-sm text-muted-foreground">
+              Be the first to know about new challenges
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const allChallenges = upcomingChallenges.map((challenge) => {
     const timeLeft = challenge.deadline_at
@@ -108,8 +151,11 @@ export const UpcomingChallenges = async () => {
               className={cn(buttonVariants({ variant: "default" }), "w-full")}
               href={`/challenges/${challenge.id}`}
             >
-              Join Challenge
-              <ArrowRight className="ml-1 h-4 w-4" />
+              <SignedOut>Sign in to join</SignedOut>
+              <SignedIn>
+                Join Challenge
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </SignedIn>
             </Link>
           </div>
         </div>
@@ -117,5 +163,22 @@ export const UpcomingChallenges = async () => {
     );
   });
 
-  return <div className="space-y-8">{allChallenges}</div>;
+  return (
+    <div className="space-y-12">
+      {/* Section Header - Left aligned with cool line */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="h-1 w-12 bg-gradient-to-r from-primary to-primary/50 rounded-full" />
+          <h2 className="text-3xl font-bold tracking-tight">Open Challenges</h2>
+        </div>
+        <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+          Choose from our curated selection of challenges and start building
+          your next breakthrough project.
+        </p>
+      </div>
+
+      {/* Challenges List */}
+      <div className="space-y-8">{allChallenges}</div>
+    </div>
+  );
 };

@@ -12,6 +12,8 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
+import { buttonVariants } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
 
 export function Header() {
   return (
@@ -28,7 +30,11 @@ export function Header() {
             <NavigationMenuItem>
               <Link
                 href="/challenges"
-                className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                className={buttonVariants({
+                  variant: "ghost",
+                  className:
+                    "text-sm border-b-2 rounded-none rounded-t-lg border-b-primary",
+                })}
               >
                 Challenges
               </Link>
@@ -57,29 +63,12 @@ export function Header() {
 
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center gap-2">
-            <SignedOut>
-              <SignInButton>
-                <Button variant="ghost" size="sm" className="h-9 px-4">
-                  Sign In
-                </Button>
-              </SignInButton>
-              <SignUpButton>
-                <Button size="sm" className="h-9 px-4">
-                  Sign Up
-                </Button>
-              </SignUpButton>
-            </SignedOut>
+            {/* Authentication temporarily disabled */}
 
-            <SignedIn>
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "h-9 w-9",
-                  },
-                }}
-                showName={false}
-              />
-            </SignedIn>
+            <Badge variant="outline" className="gap-1.5 px-3 py-1">
+              <div className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+              Coming Soon
+            </Badge>
           </nav>
         </div>
       </div>
