@@ -1,6 +1,6 @@
 import { Toaster } from "~/components/ui/sonner";
-import { Header } from "~/app/_components/header";
-import { Footer } from "~/app/_components/footer";
+import { Header } from "~/app/(top-header)/_components/header";
+import { Footer } from "~/app/(top-header)/_components/footer";
 
 export default function DashboardLayout({
   children,
