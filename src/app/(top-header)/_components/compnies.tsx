@@ -42,7 +42,7 @@ export const Companies = () => {
 
               <div className="pt-2">
                 <Link
-                  href="https://cal.com/tomas-calle-1oj8wr/30min"
+                  href="https://cal.com/tomas-calle-1oj8wr/30min4"
                   className={buttonVariants({
                     variant: "default",
                     size: "default",

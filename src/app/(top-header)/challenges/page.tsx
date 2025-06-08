@@ -44,30 +44,6 @@ export default async function Home() {
                   </p>
                 </div>
               </SignedOut>
-
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Badge
-                  variant="secondary"
-                  className="gap-2 px-4 py-2 text-sm font-medium"
-                >
-                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                  3 Live Challenges
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="gap-2 px-4 py-2 text-sm font-medium"
-                >
-                  <div className="h-2 w-2 rounded-full bg-blue-500" />
-                  50+ Partner Startups
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="gap-2 px-4 py-2 text-sm font-medium"
-                >
-                  <div className="h-2 w-2 rounded-full bg-orange-500" />
-                  $50K+ in Prizes
-                </Badge>
-              </div>
             </div>
           </div>
         </div>

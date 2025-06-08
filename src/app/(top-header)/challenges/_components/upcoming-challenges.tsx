@@ -34,8 +34,7 @@ export const UpcomingChallenges = async () => {
               No Active Challenges
             </h3>
             <p className="text-muted-foreground leading-relaxed">
-              We're preparing exciting new challenges for you. Check back soon
-              or get notified when new opportunities become available.
+              We're preparing exciting new challenges for you. Check back soon.
             </p>
           </div>
 
@@ -43,6 +42,9 @@ export const UpcomingChallenges = async () => {
             <Button className="w-full cursor-pointer">
               <Bell className="mr-2 h-4 w-4" />
               Get Notified
+              <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full">
+                Coming Soon
+              </span>
             </Button>
             <p className="text-sm text-muted-foreground">
               Be the first to know about new challenges
