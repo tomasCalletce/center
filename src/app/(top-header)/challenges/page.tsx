@@ -2,7 +2,6 @@ import { HydrateClient } from "~/trpc/server";
 import { UpcomingChallenges } from "~/app/(top-header)/challenges/_components/upcoming-challenges";
 import { Zap } from "lucide-react";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { Badge } from "~/components/ui/badge";
 
 export default async function Home() {
   return (
@@ -10,7 +9,6 @@ export default async function Home() {
       <div className="container mx-auto px-4 py-16 ">
         <div className="relative overflow-hidden border-b">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-
           <div className="relative px-8 py-20">
             <div className="mx-auto max-w-4xl text-center space-y-12">
               <div className="mx-auto w-fit group">
@@ -20,7 +18,6 @@ export default async function Home() {
                   </div>
                 </div>
               </div>
-
               <SignedIn>
                 <div className="space-y-6">
                   <h1 className="text-5xl font-bold tracking-tight lg:text-7xl">
@@ -32,7 +29,6 @@ export default async function Home() {
                   </p>
                 </div>
               </SignedIn>
-
               <SignedOut>
                 <div className="space-y-6">
                   <h1 className="text-5xl font-bold tracking-tight lg:text-7xl">
@@ -47,7 +43,6 @@ export default async function Home() {
             </div>
           </div>
         </div>
-
         <UpcomingChallenges />
       </div>
     </HydrateClient>

@@ -5,7 +5,9 @@ export const HowItWorks = () => {
     <section id="how-it-works">
       <div className="container border-y py-8 border-dashed mx-auto px-4">
         <div className="max-w-6xl space-y-6 mx-auto">
-          <h2 className="text-3xl font-medium">How skill-based hiring works</h2>
+          <h2 className="text-3xl font-medium">
+            How skill-based hiring works?
+          </h2>
 
           <div className="grid md:grid-cols-2 gap-16">
             <div className="space-y-8">
@@ -18,8 +20,8 @@ export const HowItWorks = () => {
                     Participate in challenges
                   </h3>
                   <p className="text-muted-foreground">
-                    Complete real-world technical challenges designed to
-                    showcase your skills and problem-solving abilities.
+                    Complete real-world technical challenges designed to show
+                    your ability to go from 0 to 1.
                   </p>
                 </div>
               </div>
@@ -34,7 +36,7 @@ export const HowItWorks = () => {
                   </h3>
                   <p className="text-muted-foreground">
                     Each completed challenge adds to your verified skill
-                    profile, creating a dynamic portfolio of your capabilities.
+                    profile, creating hard proof of your technical abilities.
                   </p>
                 </div>
               </div>
@@ -48,8 +50,7 @@ export const HowItWorks = () => {
                     Get matched with opportunities
                   </h3>
                   <p className="text-muted-foreground">
-                    Companies review challenge results and contact candidates
-                    with proven skills that match their requirements.
+                    We connect top startups with the best performers.
                   </p>
                 </div>
               </div>

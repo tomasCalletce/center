@@ -35,14 +35,14 @@ export const Companies = () => {
               <div className="text-muted-foreground">
                 <p>
                   Connect with talent that is able to take products from 0 to 1.
-                  Hire based on results, products built, and challenges passed
-                  instead of worthless credentials.
+                  Hire based on results and products built instead of worthless
+                  credentials.
                 </p>
               </div>
 
               <div className="pt-2">
                 <Link
-                  href="https://cal.com/tomas-calle-1oj8wr/30min4"
+                  href="https://cal.com/tomas-calle-1oj8wr/30min"
                   className={buttonVariants({
                     variant: "default",
                     size: "default",

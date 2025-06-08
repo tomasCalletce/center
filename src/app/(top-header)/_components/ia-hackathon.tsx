@@ -66,15 +66,13 @@ export const AiHackathon = () => {
                   Event Highlights
                 </span>
               </div>
-
               <h3 className="text-3xl font-medium tracking-tight">
-                Watch our hackathon in action
+                AI Hackathon Recap
               </h3>
-
               <p className="text-muted-foreground max-w-2xl">
-                Experience the energy, innovation, and collaboration from our
-                successful AI hackathon event. See the teams in action and
-                witness the breakthrough solutions that emerged.
+                This hackathon reached over +800 hackers from over 5 countries
+                of LATAM. We plan on hosting more events like this to connect
+                the best talent with top companies.
               </p>
             </div>
 

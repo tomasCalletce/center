@@ -23,10 +23,10 @@ export const TopHero = () => {
             </h1>
 
             <p className="text-muted-foreground">
-              We host challenges and work to connect the best performers with
-              top companies. Demonstrate your technical expertise through
-              real-world problems and get discovered by blue-chip employers
-              looking for exceptional talent.
+              We host hackathon style challenges and work to connect the best
+              performers with top companies. Demonstrate your technical
+              expertise through real-world problems and get hired by top
+              startups looking for exceptional talent.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
