@@ -14,7 +14,7 @@ interface ChallengeDetailsProps {
 export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
   _challenge,
 }) => {
-  const challenge = await api.challenge.details({ _challenge });
+  const challenge = await api.public.challenge.details({ _challenge });
 
   const timeLeft = challenge.deadline_at
     ? formatDistanceToNow(new Date(challenge.deadline_at), {
