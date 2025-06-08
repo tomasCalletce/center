@@ -8,16 +8,6 @@ export const Companies = () => {
       <div className="container mx-auto px-4 mb-16">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-4">
-              <div className="relative aspect-square max-w-md mx-auto rounded-xl overflow-hidden shadow-lg">
-                <Image
-                  src="/see_sky.png"
-                  alt="Talented developers reaching new heights"
-                  fill
-                  className="object-cover object-center"
-                />
-              </div>
-            </div>
             <div className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">

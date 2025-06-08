@@ -13,7 +13,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center px-4">
         <Link href="/" className="mr-8 flex items-center space-x-2">
           <span className="text-2xl font-bold">
-            ACC<span className="text-primary">.</span>
+            ACC<span className="text-slate-900">.</span>
           </span>
         </Link>
 

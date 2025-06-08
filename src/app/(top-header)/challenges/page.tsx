@@ -12,9 +12,9 @@ export default async function Home() {
           <div className="relative px-8 py-20">
             <div className="mx-auto max-w-4xl text-center space-y-12">
               <div className="mx-auto w-fit group">
-                <div className="from-primary/20 via-primary/10 border-primary/20 relative flex h-20 w-20 items-center justify-center rounded-2xl border bg-gradient-to-br to-transparent shadow-lg transition-transform duration-300 group-hover:scale-105">
-                  <div className="from-primary to-primary/80 rounded-xl bg-gradient-to-br p-4 shadow-inner">
-                    <Zap className="text-primary-foreground h-7 w-7" />
+                <div className="from-slate-900/20 via-slate-900/10 border-slate-900/20 relative flex h-20 w-20 items-center justify-center rounded-2xl border bg-gradient-to-br to-transparent shadow-lg transition-transform duration-300 group-hover:scale-105">
+                  <div className="from-slate-900 to-slate-900/80 rounded-xl bg-gradient-to-br p-4 shadow-inner">
+                    <Zap className="text-white h-7 w-7" />
                   </div>
                 </div>
               </div>
@@ -35,8 +35,7 @@ export default async function Home() {
                     Build. Compete. Connect.
                   </h1>
                   <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
-                    Join talented developers solving real problems for
-                    world-class startups. Your next opportunity starts here.
+                    Build products from 0 to connect with world class startups.
                   </p>
                 </div>
               </SignedOut>

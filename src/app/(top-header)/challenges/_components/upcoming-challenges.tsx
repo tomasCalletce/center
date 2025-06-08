@@ -42,7 +42,7 @@ export const UpcomingChallenges = async () => {
             <Button className="w-full cursor-pointer">
               <Bell className="mr-2 h-4 w-4" />
               Get Notified
-              <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full">
+              <span className="ml-2 text-xs text-primary bg-white px-2 py-0.5 rounded-full">
                 Coming Soon
               </span>
             </Button>
