@@ -78,7 +78,7 @@ export const AiHackathon = () => {
               </p>
             </div>
 
-            <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl bg-slate-50">
+            <div className="relative aspect-video rounded-xl overflow-hidden">
               <iframe
                 src="https://www.youtube.com/embed/VzN9gE7CRow"
                 title="AI Hackathon Event Recap"
