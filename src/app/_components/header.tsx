@@ -6,14 +6,12 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
-import { buttonVariants } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 
 export function Header() {
   return (
@@ -62,13 +60,27 @@ export function Header() {
         </NavigationMenu>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <nav className="flex items-center gap-2">
-            {/* Authentication temporarily disabled */}
-
-            <Badge variant="outline" className="gap-1.5 px-3 py-1">
-              <div className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
-              Coming Soon
-            </Badge>
+          <nav className="flex items-center gap-3">
+            <Link
+              href="#"
+              className={buttonVariants({
+                variant: "ghost",
+                size: "sm",
+                className: "h-9 px-4 text-sm font-medium",
+              })}
+            >
+              Host Challenge
+            </Link>
+            <Link
+              href="#"
+              className={buttonVariants({
+                variant: "default",
+                size: "sm",
+                className: "h-9 px-4 text-sm font-medium",
+              })}
+            >
+              Find Talent
+            </Link>
           </nav>
         </div>
       </div>
