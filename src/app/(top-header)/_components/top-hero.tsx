@@ -45,7 +45,7 @@ export const TopHero = () => {
               </Link>
 
               <Link
-                href="mailto:team@letsacc.com"
+                href="https://cal.com/tomas-calle-1oj8wr/30min"
                 className={buttonVariants({
                   variant: "outline",
                   size: "default",

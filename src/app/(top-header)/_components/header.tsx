@@ -62,7 +62,7 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center gap-3">
             <Link
-              href="#"
+              href="https://cal.com/tomas-calle-1oj8wr/30min"
               className={buttonVariants({
                 variant: "ghost",
                 size: "sm",
@@ -72,7 +72,7 @@ export function Header() {
               Host Challenge
             </Link>
             <Link
-              href="#"
+              href="https://cal.com/tomas-calle-1oj8wr/30min"
               className={buttonVariants({
                 variant: "default",
                 size: "sm",
