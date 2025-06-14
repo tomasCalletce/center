@@ -9,6 +9,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { challenges } from "~/server/db/schemas/challenges";
+import { teams } from "~/server/db/schemas/teams";
 import {
   images,
   formImagesSchema,
@@ -24,7 +25,9 @@ export const submissionVisibilityEnumSchema = pgEnum("submission_visibility", [
 
 export const submissions = pgTable("submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  _clerk: varchar("_user", { length: 32 }).notNull(),
+  _team: uuid("_team")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
   _challenge: uuid("_challenge").references(() => challenges.id),
   _logo_image: uuid("_logo_image").references(() => images.id),
   title: varchar("title", { length: 255 }).notNull(),
@@ -32,6 +35,7 @@ export const submissions = pgTable("submissions", {
   demo_url: text("demo_url").notNull(),
   repository_url: text("repository_url").notNull(),
   status: submissionVisibilityEnumSchema("status").notNull(),
+  submitted_by: varchar("submitted_by", { length: 32 }).notNull().default("unknown"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -39,8 +43,9 @@ export const submissions = pgTable("submissions", {
 export const verifySubmissionsSchema = createInsertSchema(submissions)
   .omit({
     id: true,
-    _clerk: true,
+    _team: true,
     _logo_image: true,
+    submitted_by: true,
     created_at: true,
     updated_at: true,
   })
@@ -51,11 +56,12 @@ export const verifySubmissionsSchema = createInsertSchema(submissions)
 export const formSubmissionSchema = createInsertSchema(submissions)
   .omit({
     id: true,
-    _clerk: true,
+    _team: true,
     _challenge: true,
     _logo_image: true,
     demo_url: true,
     repository_url: true,
+    submitted_by: true,
     created_at: true,
     updated_at: true,
   })
