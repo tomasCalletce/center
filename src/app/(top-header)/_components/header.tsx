@@ -16,7 +16,6 @@ export function Header() {
             ACC<span className="text-slate-900">.</span>
           </span>
         </Link>
-
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -31,7 +30,6 @@ export function Header() {
                 Challenges
               </Link>
             </NavigationMenuItem>
-
             <SignedIn>
               <NavigationMenuItem>
                 <Link
