@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, FileText, X, FileUp, ArrowRight } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  X,
+  FileUp,
+  ArrowRight,
+  CheckCircle,
+} from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { saveCv } from "~/app/onboarding/_actions/save-cv";
 import { useUser } from "@clerk/nextjs";
@@ -93,7 +100,7 @@ export const UploadCV = () => {
               Drop your CV here or click to browse
             </p>
             <p className="text-xs text-muted-foreground">
-              PDF format only (Max 10MB)
+              <span className="font-bold">PDF format only</span> (Max 10MB)
             </p>
           </div>
         ) : (
@@ -108,14 +115,14 @@ export const UploadCV = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-500 hover:text-destructive cursor-pointer hover:bg-transparent"
+              className="text-destructive cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedFile(null);
                 if (fileInputRef.current) fileInputRef.current.value = "";
               }}
             >
-              <X className="w-3.5 h-3.5 mr-1" />
+              <X className="w-3.5 h-3.5" />
               Remove
             </Button>
           </div>
@@ -126,13 +133,13 @@ export const UploadCV = () => {
         <div className="mt-4 rounded-md bg-muted/50 p-3 border border-border space-y-4">
           <div className="flex items-start gap-2">
             <div className="mt-0.5">
-              <FileText className="h-4 w-4 text-primary" />
+              <CheckCircle className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-medium">Next: AI Interview</p>
+              <p className="text-sm font-medium">Done</p>
               <p className="text-xs text-muted-foreground">
-                We'll ask you a few questions about your experience based on
-                your CV
+                You can now register for challenges and apply to top startup
+                jobs
               </p>
             </div>
           </div>
@@ -141,7 +148,7 @@ export const UploadCV = () => {
             isLoading={isUploading}
             className="w-full cursor-pointer"
           >
-            Next
+            Get Started
             <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </div>

@@ -14,7 +14,6 @@ export default function OnboardingComponent() {
         <main className="flex flex-1 items-center justify-center px-4">
           <MainOnboardingForm />
         </main>
-
         <StepIndicator />
       </div>
     </HydrateClient>
