@@ -3,3 +3,8 @@ export * from "~/server/db/schemas/challenges";
 export * from "~/server/db/schemas/asset";
 export * from "~/server/db/schemas/images";
 export * from "~/server/db/schemas/submissions";
+export * from "~/server/db/schemas/teams";
+export * from "~/server/db/schemas/team-members";
+export * from "~/server/db/schemas/team-invitations";
+export * from "~/server/db/schemas/challenge-participants";
+export * from "~/server/db/schemas/user-profiles";
