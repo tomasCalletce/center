@@ -2,7 +2,6 @@ import {
   pgTable,
   timestamp,
   varchar,
-  pgEnum,
   uuid,
   text,
   integer,
@@ -11,103 +10,6 @@ import {
   date,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
-
-export const employmentStatusEnum = z.enum([
-  "EMPLOYED",
-  "UNEMPLOYED",
-  "FREELANCER",
-  "STUDENT",
-  "LOOKING",
-]);
-export const employmentStatusValues = employmentStatusEnum.Values;
-export const employmentStatusEnumSchema = pgEnum("employment_status", [
-  "EMPLOYED",
-  "UNEMPLOYED",
-  "FREELANCER",
-  "STUDENT",
-  "LOOKING",
-]);
-
-export const experienceLevelEnum = z.enum([
-  "ENTRY",
-  "JUNIOR",
-  "MID",
-  "SENIOR",
-  "LEAD",
-  "EXECUTIVE",
-]);
-export const experienceLevelValues = experienceLevelEnum.Values;
-export const experienceLevelEnumSchema = pgEnum("experience_level", [
-  "ENTRY",
-  "JUNIOR",
-  "MID",
-  "SENIOR",
-  "LEAD",
-  "EXECUTIVE",
-]);
-
-export const workPreferenceEnum = z.enum([
-  "REMOTE",
-  "HYBRID",
-  "ONSITE",
-  "FLEXIBLE",
-]);
-export const workPreferenceValues = workPreferenceEnum.Values;
-export const workPreferenceEnumSchema = pgEnum("work_preference", [
-  "REMOTE",
-  "HYBRID",
-  "ONSITE",
-  "FLEXIBLE",
-]);
-
-export const jobTypePreferenceEnum = z.enum([
-  "FULLTIME",
-  "PARTTIME",
-  "CONTRACT",
-  "FREELANCE",
-  "INTERNSHIP",
-]);
-export const jobTypePreferenceValues = jobTypePreferenceEnum.Values;
-export const jobTypePreferenceEnumSchema = pgEnum("job_type_preference", [
-  "FULLTIME",
-  "PARTTIME",
-  "CONTRACT",
-  "FREELANCE",
-  "INTERNSHIP",
-]);
-
-export const companySizePreferenceEnum = z.enum([
-  "STARTUP",
-  "SMALL",
-  "MEDIUM",
-  "LARGE",
-  "ENTERPRISE",
-]);
-export const companySizePreferenceValues = companySizePreferenceEnum.Values;
-export const companySizePreferenceEnumSchema = pgEnum("company_size_preference", [
-  "STARTUP",
-  "SMALL",
-  "MEDIUM",
-  "LARGE",
-  "ENTERPRISE",
-]);
-
-export const visaStatusEnum = z.enum([
-  "CITIZEN",
-  "PERMANENT_RESIDENT",
-  "WORK_VISA",
-  "STUDENT_VISA",
-  "REQUIRES_SPONSORSHIP",
-]);
-export const visaStatusValues = visaStatusEnum.Values;
-export const visaStatusEnumSchema = pgEnum("visa_status", [
-  "CITIZEN",
-  "PERMANENT_RESIDENT",
-  "WORK_VISA",
-  "STUDENT_VISA",
-  "REQUIRES_SPONSORSHIP",
-]);
 
 export const userProfiles = pgTable("user_profiles", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -126,14 +28,14 @@ export const userProfiles = pgTable("user_profiles", {
   // Location & Availability
   location: varchar("location", { length: 255 }),
   timezone: varchar("timezone", { length: 100 }),
-  employment_status: employmentStatusEnumSchema("employment_status"),
+  employment_status: varchar("employment_status", { length: 100 }),
   available_for_hire: boolean("available_for_hire").default(false).notNull(),
   
   // Professional Info
   current_title: varchar("current_title", { length: 255 }),
   current_company: varchar("current_company", { length: 255 }),
   industry: varchar("industry", { length: 255 }),
-  experience_level: experienceLevelEnumSchema("experience_level"),
+  experience_level: varchar("experience_level", { length: 100 }),
   years_of_experience: integer("years_of_experience"),
   hourly_rate: integer("hourly_rate"),
   
@@ -141,7 +43,7 @@ export const userProfiles = pgTable("user_profiles", {
   job_seeking_status: boolean("job_seeking_status").default(false).notNull(),
   job_type_preferences: jsonb("job_type_preferences"),
   work_preferences: jsonb("work_preferences"),
-  company_size_pref: jsonb("company_size_pref"),
+  company_size_pref: varchar("company_size_pref", { length: 100 }),
   preferred_industries: jsonb("preferred_industries"),
   
   // Compensation & Benefits
@@ -156,7 +58,7 @@ export const userProfiles = pgTable("user_profiles", {
   notice_period_weeks: integer("notice_period_weeks").default(2),
   willing_to_relocate: boolean("willing_to_relocate").default(false),
   preferred_locations: jsonb("preferred_locations"),
-  visa_status: visaStatusEnumSchema("visa_status"),
+  visa_status: varchar("visa_status", { length: 100 }),
   security_clearance: varchar("security_clearance", { length: 255 }),
   
   // Career Goals & Preferences

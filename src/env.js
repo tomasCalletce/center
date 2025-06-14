@@ -12,6 +12,7 @@ export const env = createEnv({
     DATABASE_URI: z.string(),
     BLOB_READ_WRITE_TOKEN: z.string(),
     ANTHROPIC_API_KEY: z.string(),
+    TRIGGER_SECRET_KEY: z.string(),
   },
 
   /**
@@ -43,6 +44,7 @@ export const env = createEnv({
     DATABASE_URI: process.env.DATABASE_URI,
     BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
