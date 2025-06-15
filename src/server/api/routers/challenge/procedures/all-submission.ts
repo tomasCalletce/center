@@ -3,7 +3,7 @@ import { db } from "~/server/db/connection";
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
 import { submissions } from "~/server/db/schemas/submissions";
-import { images } from "~/server/db/schemas/images";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 
 export const allSubmissions = protectedProcedure
@@ -16,7 +16,7 @@ export const allSubmissions = protectedProcedure
     const allSubmissions = await db
       .select({
         id: submissions.id,
-        _clerk: submissions._clerk,
+        _team: submissions._team,
         status: submissions.status,
         title: submissions.title,
         description: submissions.description,
@@ -25,18 +25,18 @@ export const allSubmissions = protectedProcedure
         images: {
           pathname: assets.pathname,
           url: assets.url,
-          alt: images.alt,
+          alt: assetsImages.alt,
         },
         created_at: submissions.created_at,
         updated_at: submissions.updated_at,
       })
       .from(submissions)
-      .innerJoin(images, eq(submissions._logo_image, images.id))
-      .innerJoin(assets, eq(images._asset, assets.id))
+      .innerJoin(assetsImages, eq(submissions._logo_image, assetsImages.id))
+      .innerJoin(assets, eq(assetsImages._asset, assets.id))
       .where(
         and(
           eq(submissions._challenge, input._challenge),
-          eq(submissions._clerk, ctx.auth.userId)
+          eq(submissions._team, ctx.auth.userId)
         )
       );
 

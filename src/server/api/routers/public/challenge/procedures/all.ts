@@ -7,7 +7,7 @@ import {
 import { z } from "zod";
 import { asc, eq } from "drizzle-orm";
 import { assets } from "~/server/db/schemas/asset";
-import { images } from "~/server/db/schemas/images";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 
 export const all = publicProcedure
   .input(
@@ -27,12 +27,12 @@ export const all = publicProcedure
         image: {
           pathname: assets.pathname,
           url: assets.url,
-          alt: images.alt,
+          alt: assetsImages.alt,
         },
       })
       .from(challenges)
-      .innerJoin(images, eq(challenges._image, images.id))
-      .innerJoin(assets, eq(images._asset, assets.id))
+      .innerJoin(assetsImages, eq(challenges._image, assetsImages.id))
+      .innerJoin(assets, eq(assetsImages._asset, assets.id))
       .where(eq(challenges.visibility, challengeVisibilityValues.VISIBLE))
       .limit(input.limit)
       .offset(input.offset)

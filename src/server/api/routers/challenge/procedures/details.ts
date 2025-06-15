@@ -3,7 +3,7 @@ import { db } from "~/server/db/connection";
 import { challenges } from "~/server/db/schemas/challenges";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import { images } from "~/server/db/schemas/images";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 import { TRPCError } from "@trpc/server";
 
@@ -24,12 +24,12 @@ export const details = protectedProcedure
         image: {
           pathname: assets.pathname,
           url: assets.url,
-          alt: images.alt,
+          alt: assetsImages.alt,
         },
       })
       .from(challenges)
-      .innerJoin(images, eq(challenges._image, images.id))
-      .innerJoin(assets, eq(images._asset, assets.id))
+      .innerJoin(assetsImages, eq(challenges._image, assetsImages.id))
+      .innerJoin(assets, eq(assetsImages._asset, assets.id))
       .where(eq(challenges.id, input._challenge));
     if (!challenge) {
       throw new TRPCError({

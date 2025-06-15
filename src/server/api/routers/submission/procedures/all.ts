@@ -4,7 +4,7 @@ import { challenges } from "~/server/db/schemas/challenges";
 import { z } from "zod";
 import { asc, eq } from "drizzle-orm";
 import { submissions } from "~/server/db/schemas/submissions";
-import { images } from "~/server/db/schemas/images";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 
 export const all = protectedProcedure
@@ -30,14 +30,14 @@ export const all = protectedProcedure
         image: {
           pathname: assets.pathname,
           url: assets.url,
-          alt: images.alt,
+          alt: assetsImages.alt,
         },
       })
       .from(submissions)
       .innerJoin(challenges, eq(submissions._challenge, challenges.id))
-      .innerJoin(images, eq(challenges._image, images.id))
-      .innerJoin(assets, eq(images._asset, assets.id))
-      .where(eq(submissions._clerk, ctx.auth.userId))
+      .innerJoin(assetsImages, eq(challenges._image, assetsImages.id))
+      .innerJoin(assets, eq(assetsImages._asset, assets.id))
+      .where(eq(submissions._team, ctx.auth.userId))
       .limit(input.limit)
       .offset(input.offset)
       .orderBy(asc(challenges.deadline_at));

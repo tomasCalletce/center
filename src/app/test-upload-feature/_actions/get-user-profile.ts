@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "~/server/db/connection";
-import { userProfiles } from "~/server/db/schemas/user-profiles";
+import { userProfiles } from "~/server/db/schemas/users";
 import { eq } from "drizzle-orm";
 
 const TEST_USER_ID = "user_2yQg3DsQZGcYB1ZiBedp0miD0pT";
@@ -53,4 +53,4 @@ export async function fetchMarkdownContent(url: string) {
       content: "",
     };
   }
-} 
+}

@@ -11,10 +11,10 @@ import { z } from "zod";
 import { challenges } from "~/server/db/schemas/challenges";
 import { teams } from "~/server/db/schemas/teams";
 import {
-  images,
+  assetsImages,
   formImagesSchema,
   verifyImagesSchema,
-} from "~/server/db/schemas/images";
+} from "~/server/db/schemas/assets-images";
 
 export const submissionVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
 export const submissionVisibilityValues = submissionVisibilityEnum.Values;
@@ -29,13 +29,15 @@ export const submissions = pgTable("submissions", {
     .notNull()
     .references(() => teams.id, { onDelete: "cascade" }),
   _challenge: uuid("_challenge").references(() => challenges.id),
-  _logo_image: uuid("_logo_image").references(() => images.id),
+  _logo_image: uuid("_logo_image").references(() => assetsImages.id),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description"),
   demo_url: text("demo_url").notNull(),
   repository_url: text("repository_url").notNull(),
   status: submissionVisibilityEnumSchema("status").notNull(),
-  submitted_by: varchar("submitted_by", { length: 32 }).notNull().default("unknown"),
+  submitted_by: varchar("submitted_by", { length: 32 })
+    .notNull()
+    .default("unknown"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

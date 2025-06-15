@@ -6,7 +6,7 @@ import {
   verifyAssetsSchema,
 } from "~/server/db/schemas/asset";
 
-export const images = pgTable("images", {
+export const assetsImages = pgTable("assets_images", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_user", { length: 32 }).notNull(),
   _asset: uuid("_asset").references(() => assets.id),
@@ -15,7 +15,7 @@ export const images = pgTable("images", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifyImagesSchema = createInsertSchema(images)
+export const verifyImagesSchema = createInsertSchema(assetsImages)
   .omit({
     id: true,
     _clerk: true,
@@ -26,7 +26,7 @@ export const verifyImagesSchema = createInsertSchema(images)
     verifyAssetsSchema,
   });
 
-export const formImagesSchema = createInsertSchema(images)
+export const formImagesSchema = createInsertSchema(assetsImages)
   .omit({
     id: true,
     _clerk: true,

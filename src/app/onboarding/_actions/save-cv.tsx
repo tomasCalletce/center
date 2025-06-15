@@ -3,7 +3,7 @@
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { api } from "~/trpc/server";
-import { documentTypeValues } from "~/server/db/schemas/documents";
+import { documentTypeValues } from "~/server/db/schemas/assets-pdf";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { ONBOARDING_STATUS } from "~/types/onboarding";
 
@@ -15,17 +15,18 @@ export async function saveCv(formData: FormData) {
   }
 
   const file = formData.get("file") as File;
-  const blob = await put(file.name, file, {
+  const blob = await put(`${userId}/${file.name}`, file, {
     access: "public",
     addRandomSuffix: true,
   });
   revalidatePath("/");
 
-  const documentMutation = await api.documents.createCV({
-    pathname: blob.pathname,
+  const documentMutation = await api.asset.pdf.createCV({
+    verifyAssetsSchema: {
+      pathname: blob.pathname,
+      url: blob.url,
+    },
     type: documentTypeValues.CV,
-    content_type: blob.contentType,
-    url: blob.url,
   });
 
   if (!documentMutation) {
@@ -35,7 +36,7 @@ export async function saveCv(formData: FormData) {
   const client = await clerkClient();
   const metadataResponse = await client.users.updateUser(userId, {
     publicMetadata: {
-      onboardingStatus: undefined,
+      onboardingStatus: ONBOARDING_STATUS.COMPLETED,
     },
   });
 

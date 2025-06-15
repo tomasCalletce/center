@@ -6,7 +6,7 @@ import {
   challenges,
   challengeVisibilityValues,
 } from "~/server/db/schemas/challenges";
-import { images } from "~/server/db/schemas/images";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 
 export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
   const [newDocument] = await db
@@ -26,13 +26,13 @@ export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
   }
 
   const [newImage] = await db
-    .insert(images)
+    .insert(assetsImages)
     .values({
       _clerk: ctx.auth.userId,
       _asset: newDocument.id,
       alt: "super challenge",
     })
-    .returning({ id: images.id });
+    .returning({ id: assetsImages.id });
   if (!newImage) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

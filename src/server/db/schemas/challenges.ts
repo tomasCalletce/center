@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { images } from "~/server/db/schemas/images";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 
 export const challengeVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
 export const challengeVisibilityValues = challengeVisibilityEnum.Values;
@@ -31,7 +31,7 @@ export const challenges = pgTable("challenges", {
   _clerk: varchar("_user", { length: 32 }).notNull(),
   _image: uuid("_image")
     .notNull()
-    .references(() => images.id),
+    .references(() => assetsImages.id),
   title: varchar("title", { length: 255 }).notNull(),
   markdown: text("markdown"),
   price_pool: integer("price_pool").notNull(),
