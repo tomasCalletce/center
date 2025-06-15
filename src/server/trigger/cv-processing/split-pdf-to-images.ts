@@ -7,7 +7,7 @@ import { z } from "zod";
 import { dbSocket } from "~/server/db/connection";
 import { assets } from "~/server/db/schemas/asset";
 import { assetsImages } from "~/server/db/schemas/assets-images";
-import { pdfPageImages } from "~/server/db/schemas/pdf_page_images";
+import { pdfPageImages } from "~/server/db/schemas/pdf-page-images";
 
 export const splitPdfToImagesTask = schemaTask({
   id: "onboarding.split-pdf-to-images",
