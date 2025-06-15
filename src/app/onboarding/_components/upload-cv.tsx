@@ -8,6 +8,7 @@ import {
   FileUp,
   ArrowRight,
   CheckCircle,
+  Info,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { saveCv } from "~/app/onboarding/_actions/save-cv";
@@ -136,10 +137,9 @@ export const UploadCV = () => {
               <CheckCircle className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-medium">Done</p>
+              <p className="text-sm font-medium">Upload your cv?</p>
               <p className="text-xs text-muted-foreground">
-                You can now register for challenges and apply to top startup
-                jobs
+                We'll analyze your skills to personalize your experience.
               </p>
             </div>
           </div>
@@ -151,6 +151,21 @@ export const UploadCV = () => {
             Get Started
             <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
+
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-blue-50/50 to-indigo-50/50 border border-blue-100/60 backdrop-blur-sm">
+            <div className="flex-shrink-0">
+              <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center">
+                <Info className="w-3 h-3 text-blue-600" />
+              </div>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              By clicking "Get Started", you agree to our{" "}
+              <span className="font-semibold text-blue-700 hover:text-blue-800 cursor-pointer transition-colors">
+                data policies
+              </span>{" "}
+              and consent to CV analysis for job matching.
+            </p>
+          </div>
         </div>
       )}
     </div>
