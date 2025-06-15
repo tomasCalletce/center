@@ -11,7 +11,7 @@ export const env = createEnv({
     CLERK_SECRET_KEY: z.string(),
     DATABASE_URI: z.string(),
     BLOB_READ_WRITE_TOKEN: z.string(),
-    ANTHROPIC_API_KEY: z.string(),
+    OPENAI_API_KEY: z.string(),
     TRIGGER_SECRET_KEY: z.string(),
   },
 
@@ -43,8 +43,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL,
     DATABASE_URI: process.env.DATABASE_URI,
     BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
-    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

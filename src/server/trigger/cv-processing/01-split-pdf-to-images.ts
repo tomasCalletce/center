@@ -57,7 +57,7 @@ export const splitPdfToImagesTask = schemaTask({
       }
 
       for (const { blob, pageNumber } of processedFiles) {
-        const [asset] = await tx
+        const [newAsset] = await tx
           .insert(assets)
           .values({
             _clerk: userId,
@@ -65,7 +65,7 @@ export const splitPdfToImagesTask = schemaTask({
             pathname: blob.pathname,
           })
           .returning({ id: assets.id });
-        if (!asset) {
+        if (!newAsset) {
           throw new Error("Failed to create asset");
         }
 
@@ -73,7 +73,7 @@ export const splitPdfToImagesTask = schemaTask({
           .insert(assetsImages)
           .values({
             _clerk: userId,
-            _asset: asset.id,
+            _asset: newAsset.id,
             alt: `CV Page ${pageNumber}`,
           })
           .returning({ id: assetsImages.id });
@@ -93,7 +93,11 @@ export const splitPdfToImagesTask = schemaTask({
           throw new Error("Failed to create pdf page image");
         }
 
-        uploadedUrls.push(blob.url);
+        uploadedUrls.push({
+          id: imageAsset.id,
+          url: blob.url,
+          pageNumber: pageNumber,
+        });
       }
 
       return { imageUrls: uploadedUrls };
