@@ -15,7 +15,7 @@ export async function saveCv(formData: FormData) {
   }
 
   const file = formData.get("file") as File;
-  const blob = await put(file.name, file, {
+  const blob = await put(`${userId}/cv/raw/${file.name}`, file, {
     access: "public",
     addRandomSuffix: true,
   });
