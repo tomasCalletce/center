@@ -2,9 +2,9 @@ import { protectedProcedure } from "~/server/api/trpc";
 import { assets } from "~/server/db/schemas/asset";
 import { submissions } from "~/server/db/schemas/submissions";
 import { TRPCError } from "@trpc/server";
-import { db, dbSocket } from "~/server/db/connection";
+import { dbSocket } from "~/server/db/connection";
 import { verifySubmissionsSchema } from "~/server/db/schemas/submissions";
-import { images } from "~/server/db/schemas/images";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 
 export const create = protectedProcedure
   .input(verifySubmissionsSchema)
@@ -26,13 +26,13 @@ export const create = protectedProcedure
       }
 
       const [newImage] = await tx
-        .insert(images)
+        .insert(assetsImages)
         .values({
           _clerk: ctx.auth.userId,
           _asset: newAsset.id,
           alt: input.verifyImagesSchema.alt,
         })
-        .returning({ id: images.id });
+        .returning({ id: assetsImages.id });
       if (!newImage) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -43,7 +43,7 @@ export const create = protectedProcedure
       const [newSubmission] = await tx
         .insert(submissions)
         .values({
-          _clerk: ctx.auth.userId,
+          _team: ctx.auth.userId,
           _logo_image: newImage.id,
           _challenge: input._challenge,
           title: input.title,

@@ -1,7 +1,5 @@
-import { schemaTask } from "@trigger.dev/sdk/v3";
+import { schemaTask, tasks } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
-import { logger } from "@trigger.dev/sdk/v3";
-import { splitPdfToImagesTask } from "~/server/trigger/pdf-processing/split-pdf-to-images";
 
 export const mainOnboardingTask = schemaTask({
   id: "onboarding.main",
@@ -13,13 +11,16 @@ export const mainOnboardingTask = schemaTask({
     userId: z.string(),
   }),
   run: async ({ cv, userId }) => {
-    await splitPdfToImagesTask.trigger({
+    const splitPdfToImages = await tasks.triggerAndWait("split-pdf-to-images", {
       cv: {
         id: cv.id,
         url: cv.url,
       },
-      pathDestination: `${userId}/cv/processed/images/`,
+      userId,
     });
+    if (!splitPdfToImages.ok) {
+      throw new Error(`Task failed: ${splitPdfToImages.error}`);
+    }
 
     return {
       success: true,
