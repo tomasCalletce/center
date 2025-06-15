@@ -2,76 +2,55 @@ import { schemaTask } from "@trigger.dev/sdk/v3";
 import { generateObject } from "ai";
 import { z } from "zod";
 import { openai } from "@ai-sdk/openai";
+import { db } from "~/server/db/connection";
+import { users } from "~/server/db/schemas/users";
+
+const EmploymentTypeEnum = z.enum([
+  "full-time",
+  "part-time",
+  "freelance",
+  "internship",
+]);
 
 const userProfileSchema = z.object({
-  // Basic Information
-  display_name: z.string().optional(),
-  bio: z.string().optional(),
-  location: z.string().optional(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
+  // Essential Information (matches database schema)
+  display_name: z.string().nullable(),
+  email: z.string().email().nullable(),
+  location: z.string().nullable(),
+  current_title: z.string().nullable(),
 
-  // Social & Web Presence
-  github_username: z.string().optional(),
-  linkedin_url: z.string().url().optional(),
-  website_url: z.string().url().optional(),
-  portfolio_url: z.string().url().optional(),
+  // Experience History
+  experience: z
+    .array(
+      z.object({
+        company: z.string().nullable(),
+        title: z.string().nullable(),
+        employment_type: EmploymentTypeEnum.nullable(),
+        start_date: z.string().nullable(), // Format: "YYYY-MM" or "YYYY"
+        end_date: z.string().nullable(), // Format: "YYYY-MM" or "YYYY" or "present"
+        description: z.string().nullable(),
+        skills_used: z.array(z.string()).default([]),
+      })
+    )
+    .default([]),
 
-  // Employment & Career
-  current_title: z.string().optional(),
-  current_company: z.string().optional(),
-  industry: z.string().optional(),
-  experience_level: z.string().optional(),
-  years_of_experience: z.number().optional(),
-  employment_status: z.string().optional(),
-  available_for_hire: z.boolean().optional(),
-
-  // Job Preferences
-  job_seeking_status: z.boolean().optional(),
-  salary_expectation_min: z.number().optional(),
-  salary_expectation_max: z.number().optional(),
-  salary_currency: z.string().default("USD"),
-  work_preferences: z.array(z.string()).default([]),
-  preferred_locations: z.array(z.string()).default([]),
-  willing_to_relocate: z.boolean().optional(),
-
-  // Skills & Expertise
-  skills: z.array(z.string()).default([]),
-  programming_languages: z.array(z.string()).default([]),
-  frameworks: z.array(z.string()).default([]),
-  tools: z.array(z.string()).default([]),
-  soft_skills: z.array(z.string()).default([]),
-
-  // Education
+  // Education History
   education: z
     .array(
       z.object({
-        institution: z.string().optional(),
-        degree: z.string().optional(),
-        field: z.string().optional(),
-        graduation_year: z.string().optional(),
+        institution: z.string().nullable(),
+        degree: z.string().nullable(),
+        field_of_study: z.string().nullable(),
+        start_date: z.string().nullable(), // Format: "YYYY"
+        end_date: z.string().nullable(), // Format: "YYYY" or "present"
+        gpa: z.string().nullable(),
+        relevant_coursework: z.array(z.string()).default([]),
       })
     )
     .default([]),
-  certifications: z.array(z.string()).default([]),
-  languages: z.array(z.string()).default([]),
 
-  // Projects & Achievements
-  notable_projects: z
-    .array(
-      z.object({
-        name: z.string().optional(),
-        description: z.string().optional(),
-        technologies: z.array(z.string()).default([]),
-        url: z.string().url().optional(),
-      })
-    )
-    .default([]),
-  awards: z.array(z.string()).default([]),
-
-  // Career Goals
-  career_goals: z.string().optional(),
-  ideal_role: z.string().optional(),
+  // Skills (core matching criteria)
+  skills: z.array(z.string()).default([]),
 });
 
 export const extractJsonStructureTask = schemaTask({
@@ -80,21 +59,42 @@ export const extractJsonStructureTask = schemaTask({
     markdown: z.object({
       content: z.string(),
     }),
+    userId: z.string(),
   }),
-  run: async ({ markdown }) => {
+  run: async ({ markdown, userId }) => {
     const prompt = `
-      Extract comprehensive profile information from the following resume/CV document.
+      Extract key profile information from the following resume/CV document.
       
-      Focus on extracting:
-      - Personal details (name, contact info, location)
-      - Professional experience and current role
-      - Skills (technical and soft skills)
-      - Education and certifications
-      - Notable projects and achievements
-      - Career preferences and goals
+      Focus on extracting only these essential details:
+      - Display name: Extract a professional title or role description (e.g., "Frontend Developer in React", "Senior Software Engineer", "Full Stack Developer") NOT the person's actual name
+      - Location (city, state/country)
+      - Current job title (most recent or current position)
       
-      For missing information, omit the field rather than making assumptions.
-      Extract multiple items for arrays when available.
+      Work Experience (extract as structured array):
+      - Company name
+      - Job title/position
+      - Employment type: full-time, part-time, contract, freelance, internship, volunteer
+      - Start date (YYYY-MM format, or just YYYY if month unknown)
+      - End date (YYYY-MM format, or "present" if current, or just YYYY if month unknown)
+      - Brief description of role/responsibilities
+      - Skills/technologies used in that role
+      
+      Education (extract as structured array):
+      - Institution name
+      - Degree type (Bachelor's, Master's, PhD, Certificate, etc.)
+      - Field of study/major
+      - Start date (YYYY format)
+      - End date (YYYY format or "present" if ongoing)
+      - GPA (if mentioned)
+      - Relevant coursework (if mentioned)
+      
+      Guidelines:
+      - Extract ALL work experiences and education entries, even short-term ones
+      - Use "present" for end dates of current positions/studies
+      - If information is unclear or missing, set field to null
+      - Extract comprehensive skills from throughout the document
+      - For current_title, use the most recent job title or current position
+      - For display_name, create a professional title based on their experience and skills (e.g., "React Frontend Developer", "Python Backend Engineer", "Full Stack Developer")
       
       Document content:
       ${markdown.content}
@@ -107,8 +107,39 @@ export const extractJsonStructureTask = schemaTask({
       temperature: 0.1,
     });
 
+    const userData = {
+      _user: userId,
+      display_name: object.current_title,
+      location: object.location,
+      current_title: object.current_title,
+      experience: object.experience,
+      education: object.education,
+      skills: object.skills,
+    };
+
+    const [updatedUser] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users._user,
+        set: {
+          display_name: userData.display_name,
+          location: userData.location,
+          current_title: userData.current_title,
+          experience: userData.experience,
+          education: userData.education,
+          skills: userData.skills,
+        },
+      })
+      .returning({
+        id: users.id,
+      });
+    if (!updatedUser) {
+      throw new Error("Failed to upsert user");
+    }
+
     return {
-      extracted: object,
+      userId: updatedUser.id,
     };
   },
 });

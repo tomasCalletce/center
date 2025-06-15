@@ -13,16 +13,16 @@ export const consolidatedMarkdownTask = schemaTask({
       id: z.string(),
       url: z.string(),
     }),
-    content: z.array(z.string()),
+    markdownContents: z.array(z.string()),
     userId: z.string(),
   }),
-  run: async ({ cv, content, userId }) => {
+  run: async ({ cv, markdownContents, userId }) => {
     logger.log("Consolidating markdown from PDF pages", {
       cvUrl: cv.url,
       userId: userId,
     });
 
-    const consolidatedMarkdown = content.join("\n\n---\n\n");
+    const consolidatedMarkdown = markdownContents.join("\n\n---\n\n");
 
     const markdownBlob = await put(
       `${userId}/cv-${cv.id}-markdown.md`,
@@ -78,8 +78,8 @@ export const consolidatedMarkdownTask = schemaTask({
     });
 
     return {
-      ...result,
-      markdown: consolidatedMarkdown,
+      markdownAssetId: result.markdownAssetId,
+      rawMarkdown: consolidatedMarkdown,
     };
   },
 });

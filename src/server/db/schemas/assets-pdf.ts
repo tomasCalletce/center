@@ -4,14 +4,6 @@ import { z } from "zod";
 import { assets } from "~/server/db/schemas/asset";
 import { verifyAssetsSchema } from "~/server/db/schemas/asset";
 
-export const documentStatusEnum = z.enum(["PENDING", "APPROVED", "REJECTED"]);
-export const documentStatusValues = documentStatusEnum.Values;
-export const documentStatusEnumSchema = pgEnum("document_status", [
-  "PENDING",
-  "APPROVED",
-  "REJECTED",
-]);
-
 export const documentTypeEnum = z.enum(["CV"]);
 export const documentTypeValues = documentTypeEnum.Values;
 export const documentTypeEnumSchema = pgEnum("document_type", ["CV"]);

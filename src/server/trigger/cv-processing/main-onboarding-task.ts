@@ -55,7 +55,7 @@ export const mainOnboardingTask = schemaTask({
         id: cv.id,
         url: cv.url,
       },
-      content: markdownContent,
+      markdownContents: markdownContent,
       userId,
     });
     if (!consolidatedMarkdown.ok) {
@@ -66,8 +66,9 @@ export const mainOnboardingTask = schemaTask({
       typeof extractJsonStructureTask
     >("onboarding.extract-json-structure", {
       markdown: {
-        content: consolidatedMarkdown.output.markdown,
+        content: consolidatedMarkdown.output.rawMarkdown,
       },
+      userId,
     });
     if (!extractJsonStructure.ok) {
       throw new Error(`Extraction failed: ${extractJsonStructure.error}`);
@@ -75,8 +76,7 @@ export const mainOnboardingTask = schemaTask({
 
     return {
       success: true,
-      markdownUrl: consolidatedMarkdown.output.markdownUrl,
-      assetId: consolidatedMarkdown.output.assetId,
+      user: extractJsonStructure.output.userId,
     };
   },
 });
