@@ -10,4 +10,4 @@ export * from "~/server/db/schemas/challenge-participants";
 export * from "~/server/db/schemas/user-profiles";
 export * from "~/server/db/schemas/pdf-page-images";
 export * from "~/server/db/schemas/asset-markdown";
-export * from "~/server/db/schemas/image-markdowns";
+export * from "~/server/db/schemas/pdf-markdowns";
