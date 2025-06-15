@@ -43,7 +43,6 @@ export const consolidatedMarkdownTask = schemaTask({
           pathname: markdownBlob.pathname,
         })
         .returning({ id: assets.id });
-
       if (!newAsset) {
         throw new Error("Failed to create asset");
       }
@@ -55,7 +54,6 @@ export const consolidatedMarkdownTask = schemaTask({
           _asset: newAsset.id,
         })
         .returning({ id: assetsMarkdown.id });
-
       if (!newMarkdownAsset) {
         throw new Error("Failed to create asset markdown");
       }
@@ -67,7 +65,6 @@ export const consolidatedMarkdownTask = schemaTask({
           _markdown_asset: newMarkdownAsset.id,
         })
         .returning({ id: pdfMarkdowns.id });
-
       if (!newPdfMarkdown) {
         throw new Error("Failed to create PDF markdown");
       }
@@ -80,6 +77,9 @@ export const consolidatedMarkdownTask = schemaTask({
       };
     });
 
-    return result;
+    return {
+      ...result,
+      markdown: consolidatedMarkdown,
+    };
   },
 });

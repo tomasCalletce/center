@@ -3,6 +3,7 @@ import { z } from "zod";
 import { splitPdfToImagesTask } from "~/server/trigger/cv-processing/01-split-pdf-to-images";
 import { imageToMarkdownTask } from "~/server/trigger/cv-processing/02-image-to-markdown";
 import { consolidatedMarkdownTask } from "~/server/trigger/cv-processing/03-consolidated-markdown";
+import { extractJsonStructureTask } from "~/server/trigger/cv-processing/04-extract-json-structure";
 
 export const mainOnboardingTask = schemaTask({
   id: "onboarding.main",
@@ -40,7 +41,6 @@ export const mainOnboardingTask = schemaTask({
         },
       }))
     );
-
     const markdownContent = imageToMarkdownResults.runs.map((run) => {
       if (run.ok) {
         return run.output.markdown;
@@ -58,9 +58,19 @@ export const mainOnboardingTask = schemaTask({
       content: markdownContent,
       userId,
     });
-
     if (!consolidatedMarkdown.ok) {
       throw new Error(`Consolidation failed: ${consolidatedMarkdown.error}`);
+    }
+
+    const extractJsonStructure = await tasks.triggerAndWait<
+      typeof extractJsonStructureTask
+    >("onboarding.extract-json-structure", {
+      markdown: {
+        content: consolidatedMarkdown.output.markdown,
+      },
+    });
+    if (!extractJsonStructure.ok) {
+      throw new Error(`Extraction failed: ${extractJsonStructure.error}`);
     }
 
     return {
