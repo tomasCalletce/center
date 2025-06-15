@@ -36,7 +36,7 @@ export async function saveCv(formData: FormData) {
   const client = await clerkClient();
   const metadataResponse = await client.users.updateUser(userId, {
     publicMetadata: {
-      onboardingStatus: undefined,
+      onboardingStatus: ONBOARDING_STATUS.COMPLETED,
     },
   });
 
