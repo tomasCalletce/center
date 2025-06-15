@@ -27,28 +27,6 @@ export const StepIndicator = () => {
               Upload CV
             </span>
           </div>
-          <div
-            className={`h-px w-8 ${
-              currentStep > 0 ? "bg-primary" : "bg-border"
-            }`}
-          />
-          <div className="flex items-center">
-            <Badge
-              variant={currentStep === 1 ? "default" : "outline"}
-              className={currentStep === 1 ? "ring-2 ring-primary/20" : ""}
-            >
-              2
-            </Badge>
-            <span
-              className={`ml-2 text-sm ${
-                currentStep === 1
-                  ? "font-medium text-foreground"
-                  : "text-muted-foreground"
-              }`}
-            >
-              Onboarding Interview
-            </span>
-          </div>
         </div>
       </div>
     </div>
