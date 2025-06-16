@@ -22,7 +22,7 @@ interface ChallengeSubmissionsProps {
 export const ChallengeSubmissions: React.FC<
   ChallengeSubmissionsProps
 > = async ({ _challenge }) => {
-  const allSubmissions = await api.challenge.allSubmissions({ _challenge });
+  const allSubmissions = await api.public.challenge.allSubmissions({ _challenge });
 
   return (
     <div className="space-y-6">
@@ -103,9 +103,14 @@ export const ChallengeSubmissions: React.FC<
                     <div className="flex-1 min-w-0">
                       {/* Title with inline icons */}
                       <div className="flex items-start justify-between gap-3 mb-3">
-                        <h3 className="font-bold text-xl text-foreground leading-tight group-hover:text-primary transition-colors duration-200">
-                          {submission.title}
-                        </h3>
+                        <div>
+                          <h3 className="font-bold text-xl text-foreground leading-tight group-hover:text-primary transition-colors duration-200">
+                            {submission.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            by {submission.team.name}
+                          </p>
+                        </div>
                         <div className="flex items-center gap-2 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
                           <Link
                             href={submission.repository_url}

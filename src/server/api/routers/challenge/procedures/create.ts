@@ -5,10 +5,17 @@ import { db } from "~/server/db/connection";
 import {
   challenges,
   challengeVisibilityValues,
+  verifyChallengesSchema,
 } from "~/server/db/schemas/challenges";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 
-export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
+const createChallengeSchema = verifyChallengesSchema.omit({
+  _image: true,
+});
+
+export const create = protectedProcedure
+  .input(createChallengeSchema)
+  .mutation(async ({ input, ctx }) => {
   const [newDocument] = await db
     .insert(assets)
     .values({
@@ -30,7 +37,7 @@ export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
     .values({
       _clerk: ctx.auth.userId,
       _asset: newDocument.id,
-      alt: "super challenge",
+      alt: input.title,
     })
     .returning({ id: assetsImages.id });
   if (!newImage) {
@@ -45,12 +52,12 @@ export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
     .values({
       _clerk: ctx.auth.userId,
       _image: newImage.id,
-      title: "titutlo",
-      markdown: "super challenge",
-      visibility: challengeVisibilityValues.VISIBLE,
-      price_pool: 100,
-      price_pool_currency: "USD",
-      deadline_at: new Date(),
+      title: input.title,
+      markdown: input.markdown,
+      visibility: input.visibility,
+      price_pool: input.price_pool,
+      price_pool_currency: input.price_pool_currency,
+      deadline_at: input.deadline_at,
     })
     .returning({ id: challenges.id });
   if (!newChallenge) {

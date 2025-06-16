@@ -15,12 +15,12 @@ export default async function ChallengePage({
     <HydrateClient>
       <div className="w-full px-6 py-6">
         <div className="space-y-6 mb-4">
-          {/* <ChallengeDetails _challenge={_challenge} /> */}
-          {/* <ChallengeParticipants _challenge={_challenge} /> */}
+          <ChallengeDetails _challenge={_challenge} />
+          <ChallengeParticipants _challenge={_challenge} />
         </div>
         <Separator />
         <div className="space-y-6 mt-4">
-          {/* <ChallengeSubmissions _challenge={_challenge} /> */}
+          <ChallengeSubmissions _challenge={_challenge} />
         </div>
       </div>
     </HydrateClient>
