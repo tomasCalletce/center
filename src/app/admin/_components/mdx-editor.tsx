@@ -1,69 +1,60 @@
 "use client";
 
-import { 
-  MDXEditor, 
+import dynamic from "next/dynamic";
+import "@mdxeditor/editor/style.css";
+import {
+  MDXEditor,
   type MDXEditorMethods,
-  // Plugins
   headingsPlugin,
-  quotePlugin,
   listsPlugin,
   linkPlugin,
-  linkDialogPlugin,
-  imagePlugin,
-  tablePlugin,
-  thematicBreakPlugin,
-  frontmatterPlugin,
-  codeBlockPlugin,
-  sandpackPlugin,
-  codeMirrorPlugin,
-  directivesPlugin,
-  diffSourcePlugin,
   markdownShortcutPlugin,
   toolbarPlugin,
-  // Toolbar components
-  UndoRedo,
   BoldItalicUnderlineToggles,
-  CodeToggle,
-  StrikeThroughSupSubToggles,
   ListsToggle,
-  CreateLink,
-  InsertImage,
-  InsertTable,
-  InsertThematicBreak,
-  InsertCodeBlock,
   BlockTypeSelect,
-  DiffSourceToggleWrapper,
   Separator,
-  // Directives
-  AdmonitionDirectiveDescriptor
 } from "@mdxeditor/editor";
-import { type FC, useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
-import '@mdxeditor/editor/style.css';
+import { type FC, useRef } from "react";
 
 interface EditorProps {
   markdown: string;
   editorRef?: React.MutableRefObject<MDXEditorMethods | null>;
   onChange?: (markdown: string) => void;
+  placeholder?: string;
 }
 
-/**
- * Full-featured MDX Editor with toolbar and plugins
- */
-const MDXEditorComponent: FC<EditorProps> = ({ markdown, editorRef, onChange }) => {
+const MDXEditorComponent: FC<EditorProps> = ({
+  markdown,
+  editorRef,
+  onChange,
+  placeholder,
+}) => {
   const localEditorRef = useRef<MDXEditorMethods | null>(null);
   const ref = editorRef || localEditorRef;
 
-  // Update editor content when markdown prop changes
-  useEffect(() => {
-    if (ref.current && markdown !== ref.current.getMarkdown()) {
-      ref.current.setMarkdown(markdown);
-    }
-  }, [markdown, ref]);
   return (
-    <div className="mdx-editor-wrapper">
-      <style dangerouslySetInnerHTML={{
-        __html: `
+    <div className="mdx-editor-wrapper border border-border rounded-lg overflow-hidden bg-background shadow-sm">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .mdx-editor-wrapper .mdxeditor {
+            min-height: 400px !important;
+            border: none !important;
+          }
+          .mdx-editor-wrapper .mdxeditor .mdxeditor-toolbar {
+            background-color: #fafafa !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            padding: 0.75rem 1rem !important;
+            margin: 0 !important;
+          }
+          .mdx-editor-wrapper .mdxeditor .mdxeditor-rich-text-editor {
+            min-height: 350px !important;
+            padding: 1.5rem !important;
+            background-color: #ffffff !important;
+            font-size: 15px !important;
+            line-height: 1.6 !important;
+          }
           .mdx-editor-wrapper .mdxeditor h1 {
             font-size: 2.25rem !important;
             font-weight: bold !important;
@@ -100,114 +91,89 @@ const MDXEditorComponent: FC<EditorProps> = ({ markdown, editorRef, onChange }) 
             line-height: 1.4 !important;
             margin: 0.625rem 0 0.5rem 0 !important;
           }
-        `
-      }} />
+          .mdx-editor-wrapper .mdxeditor .mdxeditor-toolbar button {
+            border-radius: 0.375rem !important;
+            padding: 0.5rem !important;
+            margin-right: 0.25rem !important;
+            transition: all 0.15s ease !important;
+          }
+          .mdx-editor-wrapper .mdxeditor .mdxeditor-toolbar button:hover {
+            background-color: #f1f5f9 !important;
+          }
+          .mdx-editor-wrapper .mdxeditor .mdxeditor-toolbar [data-state="on"] {
+            background-color: #e2e8f0 !important;
+          }
+          .mdx-editor-wrapper .mdxeditor .mdxeditor-toolbar select {
+            border-radius: 0.375rem !important;
+            border: 1px solid #e2e8f0 !important;
+            padding: 0.5rem !important;
+            margin-right: 0.5rem !important;
+          }
+          .mdx-editor-wrapper .mdxeditor .mdxeditor-toolbar hr {
+            margin: 0 0.5rem !important;
+            border-color: #e2e8f0 !important;
+          }
+          .mdx-editor-wrapper .mdxeditor p {
+            margin: 0.5rem 0 !important;
+          }
+          .mdx-editor-wrapper .mdxeditor ul, .mdx-editor-wrapper .mdxeditor ol {
+            margin: 0.75rem 0 !important;
+            padding-left: 1.5rem !important;
+          }
+          .mdx-editor-wrapper .mdxeditor li {
+            margin: 0.25rem 0 !important;
+          }
+          .mdx-editor-wrapper .mdxeditor blockquote {
+            border-left: 4px solid #e2e8f0 !important;
+            margin: 1rem 0 !important;
+            padding-left: 1rem !important;
+            color: #64748b !important;
+          }
+          .mdx-editor-wrapper .mdxeditor strong {
+            font-weight: 600 !important;
+          }
+          .mdx-editor-wrapper .mdxeditor em {
+            font-style: italic !important;
+          }
+          .mdx-editor-wrapper .mdxeditor a {
+            color: #3b82f6 !important;
+            text-decoration: underline !important;
+          }
+        `,
+        }}
+      />
       <MDXEditor
-        onChange={onChange || ((e) => console.log(e))}
+        onChange={onChange || (() => {})}
         ref={ref}
         markdown={markdown}
+        placeholder={placeholder || "Write your content..."}
         plugins={[
-        // Core text formatting
-        headingsPlugin(),
-        quotePlugin(),
-        listsPlugin(),
-        
-        // Links
-        linkPlugin(),
-        linkDialogPlugin(),
-        
-        // Media
-        imagePlugin({
-          imageUploadHandler: async (image) => {
-            // You can implement your own image upload logic here
-            return Promise.resolve(`/uploads/${image.name}`);
-          },
-          imageAutocompleteSuggestions: [
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/200/400',
-          ]
-        }),
-        
-        // Tables and layout
-        tablePlugin(),
-        thematicBreakPlugin(),
-        
-        // Code
-        codeBlockPlugin({ defaultCodeBlockLanguage: 'txt' }),
-        codeMirrorPlugin({ 
-          codeBlockLanguages: {
-            txt: 'Plain Text',
-            js: 'JavaScript',
-            ts: 'TypeScript',
-            tsx: 'TypeScript (React)',
-            jsx: 'JavaScript (React)',
-            css: 'CSS',
-            html: 'HTML',
-            json: 'JSON',
-            md: 'Markdown',
-            bash: 'Bash',
-            sh: 'Shell',
-            python: 'Python',
-            py: 'Python',
-            sql: 'SQL',
-            yaml: 'YAML',
-            yml: 'YAML'
-          }
-        }),
-        
-        // Advanced features
-        frontmatterPlugin(),
-        directivesPlugin({
-          directiveDescriptors: [AdmonitionDirectiveDescriptor]
-        }),
-        
-        // Diff/Source view
-        diffSourcePlugin({ 
-          viewMode: 'rich-text',
-          diffMarkdown: markdown 
-        }),
-        
-        // Shortcuts
-        markdownShortcutPlugin(),
-        
-        // Toolbar
-        toolbarPlugin({
-          toolbarContents: () => (
-            <DiffSourceToggleWrapper>
-              <UndoRedo />
-              <Separator />
-              <BoldItalicUnderlineToggles />
-              <CodeToggle />
-              <StrikeThroughSupSubToggles />
-              <Separator />
-              <ListsToggle />
-              <Separator />
-              <BlockTypeSelect />
-              <Separator />
-              <CreateLink />
-              <InsertImage />
-              <Separator />
-              <InsertTable />
-              <InsertThematicBreak />
-              <Separator />
-              <InsertCodeBlock />
-            </DiffSourceToggleWrapper>
-          )
-        })
-      ]}
-    />
+          headingsPlugin(),
+          listsPlugin(),
+          linkPlugin(),
+          markdownShortcutPlugin(),
+          toolbarPlugin({
+            toolbarContents: () => (
+              <>
+                <BoldItalicUnderlineToggles />
+                <Separator />
+                <ListsToggle />
+                <Separator />
+                <BlockTypeSelect />
+              </>
+            ),
+          }),
+        ]}
+      />
     </div>
   );
 };
 
-// Dynamic import with SSR disabled to prevent hydration issues
-const Editor = dynamic(() => Promise.resolve(MDXEditorComponent), {
+export const SimpleEditor = dynamic(() => Promise.resolve(MDXEditorComponent), {
   ssr: false,
   loading: () => (
-    <div className="min-h-[400px] w-full border rounded-md bg-gray-50 flex items-center justify-center">
+    <div className="min-h-[200px] w-full border rounded-md bg-gray-50 flex items-center justify-center">
       <div className="text-gray-500">Loading editor...</div>
     </div>
-  )
+  ),
 });
-
-export default Editor;

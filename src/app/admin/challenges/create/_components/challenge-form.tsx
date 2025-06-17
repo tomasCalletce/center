@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -30,11 +29,14 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { api } from "~/trpc/react";
+import { SimpleEditor } from "~/app/admin/_components/mdx-editor";
+import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 const formSchema = formChallengesSchema;
 
 export const ChallengeForm: React.FC = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const editorRef = useRef<MDXEditorMethods | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,6 +49,12 @@ export const ChallengeForm: React.FC = () => {
   const createChallengeMutation = api.challenge.create.useMutation({
     onSuccess: () => {
       toast.success("Challenge created successfully");
+      form.reset();
+      setUploadedImageUrl(null);
+      // Reset the MDX editor
+      if (editorRef.current) {
+        editorRef.current.setMarkdown("");
+      }
     },
     onError: () => {
       toast.error("Failed to create challenge");
@@ -120,25 +128,6 @@ export const ChallengeForm: React.FC = () => {
               onImageRemoved={() => setUploadedImageUrl(null)}
             />
           </div>
-
-          <FormField
-            control={form.control}
-            name="markdown"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe the challenge..."
-                    className="min-h-32"
-                    {...field}
-                    value={field.value || ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           <div className="grid grid-cols-2 gap-4">
             <FormField
@@ -238,6 +227,26 @@ export const ChallengeForm: React.FC = () => {
               </FormItem>
             )}
           />
+
+          <FormField
+            control={form.control}
+            name="markdown"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <SimpleEditor
+                    markdown={field.value || ""}
+                    onChange={(value: string) => field.onChange(value)}
+                    placeholder="Describe the challenge..."
+                    editorRef={editorRef}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex gap-4 pt-6">
             <Button
               className="cursor-pointer"
