@@ -38,7 +38,7 @@ import { useRouter, useParams } from "next/navigation";
 type FormData = z.infer<typeof formSubmissionSchema>;
 
 export function MainSubmitBuildForm() {
-  const params = useParams<{ _challenge: string }>();
+  const params = useParams<{ challenge: string }>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
@@ -115,7 +115,7 @@ export function MainSubmitBuildForm() {
 
   const onSubmit = (data: FormData) => {
     submitMutation.mutate({
-      _challenge: params._challenge,
+      _challenge: params.challenge,
       title: data.title,
       description: data.description,
       demo_url: data.demo_url,

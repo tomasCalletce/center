@@ -16,13 +16,13 @@ import { buttonVariants } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 
 interface ChallengeSubmissionsProps {
-  _challenge: string;
+  challenge: string;
 }
 
 export const ChallengeSubmissions: React.FC<
   ChallengeSubmissionsProps
-> = async ({ _challenge }) => {
-  const allSubmissions = await api.challenge.allSubmissions({ _challenge });
+> = async ({ challenge }) => {
+  const allSubmissions = await api.public.challenge.allSubmissions({ _challenge: challenge });
 
   return (
     <div className="space-y-6">
@@ -44,7 +44,7 @@ export const ChallengeSubmissions: React.FC<
 
         <Link
           className={buttonVariants({ variant: "link" })}
-          href={`/talent/challenges/${_challenge}/builds/submit`}
+          href={`/challenges/${challenge}/submissions/submit`}
         >
           Add Submission
           <ExternalLink className="h-3 w-3" />
@@ -64,7 +64,7 @@ export const ChallengeSubmissions: React.FC<
           </p>
           <Link
             className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 rounded-md text-sm font-medium"
-            href={`/talent/challenges/${_challenge}/builds/submit`}
+            href={`/challenges/${challenge}/submissions/submit`}
           >
             Submit Build
             <ExternalLink className="h-4 w-4" />
@@ -103,9 +103,14 @@ export const ChallengeSubmissions: React.FC<
                     <div className="flex-1 min-w-0">
                       {/* Title with inline icons */}
                       <div className="flex items-start justify-between gap-3 mb-3">
-                        <h3 className="font-bold text-xl text-foreground leading-tight group-hover:text-primary transition-colors duration-200">
-                          {submission.title}
-                        </h3>
+                        <div>
+                          <h3 className="font-bold text-xl text-foreground leading-tight group-hover:text-primary transition-colors duration-200">
+                            {submission.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            by {submission.team.name}
+                          </p>
+                        </div>
                         <div className="flex items-center gap-2 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
                           <Link
                             href={submission.repository_url}

@@ -3,15 +3,20 @@ import { api } from "~/trpc/server";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 
 interface ChallengeParticipantsProps {
-  _challenge: string;
+  challenge: string;
 }
 
 export const ChallengeParticipants: React.FC<
   ChallengeParticipantsProps
-> = async ({ _challenge }) => {
-  const { data: challengeParticipants } = await api.challenge.participant({
-    _challenge,
+> = async ({ challenge }) => {
+  const challengeParticipants = await api.public.challenge.participant({
+    _challenge: challenge,
   });
+
+  // Handle the case where challengeParticipants might be an empty array or Clerk response
+  const participants = Array.isArray(challengeParticipants) 
+    ? challengeParticipants 
+    : challengeParticipants.data || [];
 
   return (
     <div className="flex gap-6">
@@ -28,7 +33,7 @@ export const ChallengeParticipants: React.FC<
         </div>
       </div>
       <div className="flex flex-wrap gap-4 flex-1">
-        {challengeParticipants.map((participant) => (
+        {participants.map((participant: any) => (
           <div key={participant.id} className="flex items-center gap-2">
             <Avatar className="h-8 w-8 ring-2 ring-background shadow-sm">
               <AvatarImage

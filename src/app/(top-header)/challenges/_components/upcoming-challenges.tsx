@@ -3,6 +3,7 @@ import Link from "next/link";
 import { api } from "~/trpc/server";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { formatDistanceToNow, format } from "date-fns";
 import {
   Clock,
@@ -14,12 +15,13 @@ import {
   Bell,
 } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { titleToSlug } from "~/lib/utils";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 export const UpcomingChallenges = async () => {
   const upcomingChallenges = await api.public.challenge.all({});
 
-  if (true) {
+  if (upcomingChallenges.length === 0) {
     return (
       <div className="relative overflow-hidden p-12">
         <div className="relative mx-auto max-w-md text-center space-y-8">
@@ -55,119 +57,9 @@ export const UpcomingChallenges = async () => {
     );
   }
 
-  const allChallenges = upcomingChallenges.map((challenge) => {
-    const timeLeft = challenge.deadline_at
-      ? formatDistanceToNow(new Date(challenge.deadline_at), {
-          addSuffix: true,
-        })
-      : "No deadline";
-
-    const formattedDate = challenge.deadline_at
-      ? format(new Date(challenge.deadline_at), "MMM dd, yyyy")
-      : "TBD";
-
-    const pricePool = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: challenge.price_pool_currency,
-      maximumFractionDigits: 0,
-    }).format(challenge.price_pool);
-
-    return (
-      <div className="grid grid-cols-4 overflow-hidden rounded-2xl border bg-card shadow-xl h-[500px]">
-        <Link
-          href={`/challenges/${challenge.id}`}
-          className="col-span-3 relative"
-        >
-          <Image
-            src={challenge.image.url}
-            alt={challenge.image.alt}
-            fill
-            className="object-cover"
-            priority
-          />
-        </Link>
-
-        {/* Details Section - 1/4 */}
-        <div className="col-span-1 flex flex-col">
-          {/* Top Details */}
-          <div className="flex-1 p-6 space-y-6">
-            {/* Prize Pool */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Trophy className="h-4 w-4" />
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Prize Pool
-                </span>
-              </div>
-
-              <div className="flex items-baseline gap-2">
-                <div className="text-2xl font-bold text-foreground">
-                  {pricePool}
-                </div>
-                <Badge variant="outline" className="text-xs">
-                  {challenge.price_pool_currency}
-                </Badge>
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                Deadline
-              </div>
-              <div className="space-y-2">
-                <div className="text-sm font-medium text-foreground">
-                  {formattedDate}
-                </div>
-                <Badge className="text-xs font-medium">
-                  <Clock className="h-3 w-3 mr-1" />
-                  {timeLeft}
-                </Badge>
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                Event Type
-              </div>
-              <div className="flex gap-2">
-                <Badge variant="outline" className="text-xs">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  Virtual
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  <Users className="h-3 w-3 mr-1" />
-                  Open
-                </Badge>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Title Section */}
-          <div className="border-t bg-muted/50 p-6">
-            <h2 className="font-bold text-lg leading-tight mb-2">
-              {challenge.title}
-            </h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Join this challenge and compete with developers worldwide
-            </p>
-
-            <Link
-              className={cn(buttonVariants({ variant: "default" }), "w-full")}
-              href={`/challenges/${challenge.id}`}
-            >
-              <SignedOut>Sign in to join</SignedOut>
-              <SignedIn>
-                Join Challenge
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </SignedIn>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  });
-
   return (
     <div className="space-y-12">
-      {/* Section Header - Left aligned with cool line */}
+      {/* Section Header */}
       <div className="space-y-3">
         <div className="flex items-center gap-3">
           <div className="h-1 w-12 bg-gradient-to-r from-primary to-primary/50 rounded-full" />
@@ -179,8 +71,93 @@ export const UpcomingChallenges = async () => {
         </p>
       </div>
 
-      {/* Challenges List */}
-      <div className="space-y-8">{allChallenges}</div>
+      {/* Challenges Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {upcomingChallenges.map((challenge) => {
+          const timeLeft = challenge.deadline_at
+            ? formatDistanceToNow(new Date(challenge.deadline_at), {
+                addSuffix: true,
+              })
+            : "No deadline";
+
+          const formattedDate = challenge.deadline_at
+            ? format(new Date(challenge.deadline_at), "MMM dd, yyyy")
+            : "TBD";
+
+          const pricePool = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: challenge.price_pool_currency,
+            maximumFractionDigits: 0,
+          }).format(challenge.price_pool);
+
+          const challengeSlug = titleToSlug(challenge.title);
+
+          return (
+            <Link key={challenge.id} href={`/challenges/${challengeSlug}`}>
+              <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 bg-card/50 backdrop-blur cursor-pointer">
+                {/* Challenge Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={challenge.image.url}
+                    alt={challenge.image.alt}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  
+                  {/* Prize Pool Badge */}
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-background/90 text-foreground border-0">
+                      <Trophy className="h-3 w-3 mr-1" />
+                      {pricePool}
+                    </Badge>
+                  </div>
+
+                  {/* Deadline Badge */}
+                  <div className="absolute top-4 right-4">
+                    <Badge variant="destructive" className="bg-red-500/90 text-white border-0">
+                      <Clock className="h-3 w-3 mr-1" />
+                      {timeLeft}
+                    </Badge>
+                  </div>
+                </div>
+
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-xl group-hover:text-primary transition-colors duration-200">
+                    {challenge.title}
+                  </CardTitle>
+                  <CardDescription className="text-sm">
+                    Deadline: {formattedDate}
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent className="pt-0">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-4 w-4" />
+                      <span>Virtual</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      <span>Open</span>
+                    </div>
+                  </div>
+                </CardContent>
+
+                <CardFooter className="pt-0">
+                  <div className={cn(buttonVariants({ variant: "default" }), "w-full group-hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center")}>
+                    <SignedOut>Sign in to join</SignedOut>
+                    <SignedIn>
+                      View Challenge
+                      <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </SignedIn>
+                  </div>
+                </CardFooter>
+              </Card>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };

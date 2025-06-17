@@ -5,19 +5,23 @@ import { db } from "~/server/db/connection";
 import {
   challenges,
   challengeVisibilityValues,
+  createChallengeSchema,
 } from "~/server/db/schemas/challenges";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 
-export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
-  const [newDocument] = await db
-    .insert(assets)
-    .values({
-      _clerk: ctx.auth.userId,
-      pathname:
-        "WhatsApp%20Image%202025-05-01%20at%2014.22.35-aVQ6qXrhhThJFUhfW4dBP0Ku5ar2S5.jpeg",
-      url: "https://ow7zxw0pjoyp0q71.public.blob.vercel-storage.com/WhatsApp%20Image%202025-05-01%20at%2014.22.35-aVQ6qXrhhThJFUhfW4dBP0Ku5ar2S5.jpeg",
-    })
-    .returning({ id: assets.id });
+export const create = protectedProcedure
+  .input(createChallengeSchema)
+  .mutation(async ({ input, ctx }) => {
+    const { imageData, ...challengeData } = input;
+    
+    const [newDocument] = await db
+      .insert(assets)
+      .values({
+        _clerk: ctx.auth.userId,
+        pathname: imageData.pathname,
+        url: imageData.url,
+      })
+      .returning({ id: assets.id });
   if (!newDocument) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
@@ -30,7 +34,7 @@ export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
     .values({
       _clerk: ctx.auth.userId,
       _asset: newDocument.id,
-      alt: "super challenge",
+      alt: imageData.alt,
     })
     .returning({ id: assetsImages.id });
   if (!newImage) {
@@ -45,12 +49,12 @@ export const create = protectedProcedure.mutation(async ({ input, ctx }) => {
     .values({
       _clerk: ctx.auth.userId,
       _image: newImage.id,
-      title: "titutlo",
-      markdown: "super challenge",
-      visibility: challengeVisibilityValues.VISIBLE,
-      price_pool: 100,
-      price_pool_currency: "USD",
-      deadline_at: new Date(),
+      title: challengeData.title,
+      markdown: challengeData.markdown,
+      visibility: challengeData.visibility,
+      price_pool: challengeData.price_pool,
+      price_pool_currency: challengeData.price_pool_currency,
+      deadline_at: challengeData.deadline_at,
     })
     .returning({ id: challenges.id });
   if (!newChallenge) {

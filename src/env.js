@@ -13,6 +13,7 @@ export const env = createEnv({
     BLOB_READ_WRITE_TOKEN: z.string(),
     OPENAI_API_KEY: z.string(),
     TRIGGER_SECRET_KEY: z.string(),
+    TRIGGER_PROJECT_ID: z.string(),
   },
 
   /**
@@ -44,6 +45,7 @@ export const env = createEnv({
     DATABASE_URI: process.env.DATABASE_URI,
     BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
     TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
+    TRIGGER_PROJECT_ID: process.env.TRIGGER_PROJECT_ID,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
   /**
