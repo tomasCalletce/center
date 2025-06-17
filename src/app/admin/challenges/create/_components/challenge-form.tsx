@@ -17,7 +17,18 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { ImageUpload } from "./image-upload";
-import { formChallengesSchema } from "~/server/db/schemas/challenges";
+import {
+  formChallengesSchema,
+  challengeVisibilityValues,
+  challengePricePoolCurrencyValues,
+} from "~/server/db/schemas/challenges";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 const formSchema = formChallengesSchema;
 
@@ -136,11 +147,27 @@ export const ChallengeForm: React.FC = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Currency</FormLabel>
-                  <FormControl>
-                    <Input placeholder="USD" {...field} value="USD" disabled />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select currency" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.values(challengePricePoolCurrencyValues).map(
+                        (currency) => (
+                          <SelectItem key={currency} value={currency}>
+                            {currency}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
                   <FormDescription>
-                    Currency is currently fixed to USD
+                    Choose the prize pool currency
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -183,15 +210,19 @@ export const ChallengeForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Visibility</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="VISIBLE"
+                  <select
                     {...field}
-                    value="VISIBLE"
-                    disabled
-                  />
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {Object.values(challengeVisibilityValues).map((value) => (
+                      <option key={value} value={value}>
+                        {value === "VISIBLE" ? "Public" : "Hidden"}
+                      </option>
+                    ))}
+                  </select>
                 </FormControl>
                 <FormDescription>
-                  Challenge visibility is currently set to Public
+                  Whether the challenge should be visible to participants
                 </FormDescription>
                 <FormMessage />
               </FormItem>
