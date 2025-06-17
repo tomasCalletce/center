@@ -115,6 +115,7 @@ export const ChallengeForm: React.FC = () => {
           <div>
             <label className="text-sm font-medium">Image</label>
             <ImageUpload
+              imageUrl={uploadedImageUrl}
               onImageUploaded={(url) => setUploadedImageUrl(url)}
               onImageRemoved={() => setUploadedImageUrl(null)}
             />

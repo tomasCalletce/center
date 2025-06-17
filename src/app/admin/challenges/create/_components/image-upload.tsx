@@ -9,14 +9,15 @@ import { uploadChallengeImage } from "../_actions/upload-image";
 interface ImageUploadProps {
   onImageUploaded?: (url: string) => void;
   onImageRemoved?: () => void;
+  imageUrl?: string | null;
 }
 
 export const ImageUpload = ({
   onImageUploaded,
   onImageRemoved,
+  imageUrl,
 }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = async (file: File) => {
@@ -27,7 +28,6 @@ export const ImageUpload = ({
     try {
       const result = await uploadChallengeImage(formData);
       if (result.success && result.blob) {
-        setImageUrl(result.blob.url);
         onImageUploaded?.(result.blob.url);
       } else {
         toast.error(result.error || "Upload failed");
@@ -40,7 +40,6 @@ export const ImageUpload = ({
   };
 
   const removeImage = () => {
-    setImageUrl(null);
     onImageRemoved?.();
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
