@@ -21,6 +21,7 @@ export const all = protectedProcedure
       .select({
         id: challenges.id,
         title: challenges.title,
+        slug: challenges.slug,
         deadline_at: challenges.deadline_at,
         price_pool: challenges.price_pool,
         price_pool_currency: challenges.price_pool_currency,

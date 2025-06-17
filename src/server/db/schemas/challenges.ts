@@ -33,6 +33,7 @@ export const challenges = pgTable("challenges", {
     .notNull()
     .references(() => assetsImages.id),
   title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
   markdown: text("markdown"),
   price_pool: integer("price_pool").notNull(),
   price_pool_currency: challengePricePoolCurrencyEnumSchema(
@@ -51,23 +52,29 @@ export const verifyChallengesSchema = createInsertSchema(challenges).omit({
   updated_at: true,
 });
 
-export const updateChallengeSchema = verifyChallengesSchema.omit({
-  _image: true,
-}).extend({
-  id: z.string(),
-  imageData: z.object({
-    url: z.string(),
-    pathname: z.string(),
-    alt: z.string(),
-  }).optional(),
-});
+export const updateChallengeSchema = verifyChallengesSchema
+  .omit({
+    _image: true,
+  })
+  .extend({
+    id: z.string(),
+    imageData: z
+      .object({
+        url: z.string(),
+        pathname: z.string(),
+        alt: z.string(),
+      })
+      .optional(),
+  });
 
-export const createChallengeSchema = verifyChallengesSchema.omit({
-  _image: true,
-}).extend({
-  imageData: z.object({
-    url: z.string(),
-    pathname: z.string(),
-    alt: z.string(),
-  }),
-});
+export const createChallengeSchema = verifyChallengesSchema
+  .omit({
+    _image: true,
+  })
+  .extend({
+    imageData: z.object({
+      url: z.string(),
+      pathname: z.string(),
+      alt: z.string(),
+    }),
+  });
