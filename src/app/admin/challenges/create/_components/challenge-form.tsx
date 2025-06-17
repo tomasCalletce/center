@@ -12,7 +12,6 @@ import { Textarea } from "~/components/ui/textarea";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { api } from "~/trpc/react";
 
 const formSchema = formChallengesSchema;
 
@@ -39,7 +39,19 @@ export const ChallengeForm: React.FC = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      price_pool_currency: challengePricePoolCurrencyValues.USD,
+      visibility: challengeVisibilityValues.VISIBLE,
+    },
+  });
+
+  const createChallengeMutation = api.challenge.create.useMutation({
+    onSuccess: () => {
+      toast.success("Challenge created successfully");
+    },
+    onError: () => {
+      toast.error("Failed to create challenge");
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -48,13 +60,26 @@ export const ChallengeForm: React.FC = () => {
       return;
     }
 
-    console.log("Form data:", { ...data, imageUrl: uploadedImageUrl });
-    // TODO: Here you'll call your mutation to create the challenge
-    // The uploadedImageUrl contains the Vercel blob URL
+    createChallengeMutation.mutate({
+      title: data.title,
+      slug: data.slug,
+      markdown: data.markdown,
+      price_pool: data.price_pool,
+      price_pool_currency: data.price_pool_currency,
+      visibility: data.visibility,
+      deadline_at: data.deadline_at,
+      verifyImagesSchema: {
+        alt: data.title,
+        verifyAssetsSchema: {
+          pathname: uploadedImageUrl,
+          url: uploadedImageUrl,
+        },
+      },
+    });
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Create Challenge</h1>
 
       <Form {...form}>
@@ -204,7 +229,7 @@ export const ChallengeForm: React.FC = () => {
                   >
                     {Object.values(challengeVisibilityValues).map((value) => (
                       <option key={value} value={value}>
-                        {value === "VISIBLE" ? "Public" : "Hidden"}
+                        {value}
                       </option>
                     ))}
                   </select>

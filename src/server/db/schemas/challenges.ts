@@ -11,7 +11,6 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import {
   assetsImages,
-  formImagesSchema,
   verifyImagesSchema,
 } from "~/server/db/schemas/assets-images";
 
@@ -53,17 +52,16 @@ export const verifyChallengesSchema = createInsertSchema(challenges)
   .omit({
     id: true,
     _clerk: true,
+    _image: true,
     created_at: true,
     updated_at: true,
   })
   .extend({ verifyImagesSchema });
 
-export const formChallengesSchema = createInsertSchema(challenges)
-  .omit({
-    id: true,
-    _clerk: true,
-    _image: true,
-    created_at: true,
-    updated_at: true,
-  })
-  .extend({ formImagesSchema });
+export const formChallengesSchema = createInsertSchema(challenges).omit({
+  id: true,
+  _clerk: true,
+  _image: true,
+  created_at: true,
+  updated_at: true,
+});
