@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -242,11 +241,8 @@ export const ChallengeForm: React.FC = () => {
             <Button
               className="cursor-pointer"
               type="submit"
-              disabled={form.formState.isSubmitting}
+              isLoading={createChallengeMutation.isPending}
             >
-              {form.formState.isSubmitting && (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              )}
               Create Challenge
             </Button>
           </div>
