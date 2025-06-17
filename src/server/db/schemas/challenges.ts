@@ -9,7 +9,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { assetsImages } from "~/server/db/schemas/assets-images";
+import {
+  assetsImages,
+  formImagesSchema,
+  verifyImagesSchema,
+} from "~/server/db/schemas/assets-images";
 
 export const challengeVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
 export const challengeVisibilityValues = challengeVisibilityEnum.Values;
@@ -28,7 +32,7 @@ export const challengePricePoolCurrencyEnumSchema = pgEnum(
 
 export const challenges = pgTable("challenges", {
   id: uuid("id").primaryKey().defaultRandom(),
-  _clerk: varchar("_user", { length: 32 }).notNull(),
+  _clerk: varchar("_clerk", { length: 32 }).notNull(),
   _image: uuid("_image")
     .notNull()
     .references(() => assetsImages.id),
@@ -45,36 +49,21 @@ export const challenges = pgTable("challenges", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifyChallengesSchema = createInsertSchema(challenges).omit({
-  id: true,
-  _clerk: true,
-  created_at: true,
-  updated_at: true,
-});
-
-export const updateChallengeSchema = verifyChallengesSchema
+export const verifyChallengesSchema = createInsertSchema(challenges)
   .omit({
-    _image: true,
+    id: true,
+    _clerk: true,
+    created_at: true,
+    updated_at: true,
   })
-  .extend({
-    id: z.string(),
-    imageData: z
-      .object({
-        url: z.string(),
-        pathname: z.string(),
-        alt: z.string(),
-      })
-      .optional(),
-  });
+  .extend({ verifyImagesSchema });
 
-export const createChallengeSchema = verifyChallengesSchema
+export const formChallengesSchema = createInsertSchema(challenges)
   .omit({
+    id: true,
+    _clerk: true,
     _image: true,
+    created_at: true,
+    updated_at: true,
   })
-  .extend({
-    imageData: z.object({
-      url: z.string(),
-      pathname: z.string(),
-      alt: z.string(),
-    }),
-  });
+  .extend({ formImagesSchema });
