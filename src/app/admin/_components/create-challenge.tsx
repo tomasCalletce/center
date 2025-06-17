@@ -37,6 +37,11 @@ export const CreateChallenge = () => {
       price_pool: pricePool,
       price_pool_currency: "USD",
       deadline_at: new Date(deadline),
+      imageData: {
+        url: "/ai-hackathon.jpeg", // Temporary placeholder from public folder
+        pathname: "ai-hackathon.jpeg",
+        alt: title.trim(),
+      },
     });
   };
 

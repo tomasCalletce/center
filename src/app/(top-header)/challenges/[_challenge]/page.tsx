@@ -7,9 +7,9 @@ import { Separator } from "~/components/ui/separator";
 export default async function ChallengePage({
   params,
 }: {
-  params: Promise<{ challenge: string }>;
+  params: Promise<{ _challenge: string }>;
 }) {
-  const { challenge } = await params;
+  const { _challenge: challenge } = await params;
 
   return (
     <HydrateClient>

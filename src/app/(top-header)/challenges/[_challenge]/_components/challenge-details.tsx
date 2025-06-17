@@ -9,37 +9,37 @@ import { cn } from "~/lib/utils";
 import { MDXRenderer } from "~/components/mdx-renderer";
 
 interface ChallengeDetailsProps {
-  _challenge: string;
+  challenge: string;
 }
 
 export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
-  _challenge,
+  challenge,
 }) => {
-  const challenge = await api.public.challenge.details({ _challenge });
+  const challengeData = await api.public.challenge.details({ _challenge: challenge });
 
-  const timeLeft = challenge.deadline_at
-    ? formatDistanceToNow(new Date(challenge.deadline_at), {
+  const timeLeft = challengeData.deadline_at
+    ? formatDistanceToNow(new Date(challengeData.deadline_at), {
         addSuffix: true,
       })
     : "No deadline";
 
-  const formattedDate = challenge.deadline_at
-    ? format(new Date(challenge.deadline_at), "MMM dd, yyyy")
+  const formattedDate = challengeData.deadline_at
+    ? format(new Date(challengeData.deadline_at), "MMM dd, yyyy")
     : "TBD";
 
   const pricePool = new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: challenge.price_pool_currency,
+    currency: challengeData.price_pool_currency,
     maximumFractionDigits: 0,
-  }).format(challenge.price_pool);
+  }).format(challengeData.price_pool);
 
   return (
     <div className="space-y-8">
       {/* Hero Section */}
       <div className="relative h-96 rounded-2xl overflow-hidden">
         <Image
-          src={challenge.image.url}
-          alt={challenge.image.alt}
+          src={challengeData.image.url}
+          alt={challengeData.image.alt}
           fill
           className="object-cover"
           priority
@@ -68,7 +68,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           </div>
           
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            {challenge.title}
+            {challengeData.title}
           </h1>
           
           <div className="flex items-center gap-4 text-white/90">
@@ -86,11 +86,11 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
         <div className="lg:col-span-3">
           <div className="bg-card rounded-xl border p-8">
             <h2 className="text-2xl font-semibold mb-6 text-foreground">
-              Challenge Details
+              {/* Challenge Details */}
             </h2>
             
-            {challenge.markdown ? (
-              await <MDXRenderer content={challenge.markdown} />
+            {challengeData.markdown ? (
+              await <MDXRenderer content={challengeData.markdown} />
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <p>Challenge details will be available soon.</p>
@@ -160,7 +160,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
             <div className="mt-6 pt-6 border-t">
               <Link
                 className={cn(buttonVariants({ variant: "default" }), "w-full")}
-                href={`/challenges/${challenge.id}/submissions/submit`}
+                href={`/challenges/${challengeData.id}/submissions/submit`}
               >
                 Submit Build
                 <ArrowRight className="ml-1 h-4 w-4" />

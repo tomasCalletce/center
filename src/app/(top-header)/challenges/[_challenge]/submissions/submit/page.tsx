@@ -1,5 +1,5 @@
 import { HydrateClient } from "~/trpc/server";
-import { MainSubmitBuildForm } from "~/app/(top-header)/challenges/[challenge]/submissions/submit/_components/main-from";
+import { MainSubmitBuildForm } from "~/app/(top-header)/challenges/[_challenge]/submissions/submit/_components/main-from";
 import { Rocket } from "lucide-react";
 
 export default async function SubmitBuildPage() {

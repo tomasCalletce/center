@@ -8,7 +8,7 @@ import { Label } from "~/components/ui/label";
 import { Calendar } from "~/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { challengeVisibilityValues } from "~/server/db/schemas/challenges";
-import { uploadImage } from "~/app/(top-header)/challenges/[challenge]/submissions/submit/_actions/upload-image";
+import { uploadImage } from "~/app/(top-header)/challenges/[_challenge]/submissions/submit/_actions/upload-image";
 import { toast } from "sonner";
 import { Upload, Loader2, ImageIcon, Check, X, CalendarIcon, Clock } from "lucide-react";
 import { format } from "date-fns";
@@ -369,8 +369,8 @@ export const ChallengeForm = ({ challengeId, onSuccess, onCancel }: ChallengeFor
       {/* Challenge Image Section - Full Width */}
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-foreground">Challenge Banner</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 gap-6">
+          <div>
             <div
               className={cn(
                 "relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer min-h-[280px] flex flex-col items-center justify-center transition-all",
@@ -471,28 +471,7 @@ export const ChallengeForm = ({ challengeId, onSuccess, onCancel }: ChallengeFor
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="p-4 bg-muted/30 rounded-lg">
-              <h3 className="font-medium text-sm text-foreground mb-2">Image Guidelines</h3>
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li>• Use high-quality, relevant imagery</li>
-                <li>• Maintain 2:1 aspect ratio for best results</li>
-                <li>• Ensure text is readable if included</li>
-                <li>• Avoid cluttered or busy backgrounds</li>
-                <li>• Consider how it looks at different sizes</li>
-              </ul>
-            </div>
-            
-            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
-              <h3 className="font-medium text-sm text-foreground mb-2">💡 Pro Tips</h3>
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li>• Use tools like Canva or Figma</li>
-                <li>• Include your challenge theme</li>
-                <li>• Add subtle branding elements</li>
-                <li>• Test visibility on mobile devices</li>
-              </ul>
-            </div>
-          </div>
+
         </div>
       </div>
 
