@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import matter from 'gray-matter';
+import remarkGfm from 'remark-gfm';
 
 interface MDXRendererProps {
   content: string;
@@ -130,21 +132,36 @@ const components = {
   
   // Tables
   table: ({ children, ...props }: any) => (
-    <div className="my-6 overflow-x-auto">
-      <table className="w-full border-collapse border border-border" {...props}>
+    <div className="my-8 overflow-x-auto rounded-lg border border-border shadow-sm">
+      <table className="w-full border-collapse bg-card" {...props}>
         {children}
       </table>
     </div>
   ),
+  thead: ({ children, ...props }: any) => (
+    <thead className="bg-muted/50" {...props}>
+      {children}
+    </thead>
+  ),
+  tbody: ({ children, ...props }: any) => (
+    <tbody className="divide-y divide-border" {...props}>
+      {children}
+    </tbody>
+  ),
   th: ({ children, ...props }: any) => (
-    <th className="border border-border bg-muted px-4 py-2 text-left font-semibold" {...props}>
+    <th className="px-6 py-4 text-left text-sm font-semibold text-foreground border-b border-border" {...props}>
       {children}
     </th>
   ),
   td: ({ children, ...props }: any) => (
-    <td className="border border-border px-4 py-2" {...props}>
+    <td className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap" {...props}>
       {children}
     </td>
+  ),
+  tr: ({ children, ...props }: any) => (
+    <tr className="hover:bg-muted/30 transition-colors" {...props}>
+      {children}
+    </tr>
   ),
   
   // Horizontal rule
@@ -162,9 +179,20 @@ export async function MDXRenderer({ content }: MDXRendererProps) {
     );
   }
 
+  // Parse frontmatter and extract content
+  const { content: markdownContent, data: frontmatter } = matter(content);
+
   return (
     <div className="prose prose-lg max-w-none">
-      <MDXRemote source={content} components={components} />
+      <MDXRemote 
+        source={markdownContent} 
+        components={components}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+          }
+        }}
+      />
     </div>
   );
 } 

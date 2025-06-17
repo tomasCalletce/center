@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 import { TRPCError } from "@trpc/server";
-import { titleToSlug } from "~/lib/utils";
+import { titleToSlug, isUUID } from "~/lib/utils";
 
 export const details = protectedProcedure
   .input(
@@ -16,10 +16,10 @@ export const details = protectedProcedure
   )
   .query(async ({ input }) => {
     // Check if input is a UUID or a slug
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(input._challenge);
+    const inputIsUUID = isUUID(input._challenge);
     
     let whereCondition;
-    if (isUUID) {
+    if (inputIsUUID) {
       whereCondition = eq(challenges.id, input._challenge);
     } else {
       // For slug, we need to get all challenges and find the one with matching slug

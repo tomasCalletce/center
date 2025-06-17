@@ -37,7 +37,7 @@ import {
   // Directives
   AdmonitionDirectiveDescriptor
 } from "@mdxeditor/editor";
-import { type FC } from "react";
+import { type FC, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import '@mdxeditor/editor/style.css';
 
@@ -51,6 +51,15 @@ interface EditorProps {
  * Full-featured MDX Editor with toolbar and plugins
  */
 const MDXEditorComponent: FC<EditorProps> = ({ markdown, editorRef, onChange }) => {
+  const localEditorRef = useRef<MDXEditorMethods | null>(null);
+  const ref = editorRef || localEditorRef;
+
+  // Update editor content when markdown prop changes
+  useEffect(() => {
+    if (ref.current && markdown !== ref.current.getMarkdown()) {
+      ref.current.setMarkdown(markdown);
+    }
+  }, [markdown, ref]);
   return (
     <div className="mdx-editor-wrapper">
       <style dangerouslySetInnerHTML={{
@@ -95,7 +104,7 @@ const MDXEditorComponent: FC<EditorProps> = ({ markdown, editorRef, onChange }) 
       }} />
       <MDXEditor
         onChange={onChange || ((e) => console.log(e))}
-        ref={editorRef}
+        ref={ref}
         markdown={markdown}
         plugins={[
         // Core text formatting

@@ -66,7 +66,7 @@ export const ChallengeList = ({ onCreateNew, onEditChallenge }: ChallengeListPro
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
-                        {format(new Date(challenge.deadline_at), "MMM dd, yyyy")}
+                        {challenge.deadline_at ? format(new Date(challenge.deadline_at), "MMM dd, yyyy") : "No deadline"}
                       </div>
                     </CardDescription>
                   </div>
@@ -75,9 +75,9 @@ export const ChallengeList = ({ onCreateNew, onEditChallenge }: ChallengeListPro
               <CardContent className="pt-0">
                 <div className="flex items-center justify-between">
                   <Badge 
-                    variant={new Date(challenge.deadline_at) > new Date() ? "default" : "secondary"}
+                    variant={challenge.deadline_at && new Date(challenge.deadline_at) > new Date() ? "default" : "secondary"}
                   >
-                    {new Date(challenge.deadline_at) > new Date() ? "Active" : "Ended"}
+                    {challenge.deadline_at && new Date(challenge.deadline_at) > new Date() ? "Active" : "Ended"}
                   </Badge>
                   <Button
                     variant="outline"

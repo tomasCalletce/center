@@ -3,14 +3,14 @@ import { api } from "~/trpc/server";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 
 interface ChallengeParticipantsProps {
-  _challenge: string;
+  challenge: string;
 }
 
 export const ChallengeParticipants: React.FC<
   ChallengeParticipantsProps
-> = async ({ _challenge }) => {
+> = async ({ challenge }) => {
   const challengeParticipants = await api.public.challenge.participant({
-    _challenge,
+    _challenge: challenge,
   });
 
   // Handle the case where challengeParticipants might be an empty array or Clerk response

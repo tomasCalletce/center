@@ -7,7 +7,7 @@ import { challenges } from "~/server/db/schemas/challenges";
 import { teams } from "~/server/db/schemas/teams";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
-import { titleToSlug } from "~/lib/utils";
+import { titleToSlug, isUUID } from "~/lib/utils";
 
 export const allSubmissions = publicProcedure
   .input(
@@ -17,10 +17,10 @@ export const allSubmissions = publicProcedure
   )
   .query(async ({ input }) => {
     // Check if input is a UUID or a slug
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(input._challenge);
+    const inputIsUUID = isUUID(input._challenge);
     
     let challengeId: string;
-    if (isUUID) {
+    if (inputIsUUID) {
       challengeId = input._challenge;
     } else {
       // For slug, we need to get all challenges and find the one with matching slug

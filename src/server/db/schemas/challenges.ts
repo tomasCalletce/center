@@ -50,3 +50,24 @@ export const verifyChallengesSchema = createInsertSchema(challenges).omit({
   created_at: true,
   updated_at: true,
 });
+
+export const updateChallengeSchema = verifyChallengesSchema.omit({
+  _image: true,
+}).extend({
+  id: z.string(),
+  imageData: z.object({
+    url: z.string(),
+    pathname: z.string(),
+    alt: z.string(),
+  }).optional(),
+});
+
+export const createChallengeSchema = verifyChallengesSchema.omit({
+  _image: true,
+}).extend({
+  imageData: z.object({
+    url: z.string(),
+    pathname: z.string(),
+    alt: z.string(),
+  }),
+});

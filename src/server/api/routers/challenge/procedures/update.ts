@@ -2,26 +2,22 @@ import { protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db/connection";
 import {
   challenges,
-  verifyChallengesSchema,
+  updateChallengeSchema,
 } from "~/server/db/schemas/challenges";
+import { assets } from "~/server/db/schemas/asset";
+import { assetsImages } from "~/server/db/schemas/assets-images";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
-const updateChallengeSchema = verifyChallengesSchema.omit({
-  _image: true,
-}).extend({
-  id: z.string(),
-});
-
 export const update = protectedProcedure
   .input(updateChallengeSchema)
   .mutation(async ({ input, ctx }) => {
-    const { id, ...updateData } = input;
+    const { id, imageData, ...updateData } = input;
 
     // Check if the challenge exists and belongs to the user
     const [existingChallenge] = await db
-      .select({ id: challenges.id, _clerk: challenges._clerk })
+      .select({ id: challenges.id, _clerk: challenges._clerk, _image: challenges._image })
       .from(challenges)
       .where(eq(challenges.id, id));
 
@@ -37,6 +33,34 @@ export const update = protectedProcedure
         code: "FORBIDDEN",
         message: "You can only update your own challenges",
       });
+    }
+
+    // Handle image update if provided
+    if (imageData) {
+      // Get the existing image asset ID
+      const [existingImage] = await db
+        .select({ _asset: assetsImages._asset })
+        .from(assetsImages)
+        .where(eq(assetsImages.id, existingChallenge._image));
+
+      if (existingImage && existingImage._asset) {
+        // Update the existing asset
+        await db
+          .update(assets)
+          .set({
+            pathname: imageData.pathname,
+            url: imageData.url,
+          })
+          .where(eq(assets.id, existingImage._asset));
+
+        // Update the image alt text
+        await db
+          .update(assetsImages)
+          .set({
+            alt: imageData.alt,
+          })
+          .where(eq(assetsImages.id, existingChallenge._image));
+      }
     }
 
     const [updatedChallenge] = await db
