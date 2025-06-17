@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -33,23 +35,27 @@ import {
 const formSchema = formChallengesSchema;
 
 export const ChallengeForm: React.FC = () => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    if (!uploadedImageUrl) {
+      toast.error("Please upload a challenge image");
+      return;
+    }
+
+    console.log("Form data:", { ...data, imageUrl: uploadedImageUrl });
+    // TODO: Here you'll call your mutation to create the challenge
+    // The uploadedImageUrl contains the Vercel blob URL
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Create New Challenge</h1>
-        <p className="text-muted-foreground">
-          Fill in the details to create a new challenge
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold mb-6">Create Challenge</h1>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -61,11 +67,8 @@ export const ChallengeForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter challenge title" {...field} />
+                  <Input placeholder="Challenge title" {...field} />
                 </FormControl>
-                <FormDescription>
-                  A clear and engaging title for your challenge
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -80,20 +83,17 @@ export const ChallengeForm: React.FC = () => {
                 <FormControl>
                   <Input placeholder="challenge-slug" {...field} />
                 </FormControl>
-                <FormDescription>
-                  URL-friendly version of the title (auto-generated)
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
           <div>
-            <label className="text-sm font-medium">Challenge Image</label>
-            <ImageUpload />
-            <p className="text-sm text-muted-foreground mt-1">
-              Upload an attractive image for your challenge
-            </p>
+            <label className="text-sm font-medium">Image</label>
+            <ImageUpload
+              onImageUploaded={(url) => setUploadedImageUrl(url)}
+              onImageRemoved={() => setUploadedImageUrl(null)}
+            />
           </div>
 
           <FormField
@@ -104,27 +104,24 @@ export const ChallengeForm: React.FC = () => {
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Describe your challenge in detail..."
+                    placeholder="Describe the challenge..."
                     className="min-h-32"
                     {...field}
                     value={field.value || ""}
                   />
                 </FormControl>
-                <FormDescription>
-                  Detailed description of the challenge (supports Markdown)
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="price_pool"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Prize Pool</FormLabel>
+                  <FormLabel>Prize</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -133,9 +130,6 @@ export const ChallengeForm: React.FC = () => {
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Prize amount for the winner(s)
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -153,7 +147,7 @@ export const ChallengeForm: React.FC = () => {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select currency" />
+                        <SelectValue placeholder="USD" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -166,9 +160,6 @@ export const ChallengeForm: React.FC = () => {
                       )}
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    Choose the prize pool currency
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -195,9 +186,6 @@ export const ChallengeForm: React.FC = () => {
                     }
                   />
                 </FormControl>
-                <FormDescription>
-                  When should the challenge close?
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -221,15 +209,16 @@ export const ChallengeForm: React.FC = () => {
                     ))}
                   </select>
                 </FormControl>
-                <FormDescription>
-                  Whether the challenge should be visible to participants
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <div className="flex gap-4 pt-6">
-            <Button type="submit" disabled={form.formState.isSubmitting}>
+            <Button
+              className="cursor-pointer"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
               {form.formState.isSubmitting && (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               )}

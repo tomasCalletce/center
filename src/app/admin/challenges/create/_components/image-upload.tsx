@@ -29,7 +29,6 @@ export const ImageUpload = ({
       if (result.success && result.blob) {
         setImageUrl(result.blob.url);
         onImageUploaded?.(result.blob.url);
-        toast.success("Image uploaded!");
       } else {
         toast.error(result.error || "Upload failed");
       }
@@ -97,12 +96,7 @@ export const ImageUpload = ({
       ) : (
         <div className="py-4">
           <Upload className="w-10 h-10 mx-auto text-primary/70 mb-3" />
-          <p className="text-sm font-medium mb-1">
-            Drop image or click to browse
-          </p>
-          <p className="text-xs text-muted-foreground">
-            JPG, PNG, GIF up to 5MB
-          </p>
+          <p className="text-sm font-medium">Drop image or click to browse</p>
         </div>
       )}
     </div>
