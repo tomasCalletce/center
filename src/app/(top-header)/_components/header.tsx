@@ -33,19 +33,10 @@ export function Header() {
             <SignedIn>
               <NavigationMenuItem>
                 <Link
-                  href="/submissions"
-                  className={buttonVariants({
-                    variant: "ghost",
-                  })}
-                >
-                  Submissions
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
                   href="/profile"
                   className={buttonVariants({
                     variant: "ghost",
+                    className: "cursor-pointer",
                   })}
                 >
                   Profile
@@ -54,7 +45,6 @@ export function Header() {
             </SignedIn>
           </NavigationMenuList>
         </NavigationMenu>
-
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center gap-3">
             <Link
@@ -62,7 +52,7 @@ export function Header() {
               className={buttonVariants({
                 variant: "ghost",
                 size: "sm",
-                className: "h-9 px-4 text-sm font-medium",
+                className: "h-9 px-4 text-sm font-medium cursor-pointer",
               })}
             >
               Host Challenge
@@ -72,7 +62,7 @@ export function Header() {
               className={buttonVariants({
                 variant: "default",
                 size: "sm",
-                className: "h-9 px-4 text-sm font-medium",
+                className: "h-9 px-4 text-sm font-medium cursor-pointer",
               })}
             >
               Find Talent

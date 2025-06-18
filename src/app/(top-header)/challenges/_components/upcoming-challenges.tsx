@@ -113,7 +113,7 @@ export const UpcomingChallenges = async () => {
                     </div>
                   </div>
                   <div className="pt-2">
-                    <Button className="w-full">
+                    <Button className="w-full cursor-pointer">
                       View Challenge
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
