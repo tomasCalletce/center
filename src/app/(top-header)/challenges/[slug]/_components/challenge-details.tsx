@@ -4,18 +4,27 @@ import { api } from "~/trpc/server";
 import { buttonVariants } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import { Clock, ArrowRight, Users, MapPin, Trophy, Calendar } from "lucide-react";
+import {
+  Clock,
+  ArrowRight,
+  Users,
+  MapPin,
+  Trophy,
+  Calendar,
+} from "lucide-react";
 import { cn } from "~/lib/utils";
 import { MDXRenderer } from "~/components/mdx-renderer";
 
 interface ChallengeDetailsProps {
-  challenge: string;
+  slug: string;
 }
 
 export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
-  challenge,
+  slug,
 }) => {
-  const challengeData = await api.public.challenge.details({ _challenge: challenge });
+  const challengeData = await api.public.challenge.detailsBySlug({
+    challenge_slug: slug,
+  });
 
   const timeLeft = challengeData.deadline_at
     ? formatDistanceToNow(new Date(challengeData.deadline_at), {
@@ -45,7 +54,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        
+
         {/* Hero Content */}
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="flex flex-wrap gap-3 mb-4">
@@ -53,24 +62,33 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
               <Trophy className="h-3 w-3 mr-1" />
               {pricePool} Prize Pool
             </Badge>
-            <Badge variant="destructive" className="bg-red-500/90 text-white border-0">
+            <Badge
+              variant="destructive"
+              className="bg-red-500/90 text-white border-0"
+            >
               <Clock className="h-3 w-3 mr-1" />
               {timeLeft}
             </Badge>
-            <Badge variant="outline" className="bg-background/90 text-foreground border-0">
+            <Badge
+              variant="outline"
+              className="bg-background/90 text-foreground border-0"
+            >
               <MapPin className="h-3 w-3 mr-1" />
               Virtual
             </Badge>
-            <Badge variant="outline" className="bg-background/90 text-foreground border-0">
+            <Badge
+              variant="outline"
+              className="bg-background/90 text-foreground border-0"
+            >
               <Users className="h-3 w-3 mr-1" />
               Open
             </Badge>
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {challengeData.title}
           </h1>
-          
+
           <div className="flex items-center gap-4 text-white/90">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
@@ -88,9 +106,9 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
             <h2 className="text-2xl font-semibold mb-6 text-foreground">
               {/* Challenge Details */}
             </h2>
-            
+
             {challengeData.markdown ? (
-              await <MDXRenderer content={challengeData.markdown} />
+              await (<MDXRenderer content={challengeData.markdown} />)
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <p>Challenge details will be available soon.</p>
@@ -105,7 +123,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
             <h3 className="text-lg font-semibold mb-4 text-foreground">
               Challenge Info
             </h3>
-            
+
             <div className="space-y-4">
               {/* Prize Pool */}
               <div>

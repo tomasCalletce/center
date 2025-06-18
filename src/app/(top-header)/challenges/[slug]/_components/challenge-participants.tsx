@@ -14,8 +14,8 @@ export const ChallengeParticipants: React.FC<
   });
 
   // Handle the case where challengeParticipants might be an empty array or Clerk response
-  const participants = Array.isArray(challengeParticipants) 
-    ? challengeParticipants 
+  const participants = Array.isArray(challengeParticipants)
+    ? challengeParticipants
     : challengeParticipants.data || [];
 
   return (

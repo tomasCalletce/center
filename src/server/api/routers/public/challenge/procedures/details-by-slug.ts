@@ -7,10 +7,10 @@ import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 import { TRPCError } from "@trpc/server";
 
-export const details = publicProcedure
+export const detailsBySlug = publicProcedure
   .input(
     z.object({
-      _challenge: z.string().uuid(),
+      challenge_slug: z.string(),
     })
   )
   .query(async ({ input }) => {
@@ -31,7 +31,7 @@ export const details = publicProcedure
       .from(challenges)
       .innerJoin(assetsImages, eq(challenges._image, assetsImages.id))
       .innerJoin(assets, eq(assetsImages._asset, assets.id))
-      .where(eq(challenges.id, input._challenge));
+      .where(eq(challenges.slug, input.challenge_slug));
     if (!challenge) {
       throw new TRPCError({
         code: "NOT_FOUND",
