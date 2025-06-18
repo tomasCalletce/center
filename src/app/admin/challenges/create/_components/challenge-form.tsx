@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import EditorMdx from "~/components/mx-editor";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,20 +30,22 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { api } from "~/trpc/react";
-import { SimpleEditor } from "~/app/admin/_components/mdx-editor";
-import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 const formSchema = formChallengesSchema;
 
 export const ChallengeForm: React.FC = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-  const editorRef = useRef<MDXEditorMethods | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      title: "",
+      slug: "",
+      markdown: "",
+      price_pool: undefined,
       price_pool_currency: challengePricePoolCurrencyValues.USD,
       visibility: challengeVisibilityValues.VISIBLE,
+      deadline_at: undefined,
     },
   });
 
@@ -51,10 +54,6 @@ export const ChallengeForm: React.FC = () => {
       toast.success("Challenge created successfully");
       form.reset();
       setUploadedImageUrl(null);
-      // Reset the MDX editor
-      if (editorRef.current) {
-        editorRef.current.setMarkdown("");
-      }
     },
     onError: () => {
       toast.error("Failed to create challenge");
@@ -228,11 +227,14 @@ export const ChallengeForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <SimpleEditor
+                  <EditorMdx
                     markdown={field.value || ""}
-                    onChange={(value: string) => field.onChange(value)}
-                    placeholder="Describe the challenge..."
-                    editorRef={editorRef}
+                    onChange={(value) => {
+                      field.onChange(value);
+                      // Optional: trigger validation
+                      form.trigger("markdown");
+                    }}
+                    placeholder="Describe your challenge in detail. Include rules, requirements, and evaluation criteria..."
                   />
                 </FormControl>
                 <FormMessage />
