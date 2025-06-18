@@ -36,10 +36,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
 
   return (
     <div className="grid grid-cols-4 gap-4 overflow-hidden h-[500px]">
-      <Link
-        href={`/talent/challenges/${challenge.id}`}
-        className="col-span-3 relative"
-      >
+      <Link href={`#`} className="col-span-3 relative">
         <Image
           src={challenge.image.url}
           alt={challenge.image.alt}
@@ -48,22 +45,16 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           priority
         />
       </Link>
-
-      {/* Details Section */}
       <div className="col-span-1 flex flex-col bg-card rounded-xl border">
-        {/* Title Section - Moved to top */}
         <div className="p-6 border-b">
-          <h2 className="font-semibold text-lg leading-tight mb-2">
+          <h1 className="font-bold text-2xl leading-tight">
             {challenge.title}
-          </h2>
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Join this challenge and compete with developers worldwide
+            {challenge.description}
           </p>
         </div>
-
-        {/* Details */}
         <div className="flex-1 p-6 space-y-6">
-          {/* Prize Pool */}
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Trophy className="h-4 w-4" />
@@ -71,7 +62,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
                 Prize Pool
               </span>
             </div>
-
             <div className="flex items-baseline gap-2">
               <div className="text-2xl font-bold text-foreground">
                 {pricePool}
@@ -81,7 +71,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
               </Badge>
             </div>
           </div>
-
           <div>
             <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
               Deadline
@@ -96,7 +85,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
               </Badge>
             </div>
           </div>
-
           <div>
             <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
               Event Type
@@ -113,8 +101,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
             </div>
           </div>
         </div>
-
-        {/* Bottom CTA */}
         <div className="p-6 border-t">
           <Link
             className={cn(buttonVariants({ variant: "default" }), "w-full")}

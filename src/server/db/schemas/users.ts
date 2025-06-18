@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
-  _user: varchar("_user", { length: 32 }).notNull().unique(),
+  _clerk: varchar("_clerk", { length: 32 }).notNull().unique(),
 
   // Essential Info
   display_name: varchar("display_name", { length: 255 }),
@@ -51,7 +51,7 @@ export const userProfileSchema = createInsertSchema(users, {
   education: z.array(educationSchema).optional(),
 }).omit({
   id: true,
-  _user: true,
+  _clerk: true,
   created_at: true,
   updated_at: true,
 });

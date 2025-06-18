@@ -1,57 +1,60 @@
 import { Users } from "lucide-react";
 import { api } from "~/trpc/server";
-import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 
 interface ChallengeParticipantsProps {
-  challenge: string;
+  slug: string;
 }
 
 export const ChallengeParticipants: React.FC<
   ChallengeParticipantsProps
-> = async ({ challenge }) => {
-  const challengeParticipants = await api.public.challenge.participant({
-    _challenge: challenge,
+> = async ({ slug }) => {
+  const challengeParticipants = await api.public.challenge.participants({
+    challenge_slug: slug,
   });
 
-  // Handle the case where challengeParticipants might be an empty array or Clerk response
-  const participants = Array.isArray(challengeParticipants)
-    ? challengeParticipants
-    : challengeParticipants.data || [];
-
   return (
-    <div className="flex gap-6">
-      <div className="border-r border-border/60 pr-6 min-w-fit">
-        <div className="flex items-center justify-between gap-4 mb-1">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Users className="h-5 w-5 text-primary" />
-            </div>
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Participants
-            </h2>
-          </div>
-        </div>
+    <div className="border border-dashed rounded-xl p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <Users className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm font-medium">
+          {challengeParticipants.length} joined
+        </span>
       </div>
-      <div className="flex flex-wrap gap-4 flex-1">
-        {participants.map((participant: any) => (
-          <div key={participant.id} className="flex items-center gap-2">
-            <Avatar className="h-8 w-8 ring-2 ring-background shadow-sm">
-              <AvatarImage
-                src={participant.imageUrl}
-                alt={participant.fullName || "N/A"}
-                className="object-cover"
-              />
-              <AvatarFallback className="text-xs font-medium bg-gradient-to-br from-primary/20 to-primary/10">
-                ACC
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">
-                {participant.fullName || participant.firstName || "Anonymous"}
-              </p>
+
+      <div className="flex flex-wrap gap-2">
+        {challengeParticipants.slice(0, 8).map((participant) => {
+          const initials = participant.user.display_name
+            ? participant.user.display_name
+                .split(" ")
+                .map((name) => name[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 2)
+            : "A";
+
+          return (
+            <div
+              key={participant.id}
+              className="flex items-center gap-2 bg-muted/50 rounded-full px-3 py-1.5 text-sm"
+              title={participant.user.display_name || "Anonymous Developer"}
+            >
+              <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">
+                {initials}
+              </div>
+              <span className="text-sm">
+                {participant.user.display_name?.split(" ")[0] || "Anonymous"}
+              </span>
+            </div>
+          );
+        })}
+
+        {challengeParticipants.length > 8 && (
+          <div className="flex items-center gap-2 bg-muted/50 rounded-full px-3 py-1.5 text-sm">
+            <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">
+              +{challengeParticipants.length - 8}
             </div>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

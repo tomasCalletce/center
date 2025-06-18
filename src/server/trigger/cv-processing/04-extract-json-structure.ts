@@ -108,7 +108,7 @@ export const extractJsonStructureTask = schemaTask({
     });
 
     const userData = {
-      _user: userId,
+      _clerk: userId,
       display_name: object.current_title,
       location: object.location,
       current_title: object.current_title,
@@ -121,7 +121,7 @@ export const extractJsonStructureTask = schemaTask({
       .insert(users)
       .values(userData)
       .onConflictDoUpdate({
-        target: users._user,
+        target: users._clerk,
         set: {
           display_name: userData.display_name,
           location: userData.location,

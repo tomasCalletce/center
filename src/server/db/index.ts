@@ -11,3 +11,4 @@ export * from "~/server/db/schemas/users";
 export * from "~/server/db/schemas/pdf-page-images";
 export * from "~/server/db/schemas/asset-markdown";
 export * from "~/server/db/schemas/pdf-markdowns";
+export * from "~/server/db/schemas/participation-intents";
