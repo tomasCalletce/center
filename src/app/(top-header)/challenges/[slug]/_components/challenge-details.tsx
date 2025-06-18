@@ -44,7 +44,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
 
   return (
     <div className="space-y-8">
-      {/* Hero Section */}
       <div className="relative h-96 rounded-2xl overflow-hidden">
         <Image
           src={challengeData.image.url}
@@ -54,8 +53,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-        {/* Hero Content */}
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="flex flex-wrap gap-3 mb-4">
             <Badge className="bg-background/90 text-foreground border-0">
@@ -84,11 +81,9 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
               Open
             </Badge>
           </div>
-
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {challengeData.title}
           </h1>
-
           <div className="flex items-center gap-4 text-white/90">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
@@ -97,16 +92,10 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           </div>
         </div>
       </div>
-
-      {/* Challenge Content */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Main Content - 3/4 */}
         <div className="lg:col-span-3">
           <div className="bg-card rounded-xl border p-8">
-            <h2 className="text-2xl font-semibold mb-6 text-foreground">
-              {/* Challenge Details */}
-            </h2>
-
+            <h2 className="text-2xl font-semibold mb-6 text-foreground"></h2>
             {challengeData.markdown ? (
               await (<MDXRenderer content={challengeData.markdown} />)
             ) : (
@@ -116,16 +105,12 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
             )}
           </div>
         </div>
-
-        {/* Sidebar - 1/4 */}
         <div className="lg:col-span-1">
           <div className="bg-card rounded-xl border p-6 sticky top-6">
             <h3 className="text-lg font-semibold mb-4 text-foreground">
               Challenge Info
             </h3>
-
             <div className="space-y-4">
-              {/* Prize Pool */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Trophy className="h-4 w-4 text-primary" />
@@ -137,8 +122,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
                   {pricePool}
                 </div>
               </div>
-
-              {/* Deadline */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-4 w-4 text-primary" />
@@ -155,8 +138,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
                   </Badge>
                 </div>
               </div>
-
-              {/* Event Type */}
               <div>
                 <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">
                   Event Type
@@ -173,8 +154,6 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
                 </div>
               </div>
             </div>
-
-            {/* CTA Button */}
             <div className="mt-6 pt-6 border-t">
               <Link
                 className={cn(buttonVariants({ variant: "default" }), "w-full")}
