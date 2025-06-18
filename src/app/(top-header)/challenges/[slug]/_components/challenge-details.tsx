@@ -22,7 +22,7 @@ interface ChallengeDetailsProps {
 export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
   slug,
 }) => {
-  const challengeData = await api.public.challenge.detailsBySlug({
+  const challengeData = await api.public.challenge.details({
     challenge_slug: slug,
   });
 
