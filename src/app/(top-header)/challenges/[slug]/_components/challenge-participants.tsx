@@ -1,5 +1,6 @@
 import { Users } from "lucide-react";
 import { api } from "~/trpc/server";
+import { formatDistanceToNow } from "date-fns";
 
 interface ChallengeParticipantsProps {
   slug: string;
@@ -23,36 +24,43 @@ export const ChallengeParticipants: React.FC<
 
       <div className="flex flex-wrap gap-2">
         {challengeParticipants.slice(0, 8).map((participant) => {
-          const initials = participant.user.display_name
-            ? participant.user.display_name
-                .split(" ")
-                .map((name) => name[0])
-                .join("")
-                .toUpperCase()
-                .slice(0, 2)
-            : "A";
+          const joinedTime = formatDistanceToNow(
+            new Date(participant.created_at),
+            {
+              addSuffix: true,
+            }
+          );
 
           return (
             <div
               key={participant.id}
-              className="flex items-center gap-2 bg-muted/50 rounded-full px-3 py-1.5 text-sm"
-              title={participant.user.display_name || "Anonymous Developer"}
+              className="flex items-center gap-2 bg-muted/50 rounded-full px-4 py-2 border transition-all hover:scale-105"
             >
-              <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">
-                {initials}
+              <div className="w-2 h-2 rounded-full bg-foreground/30"></div>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium leading-tight">
+                  {participant.user.display_name || "Anonymous Developer"}
+                </span>
+                <span className="text-xs text-muted-foreground leading-tight">
+                  {joinedTime}
+                </span>
               </div>
-              <span className="text-sm">
-                {participant.user.display_name?.split(" ")[0] || "Anonymous"}
-              </span>
             </div>
           );
         })}
 
         {challengeParticipants.length > 8 && (
-          <div className="flex items-center gap-2 bg-muted/50 rounded-full px-3 py-1.5 text-sm">
-            <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">
-              +{challengeParticipants.length - 8}
-            </div>
+          <div className="flex items-center gap-2 bg-muted/50 rounded-full px-4 py-2 border">
+            <div className="w-2 h-2 rounded-full bg-foreground/30"></div>
+            <span className="text-sm font-medium">
+              +{challengeParticipants.length - 8} more
+            </span>
+          </div>
+        )}
+
+        {challengeParticipants.length === 0 && (
+          <div className="text-sm text-muted-foreground">
+            No participants yet - be the first!
           </div>
         )}
       </div>

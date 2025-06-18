@@ -72,6 +72,7 @@ export const ChallengeForm: React.FC = () => {
       price_pool_currency: data.price_pool_currency,
       visibility: data.visibility,
       deadline_at: data.deadline_at,
+      open_at: data.open_at,
       verifyImagesSchema: {
         alt: data.title,
         verifyAssetsSchema: {
@@ -189,6 +190,29 @@ export const ChallengeForm: React.FC = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Deadline</FormLabel>
+                <FormControl>
+                  <Input
+                    type="datetime-local"
+                    value={
+                      field.value ? field.value.toISOString().slice(0, 16) : ""
+                    }
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? new Date(e.target.value) : null
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="open_at"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Open</FormLabel>
                 <FormControl>
                   <Input
                     type="datetime-local"

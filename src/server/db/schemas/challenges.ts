@@ -44,7 +44,8 @@ export const challenges = pgTable("challenges", {
     "price_pool_currency"
   ).notNull(),
   visibility: challengeVisibilityEnumSchema("visibility").notNull(),
-  deadline_at: timestamp("deadline"),
+  deadline_at: timestamp("deadline").notNull(),
+  open_at: timestamp("open_at").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -53,6 +53,7 @@ export const create = isAdminAuthedProcedure
         visibility: input.visibility,
         price_pool: input.price_pool,
         price_pool_currency: input.price_pool_currency,
+        open_at: input.open_at,
         deadline_at: input.deadline_at,
       })
       .returning({ id: challenges.id });
