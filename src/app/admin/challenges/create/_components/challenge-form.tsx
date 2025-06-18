@@ -30,30 +30,27 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 const formSchema = formChallengesSchema;
 
 export const ChallengeForm: React.FC = () => {
+  const router = useRouter();
+
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      slug: "",
-      markdown: "",
-      price_pool: undefined,
       price_pool_currency: challengePricePoolCurrencyValues.USD,
       visibility: challengeVisibilityValues.VISIBLE,
-      deadline_at: undefined,
     },
   });
 
   const createChallengeMutation = api.challenge.create.useMutation({
     onSuccess: () => {
       toast.success("Challenge created successfully");
-      form.reset();
-      setUploadedImageUrl(null);
+      router.push("/admin");
     },
     onError: () => {
       toast.error("Failed to create challenge");
@@ -142,7 +139,6 @@ export const ChallengeForm: React.FC = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="price_pool_currency"
@@ -173,7 +169,6 @@ export const ChallengeForm: React.FC = () => {
               )}
             />
           </div>
-
           <FormField
             control={form.control}
             name="deadline_at"
@@ -183,7 +178,6 @@ export const ChallengeForm: React.FC = () => {
                 <FormControl>
                   <Input
                     type="datetime-local"
-                    {...field}
                     value={
                       field.value ? field.value.toISOString().slice(0, 16) : ""
                     }
