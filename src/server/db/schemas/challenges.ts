@@ -35,9 +35,10 @@ export const challenges = pgTable("challenges", {
   _image: uuid("_image")
     .notNull()
     .references(() => assetsImages.id),
-  title: varchar("title", { length: 255 }).notNull(),
+  title: varchar("title").notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
-  markdown: text("markdown"),
+  description: text("description").notNull(),
+  markdown: text("markdown").notNull(),
   price_pool: integer("price_pool").notNull(),
   price_pool_currency: challengePricePoolCurrencyEnumSchema(
     "price_pool_currency"

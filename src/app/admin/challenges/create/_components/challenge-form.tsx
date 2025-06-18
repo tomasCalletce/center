@@ -66,6 +66,7 @@ export const ChallengeForm: React.FC = () => {
     createChallengeMutation.mutate({
       title: data.title,
       slug: data.slug,
+      description: data.description,
       markdown: data.markdown,
       price_pool: data.price_pool,
       price_pool_currency: data.price_pool_currency,
@@ -94,6 +95,19 @@ export const ChallengeForm: React.FC = () => {
                 <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Challenge title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input placeholder="Challenge description" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -225,7 +239,6 @@ export const ChallengeForm: React.FC = () => {
                     markdown={field.value || ""}
                     onChange={(value) => {
                       field.onChange(value);
-                      // Optional: trigger validation
                       form.trigger("markdown");
                     }}
                     placeholder="Describe your challenge in detail. Include rules, requirements, and evaluation criteria..."

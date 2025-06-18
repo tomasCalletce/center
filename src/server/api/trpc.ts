@@ -119,20 +119,21 @@ const isAuthed = t.middleware(({ next, ctx }) => {
   });
 });
 
-const isOrgAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.auth.orgId) {
+export const protectedProcedure = t.procedure.use(isAuthed);
+
+const isAdminAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.auth.sessionClaims?.metadata.isAdmin) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "No active organization",
+      message: "Not authorized",
     });
   }
 
   return next({
     ctx: {
       auth: ctx.auth,
-      orgId: ctx.auth.orgId,
     },
   });
 });
 
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const isAdminAuthedProcedure = t.procedure.use(isAdminAuthed);

@@ -1,4 +1,4 @@
-import { protectedProcedure } from "~/server/api/trpc";
+import { isAdminAuthedProcedure } from "~/server/api/trpc";
 import { assets } from "~/server/db/schemas/asset";
 import { TRPCError } from "@trpc/server";
 import { db } from "~/server/db/connection";
@@ -8,7 +8,7 @@ import {
 } from "~/server/db/schemas/challenges";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 
-export const create = protectedProcedure
+export const create = isAdminAuthedProcedure
   .input(verifyChallengesSchema)
   .mutation(async ({ input, ctx }) => {
     const [newDocument] = await db
@@ -48,6 +48,7 @@ export const create = protectedProcedure
         _image: newImage.id,
         title: input.title,
         slug: input.slug,
+        description: input.description,
         markdown: input.markdown,
         visibility: input.visibility,
         price_pool: input.price_pool,

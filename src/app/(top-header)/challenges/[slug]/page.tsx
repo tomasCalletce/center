@@ -1,7 +1,7 @@
 import { HydrateClient } from "~/trpc/server";
-import { ChallengeDetails } from "./_components/challenge-details";
-import { ChallengeParticipants } from "./_components/challenge-participants";
-import { ChallengeSubmissions } from "./_components/challenge-submissions";
+import { ChallengeDetails } from "~/app/(top-header)/challenges/[slug]/_components/challenge-details";
+// import { ChallengeParticipants } from "./_components/challenge-participants";
+// import { ChallengeSubmissions } from "~/app/(top-header)/challenges/[_challenge]/_components/challenge-submissions";
 import { Separator } from "~/components/ui/separator";
 
 export default async function ChallengePage({
