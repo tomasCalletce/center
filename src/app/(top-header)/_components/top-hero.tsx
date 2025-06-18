@@ -5,7 +5,7 @@ import { buttonVariants } from "~/components/ui/button";
 export const TopHero = () => {
   return (
     <section className="relative border-b border-dashed py-6">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-5 space-y-6">
             <div className="inline-flex items-center">

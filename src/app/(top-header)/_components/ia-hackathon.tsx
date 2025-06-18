@@ -3,7 +3,7 @@ import Image from "next/image";
 export const AiHackathon = () => {
   return (
     <section>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="max-w-6xl mx-auto space-y-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-gray-50 border border-dashed p-4  rounded-xl">
             <div className="relative aspect-[2/1] rounded-xl overflow-hidden">
