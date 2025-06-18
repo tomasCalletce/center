@@ -4,8 +4,16 @@ import { api } from "~/trpc/server";
 import { buttonVariants } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import { Clock, ArrowRight, Users, MapPin, Trophy } from "lucide-react";
+import {
+  Clock,
+  ArrowRight,
+  Users,
+  MapPin,
+  Trophy,
+  Calendar,
+} from "lucide-react";
 import { cn } from "~/lib/utils";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 interface ChallengeDetailsProps {
   slug: string;
@@ -18,15 +26,20 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
     challenge_slug: slug,
   });
 
-  const timeLeft = challenge.deadline_at
-    ? formatDistanceToNow(new Date(challenge.deadline_at), {
-        addSuffix: true,
-      })
-    : "No deadline";
+  const formattedDeadlineDate = format(challenge.deadline_at, "MMM dd, yyyy");
+  const formattedOpenDate = format(challenge.open_at, "MMM dd, yyyy");
 
-  const formattedDate = challenge.deadline_at
-    ? format(new Date(challenge.deadline_at), "MMM dd, yyyy")
-    : "TBD";
+  const timeLeft = formatDistanceToNow(challenge.deadline_at, {
+    addSuffix: true,
+  });
+
+  const openTimeLeft = formatDistanceToNow(new Date(challenge.open_at), {
+    addSuffix: true,
+  });
+
+  const isSubmissionOpen = challenge.open_at
+    ? new Date() >= challenge.open_at
+    : false;
 
   const pricePool = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -35,7 +48,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
   }).format(challenge.price_pool);
 
   return (
-    <div className="grid grid-cols-4 gap-4 overflow-hidden h-[500px]">
+    <div className="grid grid-cols-4 gap-4 overflow-hidden h-[550px]">
       <Link href={`#`} className="col-span-3 relative">
         <Image
           src={challenge.image.url}
@@ -73,11 +86,28 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           </div>
           <div>
             <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+              Submissions Open
+            </div>
+            <div className="space-y-2">
+              <div className="text-sm font-medium text-foreground">
+                {formattedOpenDate}
+              </div>
+              <Badge
+                variant={isSubmissionOpen ? "default" : "secondary"}
+                className="text-xs font-medium"
+              >
+                <Calendar className="h-3 w-3 mr-1" />
+                {isSubmissionOpen ? "Open now" : openTimeLeft}
+              </Badge>
+            </div>
+          </div>
+          <div>
+            <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
               Deadline
             </div>
             <div className="space-y-2">
               <div className="text-sm font-medium text-foreground">
-                {formattedDate}
+                {formattedDeadlineDate}
               </div>
               <Badge className="text-xs font-medium">
                 <Clock className="h-3 w-3 mr-1" />
@@ -102,13 +132,23 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           </div>
         </div>
         <div className="p-6 border-t">
-          <Link
-            className={cn(buttonVariants({ variant: "default" }), "w-full")}
-            href={`/challenges/${challenge.id}/submissions/submit`}
-          >
-            Submit Build
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
+          <SignedIn>
+            <Link
+              className={cn(buttonVariants({ variant: "default" }), "w-full")}
+              href={`/challenges/${challenge.id}/submissions/submit`}
+            >
+              Submit Build
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
+          </SignedIn>
+          <SignedOut>
+            <Link
+              className={cn(buttonVariants({ variant: "default" }), "w-full")}
+              href={`/challenges/${challenge.id}/submissions/submit`}
+            >
+              Sign in to submit
+            </Link>
+          </SignedOut>
         </div>
       </div>
     </div>
