@@ -33,16 +33,11 @@ export function Header() {
             <SignedIn>
               <NavigationMenuItem>
                 <Link
-                  href="/submissions"
-                  className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
-                >
-                  Submissions
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
                   href="/profile"
-                  className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                  className={buttonVariants({
+                    variant: "ghost",
+                    className: "cursor-pointer",
+                  })}
                 >
                   Profile
                 </Link>
@@ -50,7 +45,6 @@ export function Header() {
             </SignedIn>
           </NavigationMenuList>
         </NavigationMenu>
-
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center gap-3">
             <Link
@@ -58,7 +52,7 @@ export function Header() {
               className={buttonVariants({
                 variant: "ghost",
                 size: "sm",
-                className: "h-9 px-4 text-sm font-medium",
+                className: "h-9 px-4 text-sm font-medium cursor-pointer",
               })}
             >
               Host Challenge
@@ -68,7 +62,7 @@ export function Header() {
               className={buttonVariants({
                 variant: "default",
                 size: "sm",
-                className: "h-9 px-4 text-sm font-medium",
+                className: "h-9 px-4 text-sm font-medium cursor-pointer",
               })}
             >
               Find Talent

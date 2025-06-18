@@ -6,48 +6,28 @@ import { eq, or } from "drizzle-orm";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 import { TRPCError } from "@trpc/server";
-import { titleToSlug, isUUID } from "~/lib/utils";
 
 export const details = publicProcedure
   .input(
-    z.object({
-      _challenge: z.string(),
-    })
+    z
+      .object({
+        _challenge: z.string().uuid().optional(),
+        challenge_slug: z.string().optional(),
+      })
+      .refine((data) => data._challenge || data.challenge_slug, {
+        message: "Either challenge ID or slug must be provided",
+      })
   )
   .query(async ({ input }) => {
-    // Check if input is a UUID (36 chars with hyphens) or a slug
-    const inputIsUUID = isUUID(input._challenge);
-    
-    let whereCondition;
-    if (inputIsUUID) {
-      whereCondition = eq(challenges.id, input._challenge);
-    } else {
-      // For slug, we need to get all challenges and find the one with matching slug
-      const allChallenges = await db
-        .select({
-          id: challenges.id,
-          title: challenges.title,
-        })
-        .from(challenges);
-      
-      const matchingChallenge = allChallenges.find(
-        (challenge) => titleToSlug(challenge.title) === input._challenge
-      );
-      
-      if (!matchingChallenge) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Challenge not found",
-        });
-      }
-      
-      whereCondition = eq(challenges.id, matchingChallenge.id);
-    }
+    const whereCondition = input._challenge
+      ? eq(challenges.id, input._challenge)
+      : eq(challenges.slug, input.challenge_slug!);
 
     const [challenge] = await db
       .select({
         id: challenges.id,
         title: challenges.title,
+        slug: challenges.slug,
         markdown: challenges.markdown,
         deadline_at: challenges.deadline_at,
         price_pool: challenges.price_pool,
@@ -62,7 +42,7 @@ export const details = publicProcedure
       .innerJoin(assetsImages, eq(challenges._image, assetsImages.id))
       .innerJoin(assets, eq(assetsImages._asset, assets.id))
       .where(whereCondition);
-      
+
     if (!challenge) {
       throw new TRPCError({
         code: "NOT_FOUND",
