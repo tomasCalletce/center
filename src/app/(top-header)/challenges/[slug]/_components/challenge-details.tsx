@@ -27,13 +27,13 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
   });
 
   const timeLeft = challengeData.deadline_at
-    ? formatDistanceToNow(new Date(challengeData.deadline_at), {
+    ? formatDistanceToNow(challengeData.deadline_at, {
         addSuffix: true,
       })
     : "No deadline";
 
   const formattedDate = challengeData.deadline_at
-    ? format(new Date(challengeData.deadline_at), "MMM dd, yyyy")
+    ? format(challengeData.deadline_at, "MMM dd, yyyy")
     : "TBD";
 
   const pricePool = new Intl.NumberFormat("en-US", {
