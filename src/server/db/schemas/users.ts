@@ -18,6 +18,9 @@ export const users = pgTable("users", {
   // Skills (core matching criteria)
   skills: jsonb("skills").default([]),
 
+  // Social Media Links
+  social_links: jsonb("social_links").default([]),
+
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -45,10 +48,16 @@ const educationSchema = z.object({
   relevant_coursework: z.array(z.string()).default([]),
 });
 
+const socialLinkSchema = z.object({
+  platform: z.enum(["linkedin", "github", "portfolio", "website"]),
+  url: z.string().url(),
+});
+
 export const userProfileSchema = createInsertSchema(users, {
   skills: z.array(z.string()).optional(),
   experience: z.array(experienceSchema).optional(),
   education: z.array(educationSchema).optional(),
+  social_links: z.array(socialLinkSchema).optional(),
 }).omit({
   id: true,
   _user: true,

@@ -3,7 +3,7 @@ import { aptGet } from "@trigger.dev/build/extensions/core";
 import { env } from "./src/env";
 
 export default defineConfig({
-  project: env.TRIGGER_PROJECT_ID,
+  project:  "proj_hdbxripwvgojzugjobhx",
   runtime: "node",
   logLevel: "log",
   // The max compute seconds a task is allowed to run. If the task run exceeds this duration, it will be stopped.

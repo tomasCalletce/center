@@ -51,6 +51,15 @@ const userProfileSchema = z.object({
 
   // Skills (core matching criteria)
   skills: z.array(z.string()).default([]),
+
+  // Social Links
+  social_links: z.array(z.object({
+      platform: z.enum(["linkedin", "github", "portfolio", "website"]),
+      url: z.string().url(),
+    })
+  )
+    .default([])
+    .nullable(),
 });
 
 export const extractJsonStructureTask = schemaTask({
@@ -115,6 +124,7 @@ export const extractJsonStructureTask = schemaTask({
       experience: object.experience,
       education: object.education,
       skills: object.skills,
+      social_links: object.social_links,
     };
 
     const [updatedUser] = await db
@@ -129,6 +139,7 @@ export const extractJsonStructureTask = schemaTask({
           experience: userData.experience,
           education: userData.education,
           skills: userData.skills,
+          social_links: userData.social_links,
         },
       })
       .returning({
