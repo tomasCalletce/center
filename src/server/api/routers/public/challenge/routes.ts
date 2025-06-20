@@ -1,10 +1,10 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { all } from "~/server/api/routers/public/challenge/procedures/all";
 import { details } from "~/server/api/routers/public/challenge/procedures/details";
-import { allSubmissions } from "~/server/api/routers/challenge/procedures/all-submission";
+import { participants } from "~/server/api/routers/public/challenge/procedures/participants";
 
 export const challengeRouter = createTRPCRouter({
   all,
   details,
-  allSubmissions,
+  participants,
 });

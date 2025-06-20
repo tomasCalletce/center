@@ -11,7 +11,7 @@ import { createInsertSchema } from "drizzle-zod";
 
 export const teams = pgTable("teams", {
   id: uuid("id").primaryKey().defaultRandom(),
-  _owner: varchar("_owner", { length: 32 }).notNull(),
+  _clerk: varchar("_clerk", { length: 32 }).notNull(),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   max_members: integer("max_members").default(5).notNull(),
@@ -22,7 +22,7 @@ export const teams = pgTable("teams", {
 
 export const verifyTeamsSchema = createInsertSchema(teams).omit({
   id: true,
-  _owner: true,
+  _clerk: true,
   created_at: true,
   updated_at: true,
-}); 
+});

@@ -28,8 +28,10 @@ export const details = publicProcedure
         id: challenges.id,
         title: challenges.title,
         slug: challenges.slug,
+        description: challenges.description,
         markdown: challenges.markdown,
         deadline_at: challenges.deadline_at,
+        open_at: challenges.open_at,
         price_pool: challenges.price_pool,
         price_pool_currency: challenges.price_pool_currency,
         image: {
