@@ -4,7 +4,7 @@ import { assetRouter } from "~/server/api/routers/asset/routes";
 import { submissionRouter } from "~/server/api/routers/submission/routes";
 import { protectedRouter } from "~/server/api/routers/protected/routes";
 import { publicRouter } from "~/server/api/routers/public/routes";
-
+import { userRouter } from "~/server/api/routers/user/routes";
 /**
  * This is the primary router for your server.
  *
@@ -16,6 +16,7 @@ export const appRouter = createTRPCRouter({
   protected: protectedRouter,
   public: publicRouter,
   asset: assetRouter,
+  user: userRouter,
 });
 
 // export type definition of API
