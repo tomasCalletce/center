@@ -60,6 +60,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.43.1",
     "drizzle-zod": "^0.5.1",
+    "framer-motion": "^12.18.1",
     "gray-matter": "^4.0.3",
     "import-in-the-middle": "^1.14.2",
     "lucide-react": "^0.511.0",
