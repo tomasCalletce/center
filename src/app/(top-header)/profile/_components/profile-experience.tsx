@@ -5,15 +5,16 @@ import { EditableSection } from "./editable-section";
 import { ExperienceField } from "./form-fields";
 import { updateProfileExperience } from "../_actions/update-profile";
 import { toast } from "sonner";
+import { type EmploymentType } from "~/server/db/schemas/users";
 
 interface Experience {
   title?: string | null;
   company?: string | null;
+  employment_type?: EmploymentType | null;
   start_date?: string | null;
   end_date?: string | null;
   description?: string | null;
   skills_used?: string[] | null;
-  employment_type?: string | null;
 }
 
 interface ProfileExperienceProps {
@@ -36,6 +37,12 @@ export const ProfileExperience = ({ experience }: ProfileExperienceProps) => {
     } catch {
       return dateString;
     }
+  };
+
+  const formatEmploymentType = (type: string) => {
+    return type.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join('-');
   };
 
   const renderView = (data: Experience[]) => {
@@ -61,6 +68,11 @@ export const ProfileExperience = ({ experience }: ProfileExperienceProps) => {
                   </div>
                   <div className="text-sm text-muted-foreground">
                     {exp.company}
+                    {exp.employment_type && (
+                      <span className="ml-2 text-xs bg-muted px-2 py-0.5 rounded-full">
+                        {formatEmploymentType(exp.employment_type)}
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {formatDate(exp.start_date || null)} - {formatDate(exp.end_date || null)}

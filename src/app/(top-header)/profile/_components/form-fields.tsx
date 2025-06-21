@@ -4,8 +4,10 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { X, Plus } from "lucide-react";
 import { useState } from "react";
+import { employmentTypeEnum, type EmploymentType } from "~/server/db/schemas/users";
 
 // Text Input Field
 interface TextFieldProps {
@@ -91,6 +93,7 @@ export const SkillsField = ({ skills, onChange }: SkillsFieldProps) => {
 interface ExperienceItem {
   title?: string | null;
   company?: string | null;
+  employment_type?: EmploymentType | null;
   start_date?: string | null;
   end_date?: string | null;
   description?: string | null;
@@ -103,10 +106,20 @@ interface ExperienceFieldProps {
 }
 
 export const ExperienceField = ({ experience, onChange }: ExperienceFieldProps) => {
+  const employmentTypes = employmentTypeEnum.options;
+  const defaultEmploymentType = employmentTypes[0]; // "full-time"
+  
+  const formatEmploymentType = (type: string) => {
+    return type.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join('-');
+  };
+
   const addExperience = () => {
     const newExperience: ExperienceItem = {
       title: "",
       company: "",
+      employment_type: defaultEmploymentType,
       start_date: "",
       end_date: "",
       description: "",
@@ -164,6 +177,23 @@ export const ExperienceField = ({ experience, onChange }: ExperienceFieldProps) 
               onChange={(value) => updateExperience(index, "company", value)}
               placeholder="Company"
             />
+            <div>
+              <Select
+                value={exp.employment_type || defaultEmploymentType}
+                onValueChange={(value) => updateExperience(index, "employment_type", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Employment Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {employmentTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {formatEmploymentType(type)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <TextField
               value={exp.start_date || ""}
               onChange={(value) => updateExperience(index, "start_date", value)}
