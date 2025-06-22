@@ -17,38 +17,31 @@ import { Input } from "~/components/ui/input";
 import { uploadImage } from "../_actions/upload-image";
 import { toast } from "sonner";
 import { Upload, Loader2, ImageIcon, Check } from "lucide-react";
+import { formSubmissionSchema } from "~/server/db/schemas/submissions";
+import type { DetailsData } from "./submission-dialog";
 
-const detailsSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  demo_url: z.string().url("Please enter a valid URL"),
-  repository_url: z.string().url("Please enter a valid URL"),
-  image: z
-    .object({
-      url: z.string(),
-      pathname: z.string(),
-      alt: z.string(),
-    })
-    .nullable(),
+const detailsSchema = formSubmissionSchema.pick({
+  title: true,
+  demo_url: true,
+  repository_url: true,
+  formImagesSchema: true,
 });
 
 type DetailsFormData = z.infer<typeof detailsSchema>;
 
 interface SubmissionDetailsStepProps {
-  initialData: DetailsFormData;
-  onSubmit: (data: DetailsFormData) => void;
+  handleOnSubmit: (data: DetailsData) => void;
 }
 
 export function SubmissionDetailsStep({
-  initialData,
-  onSubmit,
+  handleOnSubmit,
 }: SubmissionDetailsStepProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [isUploaded, setIsUploaded] = useState(!!initialData.image);
+  const [isUploaded, setIsUploaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<DetailsFormData>({
     resolver: zodResolver(detailsSchema),
-    defaultValues: initialData,
   });
 
   const handleFileChange = async (file: File | null) => {
@@ -61,10 +54,12 @@ export function SubmissionDetailsStep({
 
       const result = await uploadImage(formData);
       if (result.success && result.blob) {
-        form.setValue("image", {
-          url: result.blob.url,
-          pathname: result.blob.pathname,
+        form.setValue("formImagesSchema", {
           alt: file.name,
+          formAssetsSchema: {
+            url: result.blob.url,
+            pathname: result.blob.pathname,
+          },
         });
         setIsUploaded(true);
         toast.success("Image uploaded successfully!");
@@ -79,11 +74,30 @@ export function SubmissionDetailsStep({
   };
 
   const handleRemoveImage = () => {
-    form.setValue("image", null);
+    form.setValue("formImagesSchema", {
+      alt: "",
+      formAssetsSchema: {
+        url: "",
+        pathname: "",
+      },
+    });
     setIsUploaded(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+  };
+
+  const onSubmit = (data: DetailsFormData) => {
+    handleOnSubmit({
+      title: data.title,
+      demo_url: data.demo_url,
+      repository_url: data.repository_url,
+      image: {
+        alt: data.formImagesSchema.alt,
+        url: data.formImagesSchema.formAssetsSchema.url,
+        pathname: data.formImagesSchema.formAssetsSchema.pathname,
+      },
+    });
   };
 
   return (
@@ -145,7 +159,7 @@ export function SubmissionDetailsStep({
           <div>
             <FormField
               control={form.control}
-              name="image"
+              name="formImagesSchema"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium flex items-center gap-2">

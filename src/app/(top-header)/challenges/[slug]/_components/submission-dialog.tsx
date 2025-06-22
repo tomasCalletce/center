@@ -16,6 +16,8 @@ import { api } from "~/trpc/react";
 import { SubmissionMarkdownStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-markdown-step";
 import { SubmissionResultStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-result-step";
 import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-details-step";
+import { formSubmissionSchema } from "~/server/db/schemas/submissions";
+import { z } from "zod";
 
 enum SUBMISSION_STEPS {
   DETAILS = "details",
@@ -24,117 +26,77 @@ enum SUBMISSION_STEPS {
   ERROR = "error",
 }
 
+type SubmissionDetailsSchema = z.infer<typeof formSubmissionSchema>;
+export type DetailsData = {
+  title: SubmissionDetailsSchema["title"];
+  demo_url: SubmissionDetailsSchema["demo_url"];
+  repository_url: SubmissionDetailsSchema["repository_url"];
+  image: {
+    alt: SubmissionDetailsSchema["formImagesSchema"]["alt"];
+    url: SubmissionDetailsSchema["formImagesSchema"]["formAssetsSchema"]["url"];
+    pathname: SubmissionDetailsSchema["formImagesSchema"]["formAssetsSchema"]["pathname"];
+  };
+};
+export type MarkdownData = {
+  description: SubmissionDetailsSchema["description"];
+};
+
 const stepEnum = parseAsStringEnum(Object.values(SUBMISSION_STEPS));
 
 interface SubmissionDialogProps {
-  challengeId: string;
+  _challenge: string;
   children: React.ReactNode;
 }
 
 export function SubmissionDialog({
-  challengeId,
+  _challenge,
   children,
 }: SubmissionDialogProps) {
-  const [open, setOpen] = useState(false);
   const [step, setStep] = useQueryState(
     "step",
     stepEnum.withDefault(SUBMISSION_STEPS.DETAILS)
   );
 
-  const [detailsData, setDetailsData] = useState<{
-    title: string;
-    demo_url: string;
-    repository_url: string;
-    image: {
-      url: string;
-      pathname: string;
-      alt: string;
-    } | null;
-  }>({
-    title: "",
-    demo_url: "",
-    repository_url: "",
-    image: null,
-  });
-
-  const [markdownData, setMarkdownData] = useState<{
-    description: string;
-  }>({
-    description: "",
-  });
+  const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
+  const [markdownData, setMarkdownData] = useState<MarkdownData | null>(null);
 
   const submitMutation = api.submission.create.useMutation({
     onSuccess: () => {
       setStep(SUBMISSION_STEPS.SUCCESS);
     },
-    onError: (error) => {
+    onError: () => {
       setStep(SUBMISSION_STEPS.ERROR);
     },
   });
 
-  const handleDetailsSubmit = (data: typeof detailsData) => {
-    setDetailsData(data);
+  const handleDetailsSubmit = (data: DetailsData) => {
+    setDetailsData({
+      title: data.title,
+      demo_url: data.demo_url,
+      repository_url: data.repository_url,
+      image: data.image,
+    });
     setStep(SUBMISSION_STEPS.MARKDOWN);
   };
 
-  const handleMarkdownSubmit = (data: typeof markdownData) => {
-    setMarkdownData(data);
-
+  const handleMarkdownSubmit = () => {
     // Submit the complete form data
-    submitMutation.mutate({
-      _challenge: challengeId,
-      title: detailsData.title,
-      description: data.description,
-      demo_url: detailsData.demo_url,
-      repository_url: detailsData.repository_url,
-      status: submissionVisibilityValues.VISIBLE,
-      verifyImagesSchema: detailsData.image
-        ? {
-            alt: detailsData.image.alt,
-            verifyAssetsSchema: {
-              url: detailsData.image.url,
-              pathname: detailsData.image.pathname,
-            },
-          }
-        : {
-            alt: "",
-            verifyAssetsSchema: {
-              url: "",
-              pathname: "",
-            },
-          },
-    });
   };
 
   const handleBack = () => {
-    if (step === "markdown") {
+    if (step === SUBMISSION_STEPS.MARKDOWN) {
       setStep(SUBMISSION_STEPS.DETAILS);
-    }
-  };
-
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-    if (!newOpen) {
-      // Reset to first step when dialog closes
-      setStep(SUBMISSION_STEPS.DETAILS);
-      setDetailsData({
-        title: "",
-        demo_url: "",
-        repository_url: "",
-        image: null,
-      });
-      setMarkdownData({ description: "" });
     }
   };
 
   const getStepNumber = () => {
     switch (step) {
-      case "details":
+      case SUBMISSION_STEPS.DETAILS:
         return 1;
-      case "markdown":
+      case SUBMISSION_STEPS.MARKDOWN:
         return 2;
-      case "success":
-      case "error":
+      case SUBMISSION_STEPS.SUCCESS:
+      case SUBMISSION_STEPS.ERROR:
         return 3;
       default:
         return 1;
@@ -142,7 +104,7 @@ export function SubmissionDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="!max-w-[1100px]">
         <DialogHeader>
@@ -179,15 +141,11 @@ export function SubmissionDialog({
           </div>
         </DialogHeader>
         <div>
-          {step === "details" && (
-            <SubmissionDetailsStep
-              initialData={detailsData}
-              onSubmit={handleDetailsSubmit}
-            />
+          {step === SUBMISSION_STEPS.DETAILS && (
+            <SubmissionDetailsStep handleOnSubmit={handleDetailsSubmit} />
           )}
-          {step === "markdown" && (
+          {/* {step === "markdown" && (
             <SubmissionMarkdownStep
-              initialData={markdownData}
               onSubmit={handleMarkdownSubmit}
               onBack={handleBack}
               isLoading={submitMutation.isPending}
@@ -198,7 +156,7 @@ export function SubmissionDialog({
               success={step === "success"}
               onClose={() => handleOpenChange(false)}
             />
-          )}
+          )} */}
         </div>
       </DialogContent>
     </Dialog>
