@@ -93,7 +93,6 @@ export const UpcomingChallenges = async () => {
                 className="block h-full"
               >
                 <div className="h-full flex flex-col p-4 border border-dashed rounded-xl hover:border-slate-300">
-                  {/* Image Section */}
                   <div className="relative aspect-video rounded-xl overflow-hidden mb-4 flex-shrink-0">
                     <Image
                       src={challenge.image.url}
@@ -103,9 +102,7 @@ export const UpcomingChallenges = async () => {
                     />
                   </div>
 
-                  {/* Content Section - Flexible */}
                   <div className="flex flex-col flex-1 space-y-4">
-                    {/* Title and Description */}
                     <div className="space-y-2 flex-shrink-0">
                       <h3 className="text-xl font-medium leading-tight line-clamp-2">
                         {challenge.title}
@@ -115,7 +112,6 @@ export const UpcomingChallenges = async () => {
                       </p>
                     </div>
 
-                    {/* Status Badges */}
                     <div className="flex flex-wrap gap-2 flex-shrink-0">
                       <div className="inline-flex items-center gap-1 px-3 py-1 border border-dashed rounded-full text-sm font-medium">
                         <Trophy className="h-3 w-3" />
@@ -141,10 +137,8 @@ export const UpcomingChallenges = async () => {
                       )}
                     </div>
 
-                    {/* Date Information - Side by Side */}
                     <div className="flex-1 flex flex-col justify-between min-h-0">
                       <div className="flex gap-3 text-sm">
-                        {/* Submission Open Date */}
                         <div className="flex-1 p-3 border border-dashed rounded-lg">
                           <div className="flex items-center gap-2 mb-2">
                             <CalendarDays className="h-4 w-4 text-muted-foreground" />
@@ -160,7 +154,6 @@ export const UpcomingChallenges = async () => {
                           </div>
                         </div>
 
-                        {/* Submission Close Date */}
                         <div className="flex-1 p-3 border border-dashed rounded-lg">
                           <div className="flex items-center gap-2 mb-2">
                             <Clock className="h-4 w-4 text-muted-foreground" />
@@ -179,7 +172,6 @@ export const UpcomingChallenges = async () => {
                         </div>
                       </div>
 
-                      {/* Bottom Info */}
                       <div className="flex items-center gap-4 text-sm text-muted-foreground border-t pt-3 mt-4 flex-shrink-0">
                         <div className="flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
@@ -192,7 +184,6 @@ export const UpcomingChallenges = async () => {
                       </div>
                     </div>
 
-                    {/* Button - Always at bottom */}
                     <div className="pt-3 flex-shrink-0">
                       <Button className="w-full cursor-pointer">
                         View Challenge
