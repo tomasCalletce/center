@@ -1,8 +1,7 @@
 import { HydrateClient } from "~/trpc/server";
 import { ChallengeDetails } from "~/app/(top-header)/challenges/[slug]/_components/challenge-details";
 import { ChallengeParticipants } from "~/app/(top-header)/challenges/[slug]/_components/challenge-participants";
-// import { ChallengeSubmissions } from "~/app/(top-header)/challenges/[_challenge]/_components/challenge-submissions";
-import { Separator } from "~/components/ui/separator";
+import { ChallengeMarkdown } from "~/app/(top-header)/challenges/[slug]/_components/challenge-markdown";
 import { SignedIn } from "@clerk/nextjs";
 
 export default async function ChallengePage({
@@ -15,14 +14,12 @@ export default async function ChallengePage({
   return (
     <HydrateClient>
       <div className="w-full px-6 py-6">
-        <div className="space-y-6 mb-4">
+        <div className="space-y-6">
           <ChallengeDetails slug={slug} />
           <SignedIn>
             <ChallengeParticipants slug={slug} />
           </SignedIn>
-        </div>
-        <div className="space-y-6 mt-4">
-          {/* <ChallengeSubmissions challenge={slug} /> */}
+          <ChallengeMarkdown slug={slug} />
         </div>
       </div>
     </HydrateClient>
