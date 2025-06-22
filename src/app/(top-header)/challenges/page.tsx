@@ -19,23 +19,24 @@ export default async function Home() {
                 </div>
               </div>
               <SignedIn>
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
                     Welcome back
                   </h1>
                   <p className="mx-auto max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed">
-                    Your next breakthrough is just one challenge away. Ready to
-                    build something amazing?
+                    Participate in challenges to prove your skills and get
+                    noticed by world class companies.
                   </p>
                 </div>
               </SignedIn>
               <SignedOut>
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <h1 className="text-4xl font-bold tracking-tight lg:text-5xl  bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
                     Build. Compete. Connect.
                   </h1>
                   <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
-                    Build products from 0 to connect with world class startups.
+                    Participate in challenges to prove your skills and get
+                    noticed by world class companies.
                   </p>
                 </div>
               </SignedOut>

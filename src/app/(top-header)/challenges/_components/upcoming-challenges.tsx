@@ -39,7 +39,7 @@ export const UpcomingChallenges = async () => {
   return (
     <section className="container mx-auto py-6">
       <div className="space-y-6">
-        <div className="space-y-4">
+        <div className="space-y-2">
           <div className="flex items-center gap-3">
             <div className="h-1 w-8 bg-slate-900 rounded-full" />
             <h2 className="text-2xl md:text-3xl font-medium tracking-tight">
@@ -47,8 +47,7 @@ export const UpcomingChallenges = async () => {
             </h2>
           </div>
           <p className="text-muted-foreground max-w-2xl leading-relaxed">
-            Choose from our curated selection of challenges and start building
-            your next breakthrough project.
+            Sign up for a challenge and start building cool stuff.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
