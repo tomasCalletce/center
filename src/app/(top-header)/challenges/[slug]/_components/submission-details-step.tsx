@@ -179,12 +179,9 @@ export function SubmissionDetailsStep({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-slate-900 rounded-full"></div>
-                  <span className="text-sm font-semibold text-slate-900">
-                    Project Image
-                  </span>
-                </div>
+                <span className="text-sm font-semibold text-slate-900">
+                  Project Image
+                </span>
                 <div className="text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-md">
                   PNG, JPG, WebP • Max 5MB
                 </div>

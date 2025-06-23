@@ -14,8 +14,8 @@ export const create = protectedProcedure
         .insert(assets)
         .values({
           _clerk: ctx.auth.userId,
-          pathname: input.verifyImagesSchema.verifyAssetsSchema.pathname,
-          url: input.verifyImagesSchema.verifyAssetsSchema.url,
+          pathname: input.verifyAssetsImageSchema.verifyAssetsSchema.pathname,
+          url: input.verifyAssetsImageSchema.verifyAssetsSchema.url,
         })
         .returning({ id: assets.id });
       if (!newAsset) {
@@ -30,7 +30,7 @@ export const create = protectedProcedure
         .values({
           _clerk: ctx.auth.userId,
           _asset: newAsset.id,
-          alt: input.verifyImagesSchema.alt,
+          alt: input.verifyAssetsImageSchema.alt,
         })
         .returning({ id: assetsImages.id });
       if (!newImage) {
@@ -47,7 +47,7 @@ export const create = protectedProcedure
           _logo_image: newImage.id,
           _challenge: input._challenge,
           title: input.title,
-          description: input.description,
+          markdown: input.markdown,
           demo_url: input.demo_url,
           repository_url: input.repository_url,
           status: input.status,
