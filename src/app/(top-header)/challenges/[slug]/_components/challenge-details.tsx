@@ -134,8 +134,8 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
         </div>
         <div className="p-6 border-t">
           <SignedIn>
-            <SubmissionDialog challengeId={challenge.id}>
-              <Button className="w-full">
+            <SubmissionDialog _challenge={challenge.id}>
+              <Button className="w-full cursor-pointer">
                 Submit Build
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
