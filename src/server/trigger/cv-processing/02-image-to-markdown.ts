@@ -18,7 +18,7 @@ export const imageToMarkdownTask = schemaTask({
     });
 
     const { text } = await generateText({
-      model: openai("gpt-4o-mini"),
+      model: openai("gpt-4.1-nano"),
       messages: [
         {
           role: "user",
@@ -34,6 +34,16 @@ export const imageToMarkdownTask = schemaTask({
               - If it's a table, format as markdown table
               - If it's a list, format as markdown list
               - Use appropriate heading levels
+
+              IMPORTANT:
+              - be carefull with urls, use the exact url from the image, urls like
+              - for dates, use the exact date from the image
+              - for names, use the exact name from the image
+              - for titles, use the exact title from the image
+              - for descriptions, use the exact description from the image
+              - for skills, use the exact skills from the image
+              - for experience, use the exact experience from the image
+              - for education, use the exact education from the image
               
               Return only the markdown content, no explanations.`,
             },
@@ -44,8 +54,8 @@ export const imageToMarkdownTask = schemaTask({
           ],
         },
       ],
-      maxTokens: 4000,
-      temperature: 0.1,
+      maxTokens: 8000,
+      temperature: 0,
     });
 
     return {

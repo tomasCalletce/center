@@ -25,21 +25,27 @@ export const ProfileForm = async () => {
  }
 
  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3 space-y-6">
-          <ProfileHeader user={userProfile} />
-          
-          <ProfileSkills skills={userProfile.skills as any} />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ProfileStats user={userProfile as any} />
-            <ProfileEducation education={userProfile.education as any} />
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50/50 via-white to-slate-50/30">
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        {/* Profile Header - Full Width */}
+        <div className="mb-16">
+          <ProfileHeader user={userProfile as any} />
         </div>
-        
-        <div className="lg:col-span-1">
-          <ProfileExperience experience={userProfile.experience as any} />
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+          {/* Primary Content - Experience */}
+          <div className="xl:col-span-8 space-y-8">
+            <ProfileExperience experience={userProfile.experience as any} />
+          </div>
+          
+          {/* Secondary Content - Skills & Education */}
+          <div className="xl:col-span-4 space-y-8">
+            <div className="sticky top-8 space-y-6">
+              <ProfileSkills skills={userProfile.skills as any} />
+              <ProfileEducation education={userProfile.education as any} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

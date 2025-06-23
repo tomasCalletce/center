@@ -1,5 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+"use client";
+
 import { Badge } from "~/components/ui/badge";
+import { EditableSection } from "./editable-section";
+import { EducationField } from "./profile-sections";
+import { updateProfileEducation } from "../_actions/update-profile";
+import { toast } from "sonner";
+import { GraduationCap } from "lucide-react";
 
 interface Education {
   institution?: string | null;
@@ -15,59 +21,119 @@ interface ProfileEducationProps {
 }
 
 export const ProfileEducation = ({ education }: ProfileEducationProps) => {
-  if (!education || education.length === 0) {
-    return (
-      <Card className="border-dashed">
-        <CardHeader>
-          <div className="inline-flex items-center">
-            <div className="h-1 w-6 bg-slate-900 rounded-full" />
-            <span className="ml-3 text-sm uppercase tracking-wider font-medium">
-              Education
-            </span>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">No education information available</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const educationData = education || [];
 
-  return (
-    <Card className="border-dashed">
-      <CardHeader>
-        <div className="inline-flex items-center">
-          <div className="h-1 w-6 bg-slate-900 rounded-full" />
-          <span className="ml-3 text-sm uppercase tracking-wider font-medium">
-            Education
-          </span>
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "";
+    if (dateString.toLowerCase() === "present") return "Present";
+    
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", { 
+        year: "numeric", 
+        month: "short" 
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
+  const renderView = (data: Education[]) => {
+    if (data.length === 0) {
+      return (
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3">
+            <GraduationCap className="h-5 w-5 text-slate-400" />
+          </div>
+          <p className="text-slate-500 font-medium text-sm">No education information available</p>
+          <p className="text-xs text-slate-400 mt-1">Add your educational background</p>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {education.map((edu, index) => (
-          <div key={index} className="space-y-2">
-            <div className="font-semibold">{edu.institution}</div>
-            <div className="flex flex-wrap gap-2">
-              {edu.degree && (
-                <Badge variant="secondary" className="border-dashed">{edu.degree}</Badge>
-              )}
-              {edu.field_of_study && (
-                <Badge variant="outline" className="border-dashed">{edu.field_of_study}</Badge>
-              )}
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        {data.map((edu, index) => (
+          <div key={index} className="relative group">
+            {/* Timeline line */}
+            {index < data.length - 1 && (
+              <div className="absolute left-5 top-12 bottom-0 w-px bg-gradient-to-b from-slate-300 to-slate-200" />
+            )}
+            
+            <div className="flex gap-4">
+              {/* Timeline dot */}
+              <div className="relative flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-center shadow-sm group-hover:border-slate-300 transition-colors">
+                  <GraduationCap className="h-4 w-4 text-slate-600" />
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="flex-1 space-y-2 pb-2">
+                {/* Header */}
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-slate-900 leading-tight">
+                    {edu.institution}
+                  </h3>
+                  <div className="text-sm text-slate-500 font-medium">
+                    {formatDate(edu.start_date || null)} — {formatDate(edu.end_date || null)}
+                  </div>
+                </div>
+                
+                {/* Degree and field */}
+                <div className="flex flex-wrap gap-1.5">
+                  {edu.degree && (
+                    <Badge 
+                      className="px-2 py-0.5 text-xs bg-slate-100 text-slate-700 border-slate-200 font-medium"
+                    >
+                      {edu.degree}
+                    </Badge>
+                  )}
+                  {edu.field_of_study && (
+                    <Badge 
+                      variant="outline" 
+                      className="px-2 py-0.5 text-xs bg-white border-slate-200 text-slate-600"
+                    >
+                      {edu.field_of_study}
+                    </Badge>
+                  )}
+                </div>
+                
+                {/* GPA */}
+                {edu.gpa && (
+                  <div className="text-xs text-slate-500 font-medium">
+                    GPA: {edu.gpa}
+                  </div>
+                )}
+              </div>
             </div>
-            {(edu.start_date || edu.end_date) && (
-              <div className="text-sm text-muted-foreground">
-                {edu.start_date} - {edu.end_date || "Present"}
-              </div>
-            )}
-            {edu.gpa && (
-              <div className="text-sm text-muted-foreground">
-                GPA: {edu.gpa}
-              </div>
-            )}
           </div>
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    );
+  };
+
+  const renderEdit = (data: Education[], onChange: (data: Education[]) => void) => {
+    return <EducationField education={data} onChange={onChange} />;
+  };
+
+  const handleSave = async (data: Education[]) => {
+    const result = await updateProfileEducation(data);
+    if (result.error) {
+      toast.error(result.error);
+      throw new Error(result.error);
+    }
+    toast.success("Education updated successfully!");
+  };
+
+  return (
+    <EditableSection
+      title="Education"
+      data={educationData}
+      renderView={renderView}
+      renderEdit={renderEdit}
+      onSave={handleSave}
+      icon={<GraduationCap className="h-4 w-4" />}
+    />
   );
 }; 

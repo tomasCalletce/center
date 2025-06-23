@@ -54,7 +54,7 @@ const userProfileSchema = z.object({
 
   // Social Links
   social_links: z.array(z.object({
-      platform: z.enum(["linkedin", "github", "portfolio", "website"]),
+      platform: z.enum(["linkedin", "github", "portfolio", "website"]).describe("The platform type for the user's social link extracted from the CV."),
       url: z.string().url(),
     })
   )
