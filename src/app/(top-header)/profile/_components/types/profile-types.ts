@@ -1,4 +1,6 @@
 import { type EmploymentType } from "~/server/db/schemas/users";
+import { z } from "zod";
+import { userProfileSchema } from "~/server/db/schemas/users";
 
 export interface ExperienceItem {
   title?: string | null;
@@ -29,4 +31,6 @@ export interface ProfileHeaderData {
   location?: string;
   current_title?: string;
   social_links?: SocialLink[];
-} 
+}
+
+export type UserProfile = z.infer<typeof userProfileSchema>; 

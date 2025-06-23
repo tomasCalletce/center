@@ -1,9 +1,9 @@
 import { api } from "~/trpc/server";
-import { ProfileHeader } from "~/app/(top-header)/profile/_components/profile-header";
-import { ProfileSkills } from "~/app/(top-header)/profile/_components/profile-skills";
-import { ProfileExperience } from "~/app/(top-header)/profile/_components/profile-experience";
-import { ProfileEducation } from "~/app/(top-header)/profile/_components/profile-education";
-import { ProfileStats } from "~/app/(top-header)/profile/_components/profile-stats";
+import { ProfileHeader } from "~/app/(top-header)/profile/_components/sections/header";
+import { ProfileSkills } from "~/app/(top-header)/profile/_components/sections/skills";
+import { ProfileExperience } from "~/app/(top-header)/profile/_components/sections/experience";
+import { ProfileEducation } from "~/app/(top-header)/profile/_components/sections/education";
+
 
 export const ProfileForm = async () => {
  let userProfile = null;
@@ -26,14 +26,14 @@ export const ProfileForm = async () => {
 
  return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50/50 via-white to-slate-50/30">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+      <div className="container mx-auto px-2 py-12 max-w-7xl">
         {/* Profile Header - Full Width */}
-        <div className="mb-16">
+        <div className="mb-10">
           <ProfileHeader user={userProfile as any} />
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
           {/* Primary Content - Experience */}
           <div className="xl:col-span-8 space-y-8">
             <ProfileExperience experience={userProfile.experience as any} />

@@ -1,5 +1,10 @@
-import { TextField, SocialLinksField } from "../form-controls";
-import { type ProfileHeaderData } from "../types";
+import {
+  TextField,
+  SocialLinksField,
+} from "~/app/(top-header)/profile/_components/form-controls";
+import { type UserProfile } from "~/app/(top-header)/profile/_components/types/profile-types";
+
+type ProfileHeaderData = Omit<UserProfile, "experience" | "education" | "skills">;
 
 interface ProfileHeaderEditProps {
   data: ProfileHeaderData;

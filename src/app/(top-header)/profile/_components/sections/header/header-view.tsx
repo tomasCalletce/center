@@ -1,13 +1,14 @@
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { MapPin, Calendar, Globe } from "lucide-react";
-import { calculateYearsOfExperience, socialIcons } from "../utils";
-import { type SocialLink, type ProfileHeaderData } from "../types";
+import {
+  calculateYearsOfExperience,
+  socialIcons,
+} from "~/app/(top-header)/profile/_components/utils";
+import { type UserProfile } from "~/app/(top-header)/profile/_components/types/profile-types";
 
-interface Experience {
-  start_date?: string | null;
-  end_date?: string | null;
-}
+type Experience = NonNullable<UserProfile["experience"]>[number];
+type ProfileHeaderData = Omit<UserProfile, 'experience' | 'education' | 'skills'>;
 
 interface ProfileHeaderViewProps {
   data: ProfileHeaderData;
@@ -21,9 +22,9 @@ export const ProfileHeaderView = ({ data, experience }: ProfileHeaderViewProps) 
     <div className="space-y-6 py-4">
       {/* Name with refined gradient */}
       <div className="space-y-2">
-        <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent leading-tight">
+        {/* <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent leading-tight">
           {data.display_name || "Unknown User"}
-        </h1>
+        </h1> */}
         {data.current_title && (
           <p className="text-xl text-slate-600 font-medium tracking-wide">
             {data.current_title}
