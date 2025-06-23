@@ -29,7 +29,7 @@ const EditorMdx: React.FC<EditorProps> = ({
   placeholder = "Start writing...",
 }) => {
   return (
-    <div className="border rounded-md min-h-[200px]">
+    <div className="min-h-[400px]">
       <style jsx>{`
         :global(.mdxeditor h1) {
           font-size: 2rem;

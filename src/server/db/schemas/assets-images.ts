@@ -15,10 +15,11 @@ export const assetsImages = pgTable("assets_images", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifyImagesSchema = createInsertSchema(assetsImages)
+export const verifyAssetsImageSchema = createInsertSchema(assetsImages)
   .omit({
     id: true,
     _clerk: true,
+    _asset: true,
     created_at: true,
     updated_at: true,
   })
@@ -26,7 +27,7 @@ export const verifyImagesSchema = createInsertSchema(assetsImages)
     verifyAssetsSchema,
   });
 
-export const formImagesSchema = createInsertSchema(assetsImages)
+export const formAssetsImageSchema = createInsertSchema(assetsImages)
   .omit({
     id: true,
     _clerk: true,

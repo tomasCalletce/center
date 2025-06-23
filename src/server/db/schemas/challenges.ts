@@ -11,7 +11,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import {
   assetsImages,
-  verifyImagesSchema,
+  verifyAssetsImageSchema,
 } from "~/server/db/schemas/assets-images";
 
 export const challengeVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
@@ -58,7 +58,7 @@ export const verifyChallengesSchema = createInsertSchema(challenges)
     created_at: true,
     updated_at: true,
   })
-  .extend({ verifyImagesSchema });
+  .extend({ verifyAssetsImageSchema });
 
 export const formChallengesSchema = createInsertSchema(challenges).omit({
   id: true,
