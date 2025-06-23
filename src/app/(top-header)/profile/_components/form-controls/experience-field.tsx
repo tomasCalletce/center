@@ -1,104 +1,12 @@
 "use client";
 
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { X, Plus } from "lucide-react";
-import { useState } from "react";
-import { employmentTypeEnum, type EmploymentType } from "~/server/db/schemas/users";
-
-// Text Input Field
-interface TextFieldProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  multiline?: boolean;
-}
-
-export const TextField = ({ value, onChange, placeholder, multiline }: TextFieldProps) => {
-  if (multiline) {
-    return (
-      <Textarea
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        rows={3}
-      />
-    );
-  }
-  
-  return (
-    <Input
-      value={value || ""}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-    />
-  );
-};
-
-// Skills/Tags Field
-interface SkillsFieldProps {
-  skills: string[];
-  onChange: (skills: string[]) => void;
-}
-
-export const SkillsField = ({ skills, onChange }: SkillsFieldProps) => {
-  const [newSkill, setNewSkill] = useState("");
-
-  const addSkill = () => {
-    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
-      const updatedSkills = skills.concat([newSkill.trim()]);
-      onChange(updatedSkills);
-      setNewSkill("");
-    }
-  };
-
-  const removeSkill = (skillToRemove: string) => {
-    onChange(skills.filter(skill => skill !== skillToRemove));
-  };
-
-  return (
-    <div className="space-y-3">
-      <div className="flex gap-2">
-        <Input
-          value={newSkill}
-          onChange={(e) => setNewSkill(e.target.value)}
-          placeholder="Add a skill..."
-          onKeyPress={(e) => e.key === "Enter" && addSkill()}
-        />
-        <Button size="sm" onClick={addSkill} type="button">
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {skills.map((skill, index) => (
-          <Badge key={index} variant="secondary" className="flex items-center gap-1">
-            {skill}
-            <button
-              onClick={() => removeSkill(skill)}
-              className="ml-1 hover:text-destructive"
-            >
-              <X className="h-3 w-3" />
-            </button>
-          </Badge>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Experience Field
-interface ExperienceItem {
-  title?: string | null;
-  company?: string | null;
-  employment_type?: EmploymentType | null;
-  start_date?: string | null;
-  end_date?: string | null;
-  description?: string | null;
-  skills_used?: string[] | null;
-}
+import { employmentTypeEnum } from "~/server/db/schemas/users";
+import { TextField } from "../form-controls/text-field";
+import { SkillsField } from "../form-controls/skills-field";
+import { type ExperienceItem } from "../types/profile-types";
 
 interface ExperienceFieldProps {
   experience: ExperienceItem[];
