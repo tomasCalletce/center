@@ -113,36 +113,74 @@ export function SubmissionDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="!max-w-[1100px] min-h-[600px]">
+      <DialogContent className="!max-w-[1100px] min-h-[700px]">
         <DialogHeader>
           <DialogTitle>Submit Your Build</DialogTitle>
           <DialogDescription>
             Submit your project for this challenge.
           </DialogDescription>
-          <div className="">
-            <div className="flex items-center gap-3">
-              {[1, 2, 3].map((stepNum) => (
-                <div key={stepNum} className="flex items-center gap-3">
+          <div className="relative">
+            <div className="flex items-center justify-between max-w-xs mx-auto">
+              {[
+                { num: 1, label: "Details", icon: "📝" },
+                { num: 2, label: "Description", icon: "📋" },
+                { num: 3, label: "Submit", icon: "🚀" },
+              ].map((step) => (
+                <div
+                  key={step.num}
+                  className="flex flex-col items-center relative z-10"
+                >
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
-                      stepNum < getStepNumber()
-                        ? "bg-primary text-primary-foreground"
-                        : stepNum === getStepNumber()
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
+                    className={`
+                      relative w-12 h-12 rounded-xl flex items-center justify-center text-sm font-medium 
+                      transition-all duration-300 border-2 group
+                      ${
+                        step.num < getStepNumber()
+                          ? "bg-slate-900 border-slate-900 text-white shadow-lg scale-105"
+                          : step.num === getStepNumber()
+                          ? "bg-slate-900 border-slate-900 text-white shadow-lg scale-105 ring-4 ring-slate-900/20"
+                          : "bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-300"
+                      }
+                    `}
                   >
-                    {stepNum}
+                    <span className="text-lg leading-none">
+                      {step.num < getStepNumber()
+                        ? "✓"
+                        : step.num === getStepNumber()
+                        ? step.icon
+                        : step.num}
+                    </span>
                   </div>
-                  {stepNum < 3 && (
-                    <div
-                      className={`w-12 h-0.5 transition-all ${
-                        stepNum < getStepNumber() ? "bg-primary" : "bg-muted"
-                      }`}
-                    />
-                  )}
+                  <div
+                    className={`
+                    mt-2 text-xs font-medium transition-colors duration-200
+                    ${
+                      step.num <= getStepNumber()
+                        ? "text-slate-900"
+                        : "text-slate-400"
+                    }
+                  `}
+                  >
+                    {step.label}
+                  </div>
                 </div>
               ))}
+
+              {/* Connecting line */}
+              <div className="absolute top-6 left-6 right-6 h-0.5 bg-gradient-to-r from-slate-200 via-slate-200 to-slate-200 -z-0">
+                <div
+                  className={`
+                    h-full bg-gradient-to-r from-slate-900 to-slate-700 transition-all duration-500 ease-out
+                    ${
+                      getStepNumber() === 1
+                        ? "w-0"
+                        : getStepNumber() === 2
+                        ? "w-1/2"
+                        : "w-full"
+                    }
+                  `}
+                />
+              </div>
             </div>
           </div>
         </DialogHeader>

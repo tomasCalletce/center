@@ -43,57 +43,76 @@ export function SubmissionMarkdownStep({
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="markdown"
-          render={({ field }) => (
-            <FormItem className="space-y-2">
-              <div className="flex items-center justify-between">
-                <FormLabel className="flex items-center gap-2">
-                  <FileText className="w-4 h-4" />
-                  Project Description
-                </FormLabel>
-                <div className="text-xs text-muted-foreground">
-                  Problem • Features • Tech Stack • Challenges
-                </div>
-              </div>
-              <FormControl>
-                <EditorMdx
-                  markdown={field.value || ""}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    form.trigger("markdown");
-                  }}
-                  placeholder="Describe your project, the problem it solves, key features, and technology used..."
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="space-y-6">
+      <div className="text-center space-y-2 pb-4 border-b border-dashed">
+        <h3 className="text-lg font-semibold text-slate-900">
+          Project Description
+        </h3>
+        <p className="text-sm text-slate-500">
+          Share the story behind your build
+        </p>
+      </div>
 
-        <div className="flex justify-between items-center pt-2">
-          <Button
-            type="button"
-            className="cursor-pointer"
-            variant="outline"
-            onClick={onBack}
-          >
-            <ChevronLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="cursor-pointer"
-          >
-            <Send className="h-4 w-4 mr-2" />
-            Submit Project
-          </Button>
-        </div>
-      </form>
-    </Form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="markdown"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <FormLabel className="flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    Tell your story
+                  </FormLabel>
+                  <div className="text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-md">
+                    Problem • Features • Tech Stack • Challenges
+                  </div>
+                </div>
+                <FormControl>
+                  <div className="border rounded-lg overflow-hidden">
+                    <EditorMdx
+                      markdown={field.value || ""}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        form.trigger("markdown");
+                      }}
+                      placeholder="Describe your project: What problem does it solve? What are the key features? What technology did you use? What challenges did you overcome?"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-between items-center pt-6 border-t border-dashed">
+            <div className="flex items-center gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onBack}
+                className="cursor-pointer"
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+              <div className="text-xs text-slate-500">
+                Step 2 of 2 • Final Submission
+              </div>
+            </div>
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              className="cursor-pointer px-6 shadow-lg"
+              size="lg"
+            >
+              <Send className="h-4 w-4 mr-2" />
+              Submit Project
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

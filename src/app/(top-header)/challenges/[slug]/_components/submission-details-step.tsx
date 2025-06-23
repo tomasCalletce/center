@@ -109,163 +109,238 @@ export function SubmissionDetailsStep({
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Project Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your project title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className="space-y-4">
+      <div className="text-center pb-4 border-b border-dashed">
+        <h3 className="text-lg font-semibold text-slate-900">
+          Project Details
+        </h3>
+        <p className="text-sm text-slate-500">
+          Tell us about your amazing build
+        </p>
+      </div>
 
-            <FormField
-              control={form.control}
-              name="demo_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Demo URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://your-demo.com"
-                      type="url"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="repository_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Repository URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://github.com/username/repo"
-                      type="url"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div>
-            <div className="mb-2">
-              <div className="flex items-center gap-2">
-                <ImageIcon className="w-4 h-4" />
-                <span className="text-sm font-medium">Project Image</span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                PNG, JPG, WebP • Max 5MB
-              </p>
-            </div>
-
-            <div
-              className={`
-                relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer min-h-[280px] 
-                flex flex-col items-center justify-center transition-all
-                ${
-                  selectedFile
-                    ? "border-primary bg-primary/5"
-                    : "border-border hover:border-primary/50 hover:bg-accent/50"
-                }
-              `}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const file = e.dataTransfer.files[0];
-                if (file) handleFileChange(file);
-              }}
-              onClick={() => !isUploading && fileRef.current?.click()}
-            >
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFileChange(file);
-                }}
-                className="hidden"
-                disabled={isUploading}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Title</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your project title"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
-              {isUploading ? (
-                <div className="space-y-4">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <Loader2 className="w-8 h-8 text-primary mx-auto animate-spin" />
-                  </div>
-                  <p className="text-sm font-medium">Uploading image...</p>
+              <FormField
+                control={form.control}
+                name="demo_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Demo URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://your-demo.com"
+                        type="url"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="repository_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Repository URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://github.com/username/repo"
+                        type="url"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-slate-900 rounded-full"></div>
+                  <span className="text-sm font-semibold text-slate-900">
+                    Project Image
+                  </span>
                 </div>
-              ) : selectedFile && preview ? (
-                <div className="space-y-4 w-full flex flex-col items-center">
-                  <img
-                    src={preview}
-                    alt={selectedFile.name}
-                    className="w-40 h-40 object-cover rounded-lg border-2 border-primary/20 shadow-sm"
-                  />
-                  <div className="text-center space-y-2">
-                    <p className="text-sm font-medium truncate max-w-[240px]">
-                      {selectedFile.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                    </p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        resetImage();
-                      }}
-                      className="text-xs cursor-pointer"
-                    >
-                      <X className="w-3 h-3" />
-                      Remove
-                    </Button>
-                  </div>
+                <div className="text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-md">
+                  PNG, JPG, WebP • Max 5MB
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="p-3 rounded-lg bg-muted">
-                    <Upload className="w-8 h-8 text-muted-foreground mx-auto" />
+              </div>
+
+              <div
+                className={`
+                  relative group overflow-hidden rounded-2xl transition-all duration-300 cursor-pointer
+                  ${
+                    isUploading
+                      ? "bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200"
+                      : selectedFile
+                      ? "bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200 shadow-lg"
+                      : "bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-dashed border-slate-200 hover:border-slate-900 hover:bg-gradient-to-br hover:from-slate-100 hover:to-gray-100"
+                  }
+                `}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.add(
+                    "border-slate-900",
+                    "bg-slate-100"
+                  );
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove(
+                    "border-slate-900",
+                    "bg-slate-100"
+                  );
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove(
+                    "border-slate-900",
+                    "bg-slate-100"
+                  );
+                  const file = e.dataTransfer.files[0];
+                  if (file) handleFileChange(file);
+                }}
+                onClick={() => !isUploading && fileRef.current?.click()}
+              >
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleFileChange(file);
+                  }}
+                  className="hidden"
+                  disabled={isUploading}
+                />
+
+                {isUploading ? (
+                  <div className="flex flex-col items-center justify-center h-64 space-y-4">
+                    <div className="relative">
+                      <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
+                        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                      </div>
+                      <div className="absolute inset-0 bg-blue-500/20 rounded-2xl animate-pulse"></div>
+                    </div>
+                    <div className="text-center space-y-1">
+                      <p className="text-sm font-semibold text-blue-900">
+                        Uploading your image...
+                      </p>
+                      <p className="text-xs text-blue-600">
+                        This might take a moment
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-base font-medium">
-                      Drop image here or click to browse
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      PNG, JPG, WebP • Max 5MB
-                    </p>
+                ) : selectedFile && preview ? (
+                  <div className="relative h-64 w-full">
+                    <img
+                      src={preview}
+                      alt={selectedFile.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <p className="text-sm font-semibold truncate">
+                            {selectedFile.name}
+                          </p>
+                          <p className="text-xs opacity-90">
+                            {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            resetImage();
+                          }}
+                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <div className="bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                        ✓ Uploaded
+                      </div>
+                    </div>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-64 space-y-6 p-6">
+                    <div className="relative">
+                      <div className="w-16 h-16 bg-slate-200 rounded-2xl flex items-center justify-center group-hover:bg-slate-900 transition-colors duration-300">
+                        <Upload className="w-8 h-8 text-slate-500 group-hover:text-white transition-colors duration-300" />
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">+</span>
+                      </div>
+                    </div>
+                    <div className="text-center space-y-2">
+                      <p className="text-lg font-semibold text-slate-900 group-hover:text-slate-700 transition-colors">
+                        Drop your image here
+                      </p>
+                      <p className="text-sm text-slate-500">
+                        or{" "}
+                        <span className="text-slate-900 font-medium underline">
+                          click to browse
+                        </span>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                      <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
+                      <span>Supports PNG, JPG, WebP</span>
+                      <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
+                      <span>Max 5MB</span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex justify-end pt-4">
-          <Button type="submit" className="px-8 cursor-pointer">
-            Continue
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-      </form>
-    </Form>
+          <div className="flex justify-between items-center pt-6 border-t border-dashed">
+            <div className="text-xs text-slate-500">
+              Step 1 of 2 • Project Information
+            </div>
+            <Button
+              type="submit"
+              disabled={!uploadedImage || isUploading}
+              className="px-6 cursor-pointer shadow-lg"
+              size="lg"
+            >
+              Continue to Description
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }
