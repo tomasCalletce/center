@@ -68,7 +68,7 @@ export async function updateProfileHeader(data: {
   display_name?: string;
   location?: string;
   current_title?: string;
-  social_links?: Array<{ platform: string; url: string }>;
+  social_links?: Array<{ platform: "linkedin" | "github" | "portfolio" | "website"; url: string }>;
 }) {
   const { userId } = await auth();
 
