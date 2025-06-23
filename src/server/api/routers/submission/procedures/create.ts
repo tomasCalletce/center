@@ -5,6 +5,8 @@ import { TRPCError } from "@trpc/server";
 import { dbSocket } from "~/server/db/connection";
 import { verifySubmissionsSchema } from "~/server/db/schemas/submissions";
 import { assetsImages } from "~/server/db/schemas/assets-images";
+import { teams } from "~/server/db/schemas/teams";
+import { teamMembers } from "~/server/db/schemas/team-members";
 
 export const create = protectedProcedure
   .input(verifySubmissionsSchema)
@@ -14,8 +16,8 @@ export const create = protectedProcedure
         .insert(assets)
         .values({
           _clerk: ctx.auth.userId,
-          pathname: input.verifyImagesSchema.verifyAssetsSchema.pathname,
-          url: input.verifyImagesSchema.verifyAssetsSchema.url,
+          pathname: input.verifyAssetsImageSchema.verifyAssetsSchema.pathname,
+          url: input.verifyAssetsImageSchema.verifyAssetsSchema.url,
         })
         .returning({ id: assets.id });
       if (!newAsset) {
@@ -30,7 +32,7 @@ export const create = protectedProcedure
         .values({
           _clerk: ctx.auth.userId,
           _asset: newAsset.id,
-          alt: input.verifyImagesSchema.alt,
+          alt: input.verifyAssetsImageSchema.alt,
         })
         .returning({ id: assetsImages.id });
       if (!newImage) {
@@ -40,14 +42,43 @@ export const create = protectedProcedure
         });
       }
 
+      const [newTeam] = await tx
+        .insert(teams)
+        .values({
+          _clerk: ctx.auth.userId,
+          name: "Team",
+        })
+        .returning({ id: teams.id });
+      if (!newTeam) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create team in database.",
+        });
+      }
+
+      const [newTeamMember] = await tx
+        .insert(teamMembers)
+        .values({
+          _team: newTeam.id,
+          _clerk: ctx.auth.userId,
+          role: "ADMIN",
+        })
+        .returning({ id: teamMembers.id });
+      if (!newTeamMember) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create team member in database.",
+        });
+      }
+
       const [newSubmission] = await tx
         .insert(submissions)
         .values({
-          _team: ctx.auth.userId,
+          _team: newTeam.id,
           _logo_image: newImage.id,
           _challenge: input._challenge,
           title: input.title,
-          description: input.description,
+          markdown: input.markdown,
           demo_url: input.demo_url,
           repository_url: input.repository_url,
           status: input.status,

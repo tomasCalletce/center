@@ -12,8 +12,8 @@ import { challenges } from "~/server/db/schemas/challenges";
 import { teams } from "~/server/db/schemas/teams";
 import {
   assetsImages,
-  formImagesSchema,
-  verifyImagesSchema,
+  formAssetsImageSchema,
+  verifyAssetsImageSchema,
 } from "~/server/db/schemas/assets-images";
 
 export const submissionVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
@@ -31,7 +31,7 @@ export const submissions = pgTable("submissions", {
   _challenge: uuid("_challenge").references(() => challenges.id),
   _logo_image: uuid("_logo_image").references(() => assetsImages.id),
   title: varchar("title", { length: 255 }).notNull(),
-  description: text("description"),
+  markdown: text("markdown"),
   demo_url: text("demo_url").notNull(),
   repository_url: text("repository_url").notNull(),
   status: submissionVisibilityEnumSchema("status").notNull(),
@@ -52,7 +52,7 @@ export const verifySubmissionsSchema = createInsertSchema(submissions)
     updated_at: true,
   })
   .extend({
-    verifyImagesSchema,
+    verifyAssetsImageSchema,
   });
 
 export const formSubmissionSchema = createInsertSchema(submissions)
@@ -68,7 +68,7 @@ export const formSubmissionSchema = createInsertSchema(submissions)
     updated_at: true,
   })
   .extend({
-    formImagesSchema,
+    formAssetsImageSchema,
     demo_url: z.string().url(),
     repository_url: z.string().url(),
   });

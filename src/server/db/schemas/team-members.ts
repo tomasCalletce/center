@@ -3,10 +3,9 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { teams } from "~/server/db/schemas/teams";
 
-export const teamMemberRoleEnum = z.enum(["OWNER", "ADMIN", "MEMBER"]);
+export const teamMemberRoleEnum = z.enum(["ADMIN", "MEMBER"]);
 export const teamMemberRoleValues = teamMemberRoleEnum.Values;
 export const teamMemberRoleEnumSchema = pgEnum("team_member_role", [
-  "OWNER",
   "ADMIN",
   "MEMBER",
 ]);
