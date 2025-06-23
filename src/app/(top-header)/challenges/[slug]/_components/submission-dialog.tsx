@@ -11,12 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { submissionVisibilityValues } from "~/server/db/schemas/submissions";
 import { api } from "~/trpc/react";
 import { SubmissionMarkdownStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-markdown-step";
 import { SubmissionResultStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-result-step";
 import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-details-step";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
+import { submissionVisibilityValues } from "~/server/db/schemas/submissions";
 import { z } from "zod";
 
 export enum SUBMISSION_STEPS {
@@ -58,7 +58,6 @@ export function SubmissionDialog({
   );
 
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
-  const [markdownData, setMarkdownData] = useState<MarkdownData | null>(null);
 
   const submitMutation = api.submission.create.useMutation({
     onSuccess: () => {
@@ -80,8 +79,23 @@ export function SubmissionDialog({
   };
 
   const handleMarkdownSubmit = (data: MarkdownData) => {
-    setMarkdownData(data);
-    setStep(SUBMISSION_STEPS.SUCCESS);
+    if (!detailsData) return;
+    submitMutation.mutate({
+      _challenge: _challenge,
+      title: detailsData.title,
+      demo_url: detailsData.demo_url,
+      repository_url: detailsData.repository_url,
+      markdown: data.markdown,
+      status: submissionVisibilityValues.VISIBLE,
+      verifyImagesSchema: {
+        alt: detailsData.image.alt,
+        _asset: detailsData.image.url,
+        verifyAssetsSchema: {
+          pathname: detailsData.image.pathname,
+          url: detailsData.image.url,
+        },
+      },
+    });
   };
 
   const handleBack = () => {
