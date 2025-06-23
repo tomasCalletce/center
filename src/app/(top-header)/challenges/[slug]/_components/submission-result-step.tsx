@@ -47,23 +47,6 @@ export const SubmissionResultStep: React.FC<SubmissionResultStepProps> = ({
           )}
         </p>
       </div>
-
-      {type === SUBMISSION_STEPS.SUCCESS && (
-        <div className="bg-slate-50 rounded-xl p-6 border border-dashed border-slate-200 max-w-md mx-auto">
-          <div className="space-y-3">
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-lg border border-slate-900/20 bg-gradient-to-br from-slate-900/20 via-slate-900/10 to-transparent shadow mx-auto">
-              <div className="rounded-md bg-gradient-to-br from-slate-900 to-slate-900/80 p-2 shadow-inner">
-                <span className="text-white text-sm">🚀</span>
-              </div>
-            </div>
-            <h4 className="font-semibold text-slate-900">What's Next?</h4>
-            <p className="text-sm text-slate-600">
-              We'll review your submission and notify you about the results.
-              Keep building amazing things!
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
