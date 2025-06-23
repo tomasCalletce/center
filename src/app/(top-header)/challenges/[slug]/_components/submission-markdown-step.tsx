@@ -36,12 +36,6 @@ export function SubmissionMarkdownStep({
     resolver: zodResolver(schema),
   });
 
-  const handleSubmit = (data: z.infer<typeof schema>) => {
-    handleOnSubmit({
-      markdown: data.markdown,
-    });
-  };
-
   const onSubmit = (data: z.infer<typeof schema>) => {
     handleOnSubmit({
       markdown: data.markdown,

@@ -113,12 +113,11 @@ export function SubmissionDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="!max-w-[1100px]">
+      <DialogContent className="!max-w-[1100px] min-h-[600px]">
         <DialogHeader>
           <DialogTitle>Submit Your Build</DialogTitle>
           <DialogDescription>
-            Submit your project for this challenge in{" "}
-            {getStepNumber() === 3 ? "3" : "2"} simple steps
+            Submit your project for this challenge.
           </DialogDescription>
           <div className="">
             <div className="flex items-center gap-3">
