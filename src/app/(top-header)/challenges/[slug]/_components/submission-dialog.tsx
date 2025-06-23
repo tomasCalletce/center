@@ -38,7 +38,7 @@ export type DetailsData = {
   };
 };
 export type MarkdownData = {
-  description: SubmissionDetailsSchema["description"];
+  markdown: SubmissionDetailsSchema["markdown"];
 };
 
 const stepEnum = parseAsStringEnum(Object.values(SUBMISSION_STEPS));
@@ -144,14 +144,14 @@ export function SubmissionDialog({
           {step === SUBMISSION_STEPS.DETAILS && (
             <SubmissionDetailsStep handleOnSubmit={handleDetailsSubmit} />
           )}
-          {/* {step === "markdown" && (
+          {step === "markdown" && (
             <SubmissionMarkdownStep
-              onSubmit={handleMarkdownSubmit}
+              handleOnSubmit={handleMarkdownSubmit}
               onBack={handleBack}
               isLoading={submitMutation.isPending}
             />
           )}
-          {(step === "success" || step === "error") && (
+          {/* {(step === "success" || step === "error") && (
             <SubmissionResultStep
               success={step === "success"}
               onClose={() => handleOpenChange(false)}

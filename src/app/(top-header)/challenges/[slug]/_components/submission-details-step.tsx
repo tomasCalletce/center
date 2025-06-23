@@ -16,7 +16,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { uploadImage } from "../_actions/upload-image";
 import { toast } from "sonner";
-import { Upload, Loader2, ImageIcon, X } from "lucide-react";
+import { Upload, Loader2, ImageIcon, X, ChevronRight } from "lucide-react";
 import type { DetailsData } from "./submission-dialog";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { formImagesSchema } from "~/server/db/schemas/assets-images";
@@ -262,6 +262,7 @@ export function SubmissionDetailsStep({
         <div className="flex justify-end pt-4">
           <Button type="submit" className="px-8 cursor-pointer">
             Continue
+            <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
       </form>

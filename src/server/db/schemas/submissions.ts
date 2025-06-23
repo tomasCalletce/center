@@ -31,7 +31,7 @@ export const submissions = pgTable("submissions", {
   _challenge: uuid("_challenge").references(() => challenges.id),
   _logo_image: uuid("_logo_image").references(() => assetsImages.id),
   title: varchar("title", { length: 255 }).notNull(),
-  description: text("description"),
+  markdown: text("markdown"),
   demo_url: text("demo_url").notNull(),
   repository_url: text("repository_url").notNull(),
   status: submissionVisibilityEnumSchema("status").notNull(),
