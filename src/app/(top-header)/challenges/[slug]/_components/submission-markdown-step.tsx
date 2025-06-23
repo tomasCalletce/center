@@ -4,12 +4,11 @@ import EditorMdx from "~/components/mx-editor";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, FileText, Send } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -43,59 +42,64 @@ export function SubmissionMarkdownStep({
     });
   };
 
+  const onSubmit = (data: z.infer<typeof schema>) => {
+    handleOnSubmit({
+      markdown: data.markdown,
+    });
+  };
+
   return (
-    <div className="space-y-4">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="markdown"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Project Description</FormLabel>
-                <FormControl>
-                  <EditorMdx
-                    markdown={field.value || ""}
-                    onChange={(value) => {
-                      field.onChange(value);
-                      form.trigger("markdown");
-                    }}
-                    placeholder="Describe your project, the problem it solves, key features, and technology used..."
-                  />
-                </FormControl>
-                <FormDescription>
-                  Explain what makes your project unique and valuable using the
-                  markdown editor.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="markdown"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <div className="flex items-center justify-between">
+                <FormLabel className="flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  Project Description
+                </FormLabel>
+                <div className="text-xs text-muted-foreground">
+                  Problem • Features • Tech Stack • Challenges
+                </div>
+              </div>
+              <FormControl>
+                <EditorMdx
+                  markdown={field.value || ""}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    form.trigger("markdown");
+                  }}
+                  placeholder="Describe your project, the problem it solves, key features, and technology used..."
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="bg-accent/50 rounded-lg p-4 space-y-2">
-            <h4 className="text-sm font-medium">
-              💡 Tips for a great description
-            </h4>
-            <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-              <li>• Explain the problem your project solves</li>
-              <li>• Highlight key features and innovations</li>
-              <li>• Mention technologies and tools used</li>
-              <li>• Include any challenges overcome</li>
-              <li>• Keep it concise but informative</li>
-            </ul>
-          </div>
-
-          <div className="flex justify-between pt-4">
-            <Button type="button" variant="outline" onClick={onBack}>
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <Button type="submit" isLoading={isLoading}>
-              Submit Project
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        <div className="flex justify-between items-center pt-2">
+          <Button
+            type="button"
+            className="cursor-pointer"
+            variant="outline"
+            onClick={onBack}
+          >
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            className="cursor-pointer"
+          >
+            <Send className="h-4 w-4 mr-2" />
+            Submit Project
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

@@ -19,7 +19,7 @@ import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_com
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { z } from "zod";
 
-enum SUBMISSION_STEPS {
+export enum SUBMISSION_STEPS {
   DETAILS = "details",
   MARKDOWN = "markdown",
   SUCCESS = "success",
@@ -79,8 +79,9 @@ export function SubmissionDialog({
     setStep(SUBMISSION_STEPS.MARKDOWN);
   };
 
-  const handleMarkdownSubmit = () => {
-    // Submit the complete form data
+  const handleMarkdownSubmit = (data: MarkdownData) => {
+    setMarkdownData(data);
+    setStep(SUBMISSION_STEPS.SUCCESS);
   };
 
   const handleBack = () => {
@@ -151,12 +152,10 @@ export function SubmissionDialog({
               isLoading={submitMutation.isPending}
             />
           )}
-          {/* {(step === "success" || step === "error") && (
-            <SubmissionResultStep
-              success={step === "success"}
-              onClose={() => handleOpenChange(false)}
-            />
-          )} */}
+          {(step === SUBMISSION_STEPS.SUCCESS ||
+            step === SUBMISSION_STEPS.ERROR) && (
+            <SubmissionResultStep type={step} />
+          )}
         </div>
       </DialogContent>
     </Dialog>
