@@ -44,7 +44,7 @@ export function SubmissionMarkdownStep({
 
   return (
     <div className="space-y-6">
-      <div className="text-center space-y-2 pb-4 border-b border-dashed">
+      <div className="text-center  pb-4 border-b border-dashed">
         <h3 className="text-lg font-semibold text-slate-900">
           Project Description
         </h3>

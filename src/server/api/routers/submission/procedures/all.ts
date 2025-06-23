@@ -19,7 +19,7 @@ export const all = protectedProcedure
       .select({
         id: submissions.id,
         title: submissions.title,
-        description: submissions.description,
+        markdown: submissions.markdown,
         status: submissions.status,
         created_at: submissions.created_at,
         updated_at: submissions.updated_at,
