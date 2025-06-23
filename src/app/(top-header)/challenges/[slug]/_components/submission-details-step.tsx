@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { Upload, Loader2, ImageIcon, X, ChevronRight } from "lucide-react";
 import type { DetailsData } from "./submission-dialog";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
-import { formImagesSchema } from "~/server/db/schemas/assets-images";
+import { formAssetsImageSchema } from "~/server/db/schemas/assets-images";
 
 const schema = formSubmissionSchema.pick({
   title: true,
@@ -38,7 +38,7 @@ export function SubmissionDetailsStep({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
   const [uploadedImage, setUploadedImage] = useState<z.infer<
-    typeof formImagesSchema
+    typeof formAssetsImageSchema
   > | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);

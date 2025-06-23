@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useQueryState, parseAsStringEnum } from "nuqs";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -32,16 +30,14 @@ export type DetailsData = {
   demo_url: SubmissionDetailsSchema["demo_url"];
   repository_url: SubmissionDetailsSchema["repository_url"];
   image: {
-    alt: SubmissionDetailsSchema["formImagesSchema"]["alt"];
-    url: SubmissionDetailsSchema["formImagesSchema"]["formAssetsSchema"]["url"];
-    pathname: SubmissionDetailsSchema["formImagesSchema"]["formAssetsSchema"]["pathname"];
+    alt: SubmissionDetailsSchema["formAssetsImageSchema"]["alt"];
+    url: SubmissionDetailsSchema["formAssetsImageSchema"]["formAssetsSchema"]["url"];
+    pathname: SubmissionDetailsSchema["formAssetsImageSchema"]["formAssetsSchema"]["pathname"];
   };
 };
 export type MarkdownData = {
   markdown: SubmissionDetailsSchema["markdown"];
 };
-
-const stepEnum = parseAsStringEnum(Object.values(SUBMISSION_STEPS));
 
 interface SubmissionDialogProps {
   _challenge: string;
@@ -52,10 +48,7 @@ export function SubmissionDialog({
   _challenge,
   children,
 }: SubmissionDialogProps) {
-  const [step, setStep] = useQueryState(
-    "step",
-    stepEnum.withDefault(SUBMISSION_STEPS.DETAILS)
-  );
+  const [step, setStep] = useState(SUBMISSION_STEPS.DETAILS);
 
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
 
@@ -87,9 +80,8 @@ export function SubmissionDialog({
       repository_url: detailsData.repository_url,
       markdown: data.markdown,
       status: submissionVisibilityValues.VISIBLE,
-      verifyImagesSchema: {
+      verifyAssetsImageSchema: {
         alt: detailsData.image.alt,
-        _asset: detailsData.image.url,
         verifyAssetsSchema: {
           pathname: detailsData.image.pathname,
           url: detailsData.image.url,

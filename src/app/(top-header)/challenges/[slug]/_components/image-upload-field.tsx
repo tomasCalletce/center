@@ -36,7 +36,7 @@ export function ImageUploadField({
   return (
     <FormField
       control={form.control}
-      name="formImagesSchema.formAssetsSchema.url"
+      name="formAssetsImageSchema.formAssetsSchema.url"
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-sm font-medium flex items-center gap-2">

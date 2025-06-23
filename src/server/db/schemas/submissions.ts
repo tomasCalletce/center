@@ -12,8 +12,8 @@ import { challenges } from "~/server/db/schemas/challenges";
 import { teams } from "~/server/db/schemas/teams";
 import {
   assetsImages,
-  formImagesSchema,
-  verifyImagesSchema,
+  formAssetsImageSchema,
+  verifyAssetsImageSchema,
 } from "~/server/db/schemas/assets-images";
 
 export const submissionVisibilityEnum = z.enum(["VISIBLE", "HIDDEN"]);
@@ -52,7 +52,7 @@ export const verifySubmissionsSchema = createInsertSchema(submissions)
     updated_at: true,
   })
   .extend({
-    verifyImagesSchema,
+    verifyAssetsImageSchema,
   });
 
 export const formSubmissionSchema = createInsertSchema(submissions)
@@ -68,7 +68,7 @@ export const formSubmissionSchema = createInsertSchema(submissions)
     updated_at: true,
   })
   .extend({
-    formImagesSchema,
+    formAssetsImageSchema,
     demo_url: z.string().url(),
     repository_url: z.string().url(),
   });
