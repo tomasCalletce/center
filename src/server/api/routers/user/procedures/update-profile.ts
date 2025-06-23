@@ -13,7 +13,7 @@ export const updateProfile = protectedProcedure
         ...input,
         updated_at: new Date(),
       })
-      .where(eq(users._user, ctx.auth.userId))
+      .where(eq(users._clerk, ctx.auth.userId))
       .returning();
 
     if (!updatedUser) {

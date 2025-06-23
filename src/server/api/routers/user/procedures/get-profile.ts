@@ -9,7 +9,7 @@ export const getProfile = protectedProcedure
     const [userProfile] = await db
       .select()
       .from(users)
-      .where(eq(users._user, ctx.auth.userId));
+      .where(eq(users._clerk, ctx.auth.userId));
 
     if (!userProfile) {
       throw new TRPCError({
