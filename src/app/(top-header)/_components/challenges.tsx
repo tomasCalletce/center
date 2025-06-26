@@ -1,5 +1,5 @@
 import { Zap } from "lucide-react";
-import { UpcomingChallenges } from "~/app/(top-header)/challenges/_components/upcoming-challenges";
+import { UpcomingChallenges } from "~/app/(top-header)/_components/upcoming-challenges";
 
 export const Challenges = () => {
   return (
