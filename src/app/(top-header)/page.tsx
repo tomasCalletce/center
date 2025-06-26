@@ -1,16 +1,18 @@
 import { HydrateClient } from "~/trpc/server";
 import { AiHackathon } from "~/app/(top-header)/_components/ia-hackathon";
 import { Companies } from "~/app/(top-header)/_components/compnies";
-import { TopHero } from "~/app/(top-header)/_components/top-hero";
+import { CommunityShowcase } from "~/app/(top-header)/_components/community-showcase";
 import { HowItWorks } from "~/app/(top-header)/_components/how-it-works";
+import { Challenges } from "~/app/(top-header)/_components/challenges";
 
 export default async function Home() {
   return (
     <HydrateClient>
-      <div className="space-y-16">
-        <TopHero />
-        <AiHackathon />
+      <div className="space-y-12">
+        <Challenges />
+        <CommunityShowcase />
         <HowItWorks />
+        <AiHackathon />
         <Companies />
       </div>
     </HydrateClient>
