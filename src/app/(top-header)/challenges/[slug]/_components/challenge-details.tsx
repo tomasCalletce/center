@@ -1,20 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { api } from "~/trpc/server";
-import { Button, buttonVariants } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
 import {
   Clock,
-  ArrowRight,
   Users,
   MapPin,
   Trophy,
   Calendar,
 } from "lucide-react";
-import { cn } from "~/lib/utils";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { SubmissionDialog } from "./submission-dialog";
+import { ChallengeSubmissionButton } from "./challenge-submission-button";
 
 interface ChallengeDetailsProps {
   slug: string;
@@ -133,22 +129,10 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           </div>
         </div>
         <div className="p-6 border-t">
-          <SignedIn>
-            <SubmissionDialog _challenge={challenge.id}>
-              <Button className="w-full cursor-pointer">
-                Submit Build
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </Button>
-            </SubmissionDialog>
-          </SignedIn>
-          <SignedOut>
-            <Link
-              className={cn(buttonVariants({ variant: "default" }), "w-full")}
-              href="/sign-in"
-            >
-              Sign in to submit
-            </Link>
-          </SignedOut>
+          <ChallengeSubmissionButton
+            challengeId={challenge.id}
+            isSubmissionOpen={isSubmissionOpen}
+          />
         </div>
       </div>
     </div>

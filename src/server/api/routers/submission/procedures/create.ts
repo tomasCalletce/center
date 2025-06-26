@@ -7,6 +7,9 @@ import { verifySubmissionsSchema } from "~/server/db/schemas/submissions";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 import { teams } from "~/server/db/schemas/teams";
 import { teamMembers } from "~/server/db/schemas/team-members";
+import { challenges } from "~/server/db/schemas/challenges";
+import { eq } from "drizzle-orm";
+import { sendSubmissionReceivedEmail } from "~/server/email/services/submission";
 
 export const create = protectedProcedure
   .input(verifySubmissionsSchema)
@@ -93,6 +96,27 @@ export const create = protectedProcedure
 
       return newSubmission;
     });
+
+    if (input._challenge) {
+      const [challenge] = await dbSocket
+        .select({
+          title: challenges.title,
+          slug: challenges.slug,
+        })
+        .from(challenges)
+        .where(eq(challenges.id, input._challenge));
+
+      if (challenge) {
+        await sendSubmissionReceivedEmail({
+          userClerkId: ctx.auth.userId,
+          submissionTitle: input.title,
+          challengeTitle: challenge.title,
+          challengeSlug: challenge.slug,
+          demoUrl: input.demo_url,
+          repositoryUrl: input.repository_url,
+        });
+      }
+    }
 
     return result;
   });

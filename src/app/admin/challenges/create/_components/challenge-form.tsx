@@ -73,7 +73,7 @@ export const ChallengeForm: React.FC = () => {
       visibility: data.visibility,
       deadline_at: data.deadline_at,
       open_at: data.open_at,
-      verifyImagesSchema: {
+      verifyAssetsImageSchema: {
         alt: data.title,
         verifyAssetsSchema: {
           pathname: uploadedImageUrl,
