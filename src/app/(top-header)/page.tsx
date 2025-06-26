@@ -8,7 +8,7 @@ import { Challenges } from "~/app/(top-header)/_components/challenges";
 export default async function Home() {
   return (
     <HydrateClient>
-      <div className="space-y-12">
+      <div className="space-y-8 md:space-y-12 my-8">
         <Challenges />
         <CommunityShowcase />
         <HowItWorks />

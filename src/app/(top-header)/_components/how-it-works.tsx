@@ -3,7 +3,7 @@ import Image from "next/image";
 export const HowItWorks = () => {
   return (
     <section id="how-it-works">
-      <div className="container border-y py-6 border-dashed mx-auto">
+      <div className="container border-y py-8 md:py-12 border-dashed mx-auto">
         <div className="max-w-6xl space-y-6 mx-auto">
           <h2 className="text-3xl font-medium">
             How skill-based hiring works?
