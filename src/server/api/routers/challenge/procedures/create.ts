@@ -15,8 +15,8 @@ export const create = isAdminAuthedProcedure
       .insert(assets)
       .values({
         _clerk: ctx.auth.userId,
-        pathname: input.verifyImagesSchema.verifyAssetsSchema.pathname,
-        url: input.verifyImagesSchema.verifyAssetsSchema.url,
+        pathname: input.verifyAssetsImageSchema.verifyAssetsSchema.pathname,
+        url: input.verifyAssetsImageSchema.verifyAssetsSchema.url,
       })
       .returning({ id: assets.id });
     if (!newDocument) {
@@ -31,7 +31,7 @@ export const create = isAdminAuthedProcedure
       .values({
         _clerk: ctx.auth.userId,
         _asset: newDocument.id,
-        alt: input.verifyImagesSchema.alt,
+        alt: input.verifyAssetsImageSchema.alt,
       })
       .returning({ id: assetsImages.id });
     if (!newImage) {
