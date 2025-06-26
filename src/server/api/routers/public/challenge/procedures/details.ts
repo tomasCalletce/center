@@ -2,10 +2,11 @@ import { publicProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db/connection";
 import { challenges } from "~/server/db/schemas/challenges";
 import { z } from "zod";
-import { eq, or } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 import { TRPCError } from "@trpc/server";
+import { participationIntents } from "~/server/db/schemas/participation-intents";
 
 export const details = publicProcedure
   .input(
@@ -18,7 +19,7 @@ export const details = publicProcedure
         message: "Either challenge ID or slug must be provided",
       })
   )
-  .query(async ({ input }) => {
+  .query(async ({ input, ctx }) => {
     const whereCondition = input._challenge
       ? eq(challenges.id, input._challenge)
       : eq(challenges.slug, input.challenge_slug!);
@@ -34,6 +35,13 @@ export const details = publicProcedure
         open_at: challenges.open_at,
         price_pool: challenges.price_pool,
         price_pool_currency: challenges.price_pool_currency,
+        is_notified: ctx.auth.userId
+          ? sql<boolean>`EXISTS (
+              SELECT 1 FROM ${participationIntents} 
+              WHERE ${participationIntents._challenge} = ${challenges.id} 
+              AND ${participationIntents._clerk} = ${ctx.auth.userId}
+            )`
+          : sql<boolean>`false`,
         image: {
           pathname: assets.pathname,
           url: assets.url,
