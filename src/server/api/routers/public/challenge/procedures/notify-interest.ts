@@ -1,19 +1,13 @@
-import { publicProcedure } from "~/server/api/trpc";
+import { protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db/connection";
 import { participationIntents } from "~/server/db/schemas/participation-intents";
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
-export const notifyInterest = publicProcedure
+export const notifyInterest = protectedProcedure
   .input(z.object({ challengeId: z.string().uuid() }))
   .mutation(async ({ input, ctx }) => {
-    if (!ctx.auth?.userId) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Must be logged in to express interest",
-      });
-    }
 
     const existingIntent = await db
       .select()
@@ -36,7 +30,7 @@ export const notifyInterest = publicProcedure
         _clerk: ctx.auth.userId,
         _challenge: input.challengeId,
       })
-      .returning({ id: participationIntents.id });
+      .returning();
 
     if (!newIntent) {
       throw new TRPCError({
@@ -45,5 +39,5 @@ export const notifyInterest = publicProcedure
       });
     }
 
-    return { success: true, message: "Interest recorded successfully" };
+    return newIntent;
   }); 
