@@ -1,19 +1,18 @@
-import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "~/components/ui/button";
 
 export const Companies = () => {
   return (
-    <section className="mb-16">
+    <section>
       <div className="container mx-auto">
         <div className="max-w-4xl mx-auto text-center">
           <div className="space-y-8">
             <div className="space-y-6">
               <div className="flex items-center justify-center gap-3">
                 <div className="h-1 w-8 bg-slate-900 rounded-full" />
-                <span className="text-sm uppercase tracking-wider font-medium">
+                <h2 className="text-sm uppercase tracking-wider font-medium">
                   For Companies
-                </span>
+                </h2>
                 <div className="h-1 w-8 bg-slate-900 rounded-full" />
               </div>
 

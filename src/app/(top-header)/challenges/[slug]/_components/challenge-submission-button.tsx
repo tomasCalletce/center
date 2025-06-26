@@ -3,32 +3,32 @@
 import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { ArrowRight, Bell, Check } from "lucide-react";
-import { cn } from "~/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { SubmissionDialog } from "./submission-dialog";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
-import { useState } from "react";
 
 interface ChallengeSubmissionButtonProps {
   challengeId: string;
   isSubmissionOpen: boolean;
 }
 
-export function ChallengeSubmissionButton({
-  challengeId,
-  isSubmissionOpen,
-}: ChallengeSubmissionButtonProps) {
+export const ChallengeSubmissionButton: React.FC<
+  ChallengeSubmissionButtonProps
+> = ({ challengeId, isSubmissionOpen }) => {
   const { isSignedIn, isLoaded } = useUser();
-  const [isNotified, setIsNotified] = useState(false);
+
+  const challengeDetailsQuery = api.public.challenge.details.useQuery({
+    _challenge: challengeId,
+  });
 
   const notifyMutation = api.public.challenge.notifyInterest.useMutation({
     onSuccess: () => {
-      setIsNotified(true);
       toast.success("You'll be notified when submissions open!");
+      challengeDetailsQuery.refetch();
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to save notification preference");
+    onError: () => {
+      toast.error("Failed to save notification preference");
     },
   });
 
@@ -36,18 +36,16 @@ export function ChallengeSubmissionButton({
     notifyMutation.mutate({ challengeId });
   };
 
-  if (!isLoaded) {
-    return (
-      <Button className="w-full" disabled>
-        Loading...
-      </Button>
-    );
-  }
+  if (!isLoaded) return null;
 
   if (!isSignedIn) {
     return (
       <Link
-        className={cn(buttonVariants({ variant: "default" }), "w-full")}
+        prefetch={true}
+        className={buttonVariants({
+          variant: "default",
+          className: "w-full cursor-pointer",
+        })}
         href="/sign-in"
       >
         Sign in to submit
@@ -57,21 +55,24 @@ export function ChallengeSubmissionButton({
 
   if (!isSubmissionOpen) {
     return (
-      <Button 
-        className="w-full" 
+      <Button
+        className="w-full cursor-pointer"
         variant="secondary"
         onClick={handleNotifyClick}
-        disabled={notifyMutation.isPending || isNotified}
+        isLoading={notifyMutation.isPending}
+        disabled={
+          notifyMutation.isPending || challengeDetailsQuery.data?.is_notified
+        }
       >
-        {isNotified ? (
+        {challengeDetailsQuery.data?.is_notified ? (
           <>
-            <Check className="mr-2 h-4 w-4" />
             Notifications enabled
+            <Check className="ml-1 h-4 w-4" />
           </>
         ) : (
           <>
-            <Bell className="mr-2 h-4 w-4" />
-            {notifyMutation.isPending ? "Saving..." : "Notify me"}
+            Notify me
+            <Bell className="ml-1 h-4 w-4" />
           </>
         )}
       </Button>
@@ -86,4 +87,4 @@ export function ChallengeSubmissionButton({
       </Button>
     </SubmissionDialog>
   );
-} 
+};
