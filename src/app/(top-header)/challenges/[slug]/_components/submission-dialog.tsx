@@ -52,9 +52,12 @@ export function SubmissionDialog({
 
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
 
+  const utils = api.useUtils();
+
   const submitMutation = api.submission.create.useMutation({
     onSuccess: () => {
       setStep(SUBMISSION_STEPS.SUCCESS);
+      utils.submission.getUserSubmission.invalidate({ challengeId: _challenge });
     },
     onError: () => {
       setStep(SUBMISSION_STEPS.ERROR);

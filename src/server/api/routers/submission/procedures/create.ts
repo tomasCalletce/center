@@ -8,12 +8,34 @@ import { assetsImages } from "~/server/db/schemas/assets-images";
 import { teams } from "~/server/db/schemas/teams";
 import { teamMembers } from "~/server/db/schemas/team-members";
 import { challenges } from "~/server/db/schemas/challenges";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { sendSubmissionReceivedEmail } from "~/server/email/services/submission";
 
 export const create = protectedProcedure
   .input(verifySubmissionsSchema)
   .mutation(async ({ input, ctx }) => {
+    if (input._challenge) {
+      const [existingSubmission] = await dbSocket
+        .select()
+        .from(submissions)
+        .innerJoin(teams, eq(submissions._team, teams.id))
+        .innerJoin(teamMembers, eq(teams.id, teamMembers._team))
+        .where(
+          and(
+            eq(submissions._challenge, input._challenge),
+            eq(teamMembers._clerk, ctx.auth.userId)
+          )
+        )
+        .limit(1);
+
+      if (existingSubmission) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You have already submitted to this challenge",
+        });
+      }
+    }
+
     const result = await dbSocket.transaction(async (tx) => {
       const [newAsset] = await tx
         .insert(assets)
