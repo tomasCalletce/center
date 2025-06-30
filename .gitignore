@@ -49,3 +49,4 @@ yarn-error.log*
 _db.sql
 .cursor/
 .trigger
+.tool-versions

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { ArrowRight, Bell, Check } from "lucide-react";
+import { ArrowRight, Bell, Check, Edit } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { SubmissionDialog } from "./submission-dialog";
 import { api } from "~/trpc/react";
@@ -21,6 +21,11 @@ export const ChallengeSubmissionButton: React.FC<
   const challengeDetailsQuery = api.public.challenge.details.useQuery({
     _challenge: challengeId,
   });
+
+  const userSubmissionQuery = api.submission.getUserSubmission.useQuery(
+    { challengeId },
+    { enabled: isSignedIn && isSubmissionOpen }
+  );
 
   const notifyMutation = api.public.challenge.notifyInterest.useMutation({
     onSuccess: () => {
@@ -76,6 +81,22 @@ export const ChallengeSubmissionButton: React.FC<
           </>
         )}
       </Button>
+    );
+  }
+
+  const hasSubmitted = userSubmissionQuery.data;
+
+  if (hasSubmitted) {
+    return (
+      <SubmissionDialog _challenge={challengeId}>
+        <Button
+          className="w-full cursor-pointer"
+          variant="secondary"
+        >
+          Edit Submission
+          <Edit className="ml-2 h-4 w-4" />
+        </Button>
+      </SubmissionDialog>
     );
   }
 
