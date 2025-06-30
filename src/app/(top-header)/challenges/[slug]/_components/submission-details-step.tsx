@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -29,10 +29,12 @@ const schema = formSubmissionSchema.pick({
 
 interface SubmissionDetailsStepProps {
   handleOnSubmit: (data: DetailsData) => void;
+  initialData?: DetailsData | null;
 }
 
 export function SubmissionDetailsStep({
   handleOnSubmit,
+  initialData,
 }: SubmissionDetailsStepProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -44,7 +46,33 @@ export function SubmissionDetailsStep({
   const fileRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      title: initialData?.title || "",
+      demo_url: initialData?.demo_url || "",
+      repository_url: initialData?.repository_url || "",
+    },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        title: initialData.title,
+        demo_url: initialData.demo_url,
+        repository_url: initialData.repository_url,
+      });
+
+      if (initialData.image.url) {
+        setPreview(initialData.image.url);
+        setUploadedImage({
+          alt: initialData.image.alt,
+          formAssetsSchema: {
+            url: initialData.image.url,
+            pathname: initialData.image.pathname,
+          },
+        });
+      }
+    }
+  }, [initialData, form]);
 
   const handleFileChange = (file: File | null) => {
     if (!file) return;
@@ -83,7 +111,7 @@ export function SubmissionDetailsStep({
   };
 
   const resetImage = () => {
-    if (preview) URL.revokeObjectURL(preview);
+    if (preview && !preview.startsWith('http')) URL.revokeObjectURL(preview);
     setPreview("");
     setSelectedFile(null);
     setUploadedImage(null);
@@ -193,7 +221,7 @@ export function SubmissionDetailsStep({
                   ${
                     isUploading
                       ? "bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200"
-                      : selectedFile
+                      : selectedFile || preview
                       ? "bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200 shadow-lg"
                       : "bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-dashed border-slate-200 hover:border-slate-900 hover:bg-gradient-to-br hover:from-slate-100 hover:to-gray-100"
                   }
@@ -252,11 +280,11 @@ export function SubmissionDetailsStep({
                       </p>
                     </div>
                   </div>
-                ) : selectedFile && preview ? (
+                ) : (selectedFile || preview) ? (
                   <div className="relative h-64 w-full">
                     <img
                       src={preview}
-                      alt={selectedFile.name}
+                      alt={selectedFile?.name || "Project image"}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -264,11 +292,13 @@ export function SubmissionDetailsStep({
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <p className="text-sm font-semibold truncate">
-                            {selectedFile.name}
+                            {selectedFile?.name || "Project image"}
                           </p>
-                          <p className="text-xs opacity-90">
-                            {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
+                          {selectedFile && (
+                            <p className="text-xs opacity-90">
+                              {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          )}
                         </div>
                         <Button
                           type="button"
@@ -278,62 +308,56 @@ export function SubmissionDetailsStep({
                             e.stopPropagation();
                             resetImage();
                           }}
-                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+                          className="bg-white/20 border-white/30 text-white hover:bg-white/30 hover:text-white"
                         >
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
-                    <div className="absolute top-4 right-4">
-                      <div className="bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                        ✓ Uploaded
-                      </div>
-                    </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-64 space-y-6 p-6">
-                    <div className="relative">
-                      <div className="w-16 h-16 bg-slate-200 rounded-2xl flex items-center justify-center group-hover:bg-slate-900 transition-colors duration-300">
-                        <Upload className="w-8 h-8 text-slate-500 group-hover:text-white transition-colors duration-300" />
-                      </div>
-                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">+</span>
+                  <div className="flex flex-col items-center justify-center h-64 space-y-6">
+                    <div className="relative group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center border-2 border-slate-200 group-hover:border-slate-900 transition-colors duration-300">
+                        <div className="relative">
+                          <Upload className="w-8 h-8 text-slate-400 group-hover:text-slate-900 transition-colors duration-300" />
+                          <div className="absolute -top-1 -right-1 w-6 h-6 bg-slate-900 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <ImageIcon className="w-3 h-3 text-white" />
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="text-center space-y-2">
-                      <p className="text-lg font-semibold text-slate-900 group-hover:text-slate-700 transition-colors">
-                        Drop your image here
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        or{" "}
-                        <span className="text-slate-900 font-medium underline">
-                          click to browse
-                        </span>
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
-                      <span>Supports PNG, JPG, WebP</span>
-                      <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
-                      <span>Max 5MB</span>
+                      <div className="space-y-1">
+                        <p className="text-lg font-semibold text-slate-900 group-hover:text-slate-800 transition-colors duration-200">
+                          Drop your image here
+                        </p>
+                        <p className="text-sm text-slate-500">
+                          or click to browse files
+                        </p>
+                      </div>
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 group-hover:bg-slate-900 group-hover:text-white rounded-lg transition-all duration-300">
+                        <Upload className="w-4 h-4" />
+                        <span className="text-sm font-medium">Choose File</span>
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
             </div>
           </div>
+
           <div className="flex justify-between items-center pt-6 border-t border-dashed">
             <div className="text-xs text-slate-500">
               Step 1 of 2 • Project Information
             </div>
             <Button
               type="submit"
-              disabled={!uploadedImage || isUploading}
-              className="px-6 cursor-pointer shadow-lg"
+              className="cursor-pointer px-6 shadow-lg"
               size="lg"
             >
-              Continue to Description
-              <ChevronRight className="w-4 h-4 ml-2" />
+              Continue
+              <ChevronRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
         </form>

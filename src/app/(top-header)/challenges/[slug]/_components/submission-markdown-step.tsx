@@ -16,6 +16,7 @@ import {
 } from "~/components/ui/form";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import type { MarkdownData } from "./submission-dialog";
+import { useEffect } from "react";
 
 const schema = formSubmissionSchema.pick({
   markdown: true,
@@ -25,16 +26,29 @@ interface SubmissionMarkdownStepProps {
   handleOnSubmit: (data: MarkdownData) => void;
   onBack: () => void;
   isLoading: boolean;
+  initialData?: MarkdownData;
 }
 
 export function SubmissionMarkdownStep({
   handleOnSubmit,
   onBack,
   isLoading,
+  initialData,
 }: SubmissionMarkdownStepProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      markdown: initialData?.markdown || "",
+    },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        markdown: initialData.markdown,
+      });
+    }
+  }, [initialData, form]);
 
   const onSubmit = (data: z.infer<typeof schema>) => {
     handleOnSubmit({
@@ -108,7 +122,7 @@ export function SubmissionMarkdownStep({
               size="lg"
             >
               <Send className="h-4 w-4 mr-2" />
-              Submit Project
+              {initialData ? "Update Project" : "Submit Project"}
             </Button>
           </div>
         </form>

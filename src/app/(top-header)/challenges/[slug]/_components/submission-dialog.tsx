@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -48,13 +48,20 @@ export function SubmissionDialog({
   _challenge,
   children,
 }: SubmissionDialogProps) {
+  const [open, setOpen] = useState(false);
   const [step, setStep] = useState(SUBMISSION_STEPS.DETAILS);
-
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
 
   const utils = api.useUtils();
 
-  const submitMutation = api.submission.create.useMutation({
+  const userSubmissionQuery = api.submission.getUserSubmission.useQuery(
+    { challengeId: _challenge },
+    { enabled: open }
+  );
+
+  const isEditMode = !!userSubmissionQuery.data;
+
+  const createMutation = api.submission.create.useMutation({
     onSuccess: () => {
       setStep(SUBMISSION_STEPS.SUCCESS);
       utils.submission.getUserSubmission.invalidate({ challengeId: _challenge });
@@ -63,6 +70,44 @@ export function SubmissionDialog({
       setStep(SUBMISSION_STEPS.ERROR);
     },
   });
+
+  const updateMutation = api.submission.update.useMutation({
+    onSuccess: () => {
+      setStep(SUBMISSION_STEPS.SUCCESS);
+      utils.submission.getUserSubmission.invalidate({ challengeId: _challenge });
+    },
+    onError: () => {
+      setStep(SUBMISSION_STEPS.ERROR);
+    },
+  });
+
+  const resetDialogState = () => {
+    setStep(SUBMISSION_STEPS.DETAILS);
+    setDetailsData(null);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen) {
+      resetDialogState();
+    }
+  };
+
+  useEffect(() => {
+    if (isEditMode && userSubmissionQuery.data && !detailsData) {
+      const submission = userSubmissionQuery.data;
+      setDetailsData({
+        title: submission.title,
+        demo_url: submission.demo_url,
+        repository_url: submission.repository_url,
+        image: {
+          alt: submission.logo_image?.alt || "",
+          url: submission.logo_image?.url || "",
+          pathname: submission.logo_image?.pathname || "",
+        },
+      });
+    }
+  }, [isEditMode, userSubmissionQuery.data, detailsData]);
 
   const handleDetailsSubmit = (data: DetailsData) => {
     setDetailsData({
@@ -76,7 +121,8 @@ export function SubmissionDialog({
 
   const handleMarkdownSubmit = (data: MarkdownData) => {
     if (!detailsData) return;
-    submitMutation.mutate({
+
+    const submissionData = {
       _challenge: _challenge,
       title: detailsData.title,
       demo_url: detailsData.demo_url,
@@ -90,7 +136,16 @@ export function SubmissionDialog({
           url: detailsData.image.url,
         },
       },
-    });
+    };
+
+    if (isEditMode && userSubmissionQuery.data) {
+      updateMutation.mutate({
+        ...submissionData,
+        id: userSubmissionQuery.data.id,
+      });
+    } else {
+      createMutation.mutate(submissionData);
+    }
   };
 
   const handleBack = () => {
@@ -113,21 +168,30 @@ export function SubmissionDialog({
     }
   };
 
+  const initialMarkdownData = isEditMode && userSubmissionQuery.data 
+    ? { markdown: userSubmissionQuery.data.markdown || "" }
+    : undefined;
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="!max-w-[1100px] min-h-[700px]">
         <DialogHeader>
-          <DialogTitle>Submit Your Build</DialogTitle>
+          <DialogTitle>
+            {isEditMode ? "Edit Your Submission" : "Submit Your Build"}
+          </DialogTitle>
           <DialogDescription>
-            Submit your project for this challenge.
+            {isEditMode 
+              ? "Update your project submission for this challenge."
+              : "Submit your project for this challenge."
+            }
           </DialogDescription>
           <div className="relative">
             <div className="flex items-center justify-between max-w-xs mx-auto">
               {[
                 { num: 1, label: "Details", icon: "📝" },
                 { num: 2, label: "Description", icon: "📋" },
-                { num: 3, label: "Submit", icon: "🚀" },
+                { num: 3, label: isEditMode ? "Update" : "Submit", icon: "🚀" },
               ].map((step) => (
                 <div
                   key={step.num}
@@ -169,7 +233,6 @@ export function SubmissionDialog({
                 </div>
               ))}
 
-              {/* Connecting line */}
               <div className="absolute top-6 left-6 right-6 h-0.5 bg-gradient-to-r from-slate-200 via-slate-200 to-slate-200 -z-0">
                 <div
                   className={`
@@ -189,13 +252,17 @@ export function SubmissionDialog({
         </DialogHeader>
         <div>
           {step === SUBMISSION_STEPS.DETAILS && (
-            <SubmissionDetailsStep handleOnSubmit={handleDetailsSubmit} />
+            <SubmissionDetailsStep 
+              handleOnSubmit={handleDetailsSubmit}
+              initialData={detailsData}
+            />
           )}
           {step === "markdown" && (
             <SubmissionMarkdownStep
               handleOnSubmit={handleMarkdownSubmit}
               onBack={handleBack}
-              isLoading={submitMutation.isPending}
+              isLoading={createMutation.isPending || updateMutation.isPending}
+              initialData={initialMarkdownData}
             />
           )}
           {(step === SUBMISSION_STEPS.SUCCESS ||
