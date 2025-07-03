@@ -21,4 +21,4 @@ export const ExperienceEdit = ({
   onChange,
 }: ExperienceEditProps) => {
   return <ExperienceField experience={experience} onChange={onChange} />;
-}; 
+};

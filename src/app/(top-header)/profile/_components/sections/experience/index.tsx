@@ -3,42 +3,39 @@
 import { EditableSection } from "~/app/(top-header)/profile/_components/editable-section";
 import { updateProfileExperience } from "~/app/(top-header)/profile/_actions/update-profile";
 import { toast } from "sonner";
-import { type EmploymentType } from "~/server/db/schemas/users";
 import { Briefcase } from "lucide-react";
 import { ExperienceView } from "~/app/(top-header)/profile/_components/sections/experience/experience-view";
 import { ExperienceEdit } from "~/app/(top-header)/profile/_components/sections/experience/experience-edit";
+import { api } from "~/trpc/react";
+import { type User } from "~/server/db/schemas/users";
 
-interface Experience {
-  title?: string | null;
-  company?: string | null;
-  employment_type?: EmploymentType | null;
-  start_date?: string | null;
-  end_date?: string | null;
-  description?: string | null;
-  skills_used?: string[] | null;
-}
+export const ProfileExperience = () => {
+  const userProfile = api.user.getProfile.useQuery();
 
-interface ProfileExperienceProps {
-  experience?: Experience[] | null;
-}
+  const updateProfileExperienceMutation = api.user.updateProfile.useMutation({
+    onSuccess: () => {
+      toast.success("Header updated successfully!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-export const ProfileExperience = ({ experience }: ProfileExperienceProps) => {
-  const experienceData = experience || [];
-
-  const handleSave = async (data: Experience[]) => {
-    const result = await updateProfileExperience(data);
-    if (result.error) {
-      toast.error(result.error);
-      throw new Error(result.error);
-    }
-    toast.success("Experience updated successfully!");
+  const handleSave = async (data: User) => {
+    updateProfileExperienceMutation.mutate(data);
   };
+
+  if (!userProfile.data) {
+    return null;
+  }
 
   return (
     <EditableSection
       title="Experience"
-      data={experienceData}
-      renderView={(data) => <ExperienceView experience={data} />}
+      data={userProfile.data}
+      renderView={(data) => (
+        <ExperienceView experience={data.experience || []} />
+      )}
       renderEdit={(data, onChange) => (
         <ExperienceEdit experience={data} onChange={onChange} />
       )}
@@ -46,4 +43,4 @@ export const ProfileExperience = ({ experience }: ProfileExperienceProps) => {
       icon={<Briefcase className="h-4 w-4" />}
     />
   );
-}; 
+};

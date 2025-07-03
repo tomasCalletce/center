@@ -2,32 +2,13 @@ import { pgTable, timestamp, varchar, uuid, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  _clerk: varchar("_clerk", { length: 32 }).notNull().unique(),
-
-  // Essential Info
-  display_name: varchar("display_name", { length: 255 }),
-  location: varchar("location", { length: 255 }),
-  current_title: varchar("current_title", { length: 255 }),
-
-  // Structured Career Data
-  experience: jsonb("experience").default([]),
-  education: jsonb("education").default([]),
-
-  // Skills (core matching criteria)
-  skills: jsonb("skills").default([]),
-
-  // Social Media Links
-  social_links: jsonb("social_links").default([]),
-
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at").defaultNow().notNull(),
-});
-
-// Zod schemas for validation
-export const employmentTypeEnum = z.enum(["full-time", "part-time", "freelance", "internship"]);
-export type EmploymentType = z.infer<typeof employmentTypeEnum>;
+export const employmentTypeEnum = z.enum([
+  "full-time",
+  "part-time",
+  "freelance",
+  "internship",
+]);
+export type UserEmploymentType = z.infer<typeof employmentTypeEnum>;
 
 const experienceSchema = z.object({
   company: z.string().nullable(),
@@ -38,6 +19,7 @@ const experienceSchema = z.object({
   description: z.string().nullable(),
   skills_used: z.array(z.string()).default([]),
 });
+export type UserExperience = z.infer<typeof experienceSchema>;
 
 const educationSchema = z.object({
   institution: z.string().nullable(),
@@ -48,11 +30,37 @@ const educationSchema = z.object({
   gpa: z.string().nullable(),
   relevant_coursework: z.array(z.string()).default([]),
 });
+export type UserEducation = z.infer<typeof educationSchema>;
 
 const socialLinkSchema = z.object({
   platform: z.enum(["linkedin", "github", "portfolio", "website"]),
   url: z.string().url(),
 });
+export type UserSocialLink = z.infer<typeof socialLinkSchema>;
+
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  _clerk: varchar("_clerk", { length: 32 }).notNull().unique(),
+
+  // Essential Info
+  display_name: varchar("display_name", { length: 255 }),
+  location: varchar("location", { length: 255 }),
+  current_title: varchar("current_title", { length: 255 }),
+
+  // Structured Career Data with proper typing
+  experience: jsonb("experience").$type<UserExperience[]>().default([]),
+  education: jsonb("education").$type<UserEducation[]>().default([]),
+
+  // Skills (core matching criteria)
+  skills: jsonb("skills").$type<string[]>().default([]),
+
+  // Social Media Links
+  social_links: jsonb("social_links").$type<UserSocialLink[]>().default([]),
+
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+export type User = typeof users.$inferSelect;
 
 export const userProfileSchema = createInsertSchema(users, {
   skills: z.array(z.string()).optional(),
