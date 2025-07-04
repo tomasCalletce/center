@@ -39,6 +39,8 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
     ? new Date() >= challenge.open_at
     : false;
 
+  const isDeadlinePassed = new Date() > challenge.deadline_at;
+
   const pricePool = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: challenge.price_pool_currency,
@@ -96,11 +98,11 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
                 {formattedOpenDate}
               </div>
               <Badge
-                variant={isSubmissionOpen ? "default" : "secondary"}
+                variant={isDeadlinePassed ? "destructive" : isSubmissionOpen ? "default" : "secondary"}
                 className="text-xs font-medium"
               >
                 <Calendar className="h-3 w-3 mr-1" />
-                {isSubmissionOpen ? "Open now" : openTimeLeft}
+                {isDeadlinePassed ? "Closed" : isSubmissionOpen ? "Open now" : openTimeLeft}
               </Badge>
             </div>
           </div>
@@ -112,9 +114,12 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
               <div className="text-sm font-medium text-foreground">
                 {formattedDeadlineDate}
               </div>
-              <Badge className="text-xs font-medium">
+              <Badge 
+                variant={isDeadlinePassed ? "destructive" : "default"}
+                className="text-xs font-medium"
+              >
                 <Clock className="h-3 w-3 mr-1" />
-                {timeLeft}
+                {isDeadlinePassed ? "Ended" : timeLeft}
               </Badge>
             </div>
           </div>

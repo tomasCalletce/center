@@ -12,18 +12,27 @@ import { TRPCError } from "@trpc/server";
 
 export const recentSubmissions = publicProcedure
   .input(
-    z.object({
-      challenge_slug: z.string(),
-      limit: z.number().min(1).max(10).default(5),
-    })
+    z
+      .object({
+        _challenge: z.string().uuid().optional(),
+        challenge_slug: z.string().optional(),
+        limit: z.number().min(1).max(10).default(5),
+      })
+      .refine((data) => data._challenge || data.challenge_slug, {
+        message: "Either challenge ID or slug must be provided",
+      })
   )
   .query(async ({ input }) => {
+    const whereCondition = input._challenge
+      ? eq(challenges.id, input._challenge)
+      : eq(challenges.slug, input.challenge_slug!);
+
     const [challenge] = await db
       .select({
         id: challenges.id,
       })
       .from(challenges)
-      .where(eq(challenges.slug, input.challenge_slug));
+      .where(whereCondition);
 
     if (!challenge) {
       throw new TRPCError({

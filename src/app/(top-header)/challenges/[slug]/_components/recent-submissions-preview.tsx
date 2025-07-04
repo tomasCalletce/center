@@ -23,7 +23,7 @@ export const RecentSubmissionsPreview: React.FC<RecentSubmissionsPreviewProps> =
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
             <FileText className="h-6 w-6" />
-            Recent Submissions
+            Latest Builds
           </h2>
         </div>
         <div className="flex gap-4 overflow-x-auto pb-2 px-4">
@@ -47,12 +47,12 @@ export const RecentSubmissionsPreview: React.FC<RecentSubmissionsPreviewProps> =
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
             <FileText className="h-6 w-6" />
-            Recent Submissions
+            Latest Builds
           </h2>
         </div>
         <div className="text-center py-12 text-muted-foreground">
           <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p className="text-sm">No submissions yet</p>
+          <p className="text-sm">No builds yet</p>
         </div>
       </div>
     );
@@ -63,10 +63,10 @@ export const RecentSubmissionsPreview: React.FC<RecentSubmissionsPreviewProps> =
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
           <FileText className="h-6 w-6" />
-          Recent Submissions
+          Latest Builds
         </h2>
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-2 px-4 justify-center">
+      <div className="flex gap-4 overflow-x-auto pb-2 px-4">
         {recentSubmissionsQuery.data.map((submission) => (
           <div key={submission.id} className="flex-shrink-0 w-56 p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow">
             <div className="relative w-full h-24 mb-3 rounded-lg overflow-hidden bg-muted">
