@@ -85,6 +85,22 @@ export const ChallengeSubmissionButton: React.FC<
   }
 
   const hasSubmitted = userSubmissionQuery.data;
+  const isDeadlinePassed = challengeDetailsQuery.data?.deadline_at
+    ? new Date() > new Date(challengeDetailsQuery.data.deadline_at)
+    : false;
+
+  if (isDeadlinePassed) {
+    return (
+      <Button
+        className="w-full cursor-pointer"
+        variant="outline"
+        disabled
+      >
+        Submission Closed
+        <Check className="ml-2 h-4 w-4" />
+      </Button>
+    );
+  }
 
   if (hasSubmitted) {
     return (

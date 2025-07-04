@@ -1,11 +1,20 @@
+"use client";
+
 import Link from "next/link";
-import { SignedIn } from "@clerk/nextjs";
-import { buttonVariants } from "~/components/ui/button";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  useUser,
+} from "@clerk/nextjs";
+import { Button } from "~/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
+import { UserMenu } from "./user-menu";
 
 export function Header() {
   return (
@@ -18,56 +27,43 @@ export function Header() {
         </Link>
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link
-                href="/challenges"
-                className={buttonVariants({
-                  variant: "ghost",
-                  className:
-                    "text-sm border-b-2 rounded-none rounded-t-lg border-b-primary",
-                })}
-              >
-                Challenges
-              </Link>
-            </NavigationMenuItem>
             <SignedIn>
               <NavigationMenuItem>
-                <Link
-                  href="/profile"
-                  className={buttonVariants({
-                    variant: "ghost",
-                    className: "cursor-pointer",
-                  })}
-                >
-                  Profile
+                <Link href="/profile">
+                  <Button variant="ghost" className="cursor-pointer">
+                    Profile
+                  </Button>
                 </Link>
               </NavigationMenuItem>
             </SignedIn>
           </NavigationMenuList>
         </NavigationMenu>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <nav className="flex items-center gap-3">
-            <Link
-              href="https://cal.com/tomas-calle-1oj8wr/30min"
-              className={buttonVariants({
-                variant: "ghost",
-                size: "sm",
-                className: "h-9 px-4 text-sm font-medium cursor-pointer",
-              })}
-            >
-              Host Challenge
-            </Link>
-            <Link
-              href="https://cal.com/tomas-calle-1oj8wr/30min"
-              className={buttonVariants({
-                variant: "default",
-                size: "sm",
-                className: "h-9 px-4 text-sm font-medium cursor-pointer",
-              })}
-            >
-              Find Talent
-            </Link>
-          </nav>
+          <SignedIn>
+            <UserMenu />
+          </SignedIn>
+          <SignedOut>
+            <nav className="flex items-center gap-3">
+              <SignUpButton>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-4 text-sm font-medium cursor-pointer"
+                >
+                  Sign Up
+                </Button>
+              </SignUpButton>
+              <SignInButton>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-9 px-4 text-sm font-medium cursor-pointer"
+                >
+                  Sign In
+                </Button>
+              </SignInButton>
+            </nav>
+          </SignedOut>
         </div>
       </div>
     </header>

@@ -2,16 +2,17 @@ import {
   TextField,
   SocialLinksField,
 } from "~/app/(top-header)/profile/_components/form-controls";
-import { type UserProfile } from "~/app/(top-header)/profile/_components/types/profile-types";
-
-type ProfileHeaderData = Omit<UserProfile, "experience" | "education" | "skills">;
+import { type User } from "~/server/db/schemas/users";
 
 interface ProfileHeaderEditProps {
-  data: ProfileHeaderData;
-  onChange: (data: ProfileHeaderData) => void;
+  data: User;
+  onChange: (data: User) => void;
 }
 
-export const ProfileHeaderEdit = ({ data, onChange }: ProfileHeaderEditProps) => {
+export const ProfileHeaderEdit = ({
+  data,
+  onChange,
+}: ProfileHeaderEditProps) => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -24,7 +25,9 @@ export const ProfileHeaderEdit = ({ data, onChange }: ProfileHeaderEditProps) =>
           />
         </div>
         <div>
-          <label className="text-sm font-medium mb-2 block">Current Title</label>
+          <label className="text-sm font-medium mb-2 block">
+            Current Title
+          </label>
           <TextField
             value={data.current_title || ""}
             onChange={(value) => onChange({ ...data, current_title: value })}
@@ -32,7 +35,7 @@ export const ProfileHeaderEdit = ({ data, onChange }: ProfileHeaderEditProps) =>
           />
         </div>
       </div>
-      
+
       <div>
         <label className="text-sm font-medium mb-2 block">Location</label>
         <TextField
@@ -46,9 +49,11 @@ export const ProfileHeaderEdit = ({ data, onChange }: ProfileHeaderEditProps) =>
         <label className="text-sm font-medium mb-2 block">Social Links</label>
         <SocialLinksField
           socialLinks={data.social_links || []}
-          onChange={(socialLinks) => onChange({ ...data, social_links: socialLinks })}
+          onChange={(socialLinks) =>
+            onChange({ ...data, social_links: socialLinks })
+          }
         />
       </div>
     </div>
   );
-}; 
+};

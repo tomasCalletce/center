@@ -1,6 +1,7 @@
 import { Toaster } from "~/components/ui/sonner";
 import { Header } from "~/app/(top-header)/_components/header";
 import { Footer } from "~/app/(top-header)/_components/footer";
+import { HelpChatButton } from "~/components/help-chat-button";
 
 export default function DashboardLayout({
   children,
@@ -13,6 +14,7 @@ export default function DashboardLayout({
         <Toaster />
       </main>
       <Footer />
+      <HelpChatButton />
     </div>
   );
 }
