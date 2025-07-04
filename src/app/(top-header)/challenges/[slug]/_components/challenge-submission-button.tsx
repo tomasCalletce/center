@@ -85,8 +85,24 @@ export const ChallengeSubmissionButton: React.FC<
   }
 
   const hasSubmitted = userSubmissionQuery.data;
+  const isDeadlinePassed = challengeDetailsQuery.data?.deadline_at
+    ? new Date() > new Date(challengeDetailsQuery.data.deadline_at)
+    : false;
 
   if (hasSubmitted) {
+    if (isDeadlinePassed) {
+      return (
+        <Button
+          className="w-full cursor-pointer"
+          variant="outline"
+          disabled
+        >
+          Submission Closed
+          <Check className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    }
+
     return (
       <SubmissionDialog _challenge={challengeId}>
         <Button
@@ -97,6 +113,19 @@ export const ChallengeSubmissionButton: React.FC<
           <Edit className="ml-2 h-4 w-4" />
         </Button>
       </SubmissionDialog>
+    );
+  }
+
+  if (isDeadlinePassed) {
+    return (
+      <Button
+        className="w-full cursor-pointer"
+        variant="outline"
+        disabled
+      >
+        Submission Closed
+        <Check className="ml-2 h-4 w-4" />
+      </Button>
     );
   }
 

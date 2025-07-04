@@ -11,6 +11,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { ChallengeSubmissionButton } from "./challenge-submission-button";
+import { ChallengeStats } from "./challenge-stats";
 
 interface ChallengeDetailsProps {
   slug: string;
@@ -54,6 +55,11 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           className="object-cover rounded-xl"
           priority
         />
+        <div className="absolute bottom-4 left-4">
+          <div className="bg-black/60 backdrop-blur-sm rounded-lg">
+            <ChallengeStats slug={challenge.slug} />
+          </div>
+        </div>
       </div>
       <div className="col-span-1 flex flex-col bg-card rounded-xl border">
         <div className="p-6 border-b">
