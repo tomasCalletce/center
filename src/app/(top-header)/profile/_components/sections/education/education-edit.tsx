@@ -1,7 +1,7 @@
 import { type User, type UserEducation } from "~/server/db/schemas/users";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { Plus, X } from "lucide-react";
-import { TextField } from "~/app/(top-header)/profile/_components/form-controls/text-field";
 
 interface EducationEditProps {
   user: User;
@@ -65,36 +65,42 @@ export const EducationEdit = ({ user, onChange }: EducationEditProps) => {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <TextField
-              value={edu.institution || ""}
-              onChange={(value) => updateEducation(index, "institution", value)}
+            <Input
+              value={edu.institution ?? ""}
+              onChange={(e) =>
+                updateEducation(index, "institution", e.target.value)
+              }
               placeholder="Institution"
             />
-            <TextField
-              value={edu.degree || ""}
-              onChange={(value) => updateEducation(index, "degree", value)}
+            <Input
+              value={edu.degree ?? ""}
+              onChange={(e) => updateEducation(index, "degree", e.target.value)}
               placeholder="Degree"
             />
-            <TextField
-              value={edu.field_of_study || ""}
-              onChange={(value) =>
-                updateEducation(index, "field_of_study", value)
+            <Input
+              value={edu.field_of_study ?? ""}
+              onChange={(e) =>
+                updateEducation(index, "field_of_study", e.target.value)
               }
               placeholder="Field of Study"
             />
-            <TextField
-              value={edu.gpa || ""}
-              onChange={(value) => updateEducation(index, "gpa", value)}
+            <Input
+              value={edu.gpa ?? ""}
+              onChange={(e) => updateEducation(index, "gpa", e.target.value)}
               placeholder="GPA (optional)"
             />
-            <TextField
-              value={edu.start_date || ""}
-              onChange={(value) => updateEducation(index, "start_date", value)}
+            <Input
+              value={edu.start_date ?? ""}
+              onChange={(e) =>
+                updateEducation(index, "start_date", e.target.value)
+              }
               placeholder="Start Date"
             />
-            <TextField
-              value={edu.end_date || ""}
-              onChange={(value) => updateEducation(index, "end_date", value)}
+            <Input
+              value={edu.end_date ?? ""}
+              onChange={(e) =>
+                updateEducation(index, "end_date", e.target.value)
+              }
               placeholder="End Date"
             />
           </div>

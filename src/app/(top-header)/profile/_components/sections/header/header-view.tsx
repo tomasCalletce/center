@@ -1,10 +1,7 @@
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { MapPin, Calendar, Globe } from "lucide-react";
-import {
-  calculateYearsOfExperience,
-  socialIcons,
-} from "~/app/(top-header)/profile/_components/utils";
+import { socialIcons } from "~/app/(top-header)/profile/_components/utils";
 import { type User } from "~/server/db/schemas/users";
 
 interface ProfileHeaderViewProps {
@@ -12,8 +9,6 @@ interface ProfileHeaderViewProps {
 }
 
 export const ProfileHeaderView = ({ user }: ProfileHeaderViewProps) => {
-  const yearsOfExperience = calculateYearsOfExperience(user.experience);
-
   return (
     <div className="space-y-4">
       {/* Name and title */}
@@ -27,7 +22,7 @@ export const ProfileHeaderView = ({ user }: ProfileHeaderViewProps) => {
       </div>
 
       {/* Location and experience info */}
-      {(user.location || yearsOfExperience > 0) && (
+      {user.location && (
         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           {user.location && (
             <div className="flex items-center gap-1.5">
@@ -35,19 +30,8 @@ export const ProfileHeaderView = ({ user }: ProfileHeaderViewProps) => {
               <span>{user.location}</span>
             </div>
           )}
-          {yearsOfExperience > 0 && (
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              <span>
-                {yearsOfExperience.toFixed(1)} year
-                {yearsOfExperience !== 1 ? "s" : ""} experience
-              </span>
-            </div>
-          )}
         </div>
       )}
-
-      {/* Social links */}
       {user.social_links && user.social_links.length > 0 && (
         <div className="flex gap-2">
           {user.social_links.map((link, index) => {

@@ -2,21 +2,6 @@ import { Badge } from "~/components/ui/badge";
 import { GraduationCap } from "lucide-react";
 import { type User } from "~/server/db/schemas/users";
 
-const formatDate = (dateString: string | null) => {
-  if (!dateString) return "";
-  if (dateString.toLowerCase() === "present") return "Present";
-
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-    });
-  } catch {
-    return dateString;
-  }
-};
-
 interface EducationViewProps {
   user: User;
 }
@@ -30,9 +15,6 @@ export const EducationView = ({ user }: EducationViewProps) => {
         </div>
         <p className="text-slate-500 font-medium text-sm">
           No education information available
-        </p>
-        <p className="text-xs text-slate-400 mt-1">
-          Add your educational background
         </p>
       </div>
     );
@@ -63,8 +45,7 @@ export const EducationView = ({ user }: EducationViewProps) => {
                   {edu.institution}
                 </h3>
                 <div className="text-sm text-slate-500 font-medium">
-                  {formatDate(edu.start_date || null)} —{" "}
-                  {formatDate(edu.end_date || null)}
+                  {edu.start_date} — {edu.end_date}
                 </div>
               </div>
 

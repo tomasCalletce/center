@@ -1,7 +1,5 @@
-import {
-  TextField,
-  SocialLinksField,
-} from "~/app/(top-header)/profile/_components/form-controls";
+import { SocialLinksField } from "~/app/(top-header)/profile/_components/form-controls";
+import { Input } from "~/components/ui/input";
 import { type User } from "~/server/db/schemas/users";
 
 interface ProfileHeaderEditProps {
@@ -18,9 +16,11 @@ export const ProfileHeaderEdit = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Display Name</label>
-          <TextField
+          <Input
             value={user.display_name || "ACC Competitor"}
-            onChange={(value) => onChange({ ...user, display_name: value })}
+            onChange={(e) =>
+              onChange({ ...user, display_name: e.target.value })
+            }
             placeholder="Your full name"
           />
         </div>
@@ -28,9 +28,11 @@ export const ProfileHeaderEdit = ({
           <label className="text-sm font-medium mb-2 block">
             Current Title
           </label>
-          <TextField
+          <Input
             value={user.current_title || ""}
-            onChange={(value) => onChange({ ...user, current_title: value })}
+            onChange={(e) =>
+              onChange({ ...user, current_title: e.target.value })
+            }
             placeholder="e.g., Senior Software Engineer"
           />
         </div>
@@ -38,9 +40,9 @@ export const ProfileHeaderEdit = ({
 
       <div>
         <label className="text-sm font-medium mb-2 block">Location</label>
-        <TextField
+        <Input
           value={user.location || ""}
-          onChange={(value) => onChange({ ...user, location: value })}
+          onChange={(e) => onChange({ ...user, location: e.target.value })}
           placeholder="e.g., San Francisco, CA"
         />
       </div>

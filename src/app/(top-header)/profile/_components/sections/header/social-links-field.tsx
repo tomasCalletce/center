@@ -2,23 +2,37 @@
 
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { X, Plus } from "lucide-react";
 import { useState } from "react";
-
-import { type SocialLink } from "../types/profile-types";
+import { type UserSocialLink } from "~/server/db/schemas/users";
 
 interface SocialLinksFieldProps {
-  socialLinks: SocialLink[];
-  onChange: (socialLinks: SocialLink[]) => void;
+  socialLinks: UserSocialLink[];
+  onChange: (socialLinks: UserSocialLink[]) => void;
 }
 
-export const SocialLinksField = ({ socialLinks, onChange }: SocialLinksFieldProps) => {
-  const [newLink, setNewLink] = useState<SocialLink>({ platform: "linkedin", url: "" });
+export const SocialLinksField = ({
+  socialLinks,
+  onChange,
+}: SocialLinksFieldProps) => {
+  const [newLink, setNewLink] = useState<UserSocialLink>({
+    platform: "linkedin",
+    url: "",
+  });
 
   const addSocialLink = () => {
     if (newLink.url.trim()) {
-      const updatedLinks = [...socialLinks, { ...newLink, url: newLink.url.trim() }];
+      const updatedLinks = [
+        ...socialLinks,
+        { ...newLink, url: newLink.url.trim() },
+      ];
       onChange(updatedLinks);
       setNewLink({ platform: "linkedin", url: "" });
     }
@@ -28,7 +42,11 @@ export const SocialLinksField = ({ socialLinks, onChange }: SocialLinksFieldProp
     onChange(socialLinks.filter((_, i) => i !== index));
   };
 
-  const updateSocialLink = (index: number, field: keyof SocialLink, value: string) => {
+  const updateSocialLink = (
+    index: number,
+    field: keyof UserSocialLink,
+    value: string
+  ) => {
     const updated = socialLinks.map((link, i) => {
       if (i === index) {
         return { ...link, [field]: value };
@@ -40,17 +58,22 @@ export const SocialLinksField = ({ socialLinks, onChange }: SocialLinksFieldProp
 
   const platformLabels = {
     linkedin: "LinkedIn",
-    github: "GitHub", 
+    github: "GitHub",
     portfolio: "Portfolio",
-    website: "Website"
+    website: "Website",
   };
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-3 gap-2">
+      <div>
         <Select
           value={newLink.platform}
-          onValueChange={(value) => setNewLink({ ...newLink, platform: value as SocialLink["platform"] })}
+          onValueChange={(value) =>
+            setNewLink({
+              ...newLink,
+              platform: value as UserSocialLink["platform"],
+            })
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Platform" />
@@ -69,17 +92,22 @@ export const SocialLinksField = ({ socialLinks, onChange }: SocialLinksFieldProp
           placeholder="URL"
           className="col-span-1"
         />
-        <Button size="sm" onClick={addSocialLink} type="button">
+        <Button onClick={addSocialLink} type="button">
           <Plus className="h-4 w-4" />
         </Button>
       </div>
-      
+
       <div className="space-y-2">
         {socialLinks.map((link, index) => (
-          <div key={index} className="flex items-center gap-2 p-2 border rounded">
+          <div
+            key={index}
+            className="flex items-center gap-2 p-2 border rounded"
+          >
             <Select
               value={link.platform}
-              onValueChange={(value) => updateSocialLink(index, "platform", value)}
+              onValueChange={(value) =>
+                updateSocialLink(index, "platform", value)
+              }
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -111,4 +139,4 @@ export const SocialLinksField = ({ socialLinks, onChange }: SocialLinksFieldProp
       </div>
     </div>
   );
-}; 
+};
