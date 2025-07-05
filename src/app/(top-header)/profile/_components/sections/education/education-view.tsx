@@ -1,18 +1,6 @@
 import { Badge } from "~/components/ui/badge";
 import { GraduationCap } from "lucide-react";
-
-interface Education {
-  institution?: string | null;
-  degree?: string | null;
-  field_of_study?: string | null;
-  start_date?: string | null;
-  end_date?: string | null;
-  gpa?: string | null;
-}
-
-interface EducationViewProps {
-  education: Education[];
-}
+import { type User } from "~/server/db/schemas/users";
 
 const formatDate = (dateString: string | null) => {
   if (!dateString) return "";
@@ -29,8 +17,12 @@ const formatDate = (dateString: string | null) => {
   }
 };
 
-export const EducationView = ({ education }: EducationViewProps) => {
-  if (education.length === 0) {
+interface EducationViewProps {
+  user: User;
+}
+
+export const EducationView = ({ user }: EducationViewProps) => {
+  if (!user || !user.education || user.education.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3">
@@ -48,10 +40,10 @@ export const EducationView = ({ education }: EducationViewProps) => {
 
   return (
     <div className="space-y-6">
-      {education.map((edu, index) => (
+      {user.education.map((edu, index) => (
         <div key={index} className="relative group">
           {/* Timeline line */}
-          {index < education.length - 1 && (
+          {index < (user.education?.length ?? 0) - 1 && (
             <div className="absolute left-5 top-12 bottom-0 w-px bg-gradient-to-b from-slate-300 to-slate-200" />
           )}
 
@@ -105,4 +97,4 @@ export const EducationView = ({ education }: EducationViewProps) => {
       ))}
     </div>
   );
-}; 
+};

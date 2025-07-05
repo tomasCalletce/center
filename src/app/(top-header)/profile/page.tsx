@@ -37,7 +37,7 @@ export default async function ProfilePage() {
           <div className="xl:col-span-4 space-y-8">
             <div className="sticky top-8 space-y-6">
               <ProfileSkills />
-              <ProfileEducation education={userProfile.education as any} />
+              <ProfileEducation />
             </div>
           </div>
         </div>

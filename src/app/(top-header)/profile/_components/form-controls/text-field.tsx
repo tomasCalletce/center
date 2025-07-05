@@ -10,7 +10,12 @@ interface TextFieldProps {
   multiline?: boolean;
 }
 
-export const TextField = ({ value, onChange, placeholder, multiline }: TextFieldProps) => {
+export const TextField = ({
+  value,
+  onChange,
+  placeholder,
+  multiline,
+}: TextFieldProps) => {
   if (multiline) {
     return (
       <Textarea
@@ -21,7 +26,7 @@ export const TextField = ({ value, onChange, placeholder, multiline }: TextField
       />
     );
   }
-  
+
   return (
     <Input
       value={value || ""}
@@ -29,4 +34,4 @@ export const TextField = ({ value, onChange, placeholder, multiline }: TextField
       placeholder={placeholder}
     />
   );
-}; 
+};
