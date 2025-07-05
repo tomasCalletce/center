@@ -22,13 +22,11 @@ export default async function ProfilePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50/50 via-white to-slate-50/30">
       <div className="container mx-auto px-2 py-12 max-w-7xl">
         {/* Profile Header - Full Width */}
-        <div className="mb-10">
+        <div className="mb-4">
           <ProfileHeader />
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
-          {/* Primary Content - Experience */}
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           <div className="xl:col-span-8 space-y-8">
             {/* <ProfileExperience /> */}
           </div>

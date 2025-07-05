@@ -40,8 +40,8 @@ export const SkillsEdit = ({ user, onChange }: SkillsEditProps) => {
           onChange={(e) => setNewSkill(e.target.value)}
           placeholder="Add a skill..."
         />
-        <Button size="sm" onClick={addSkill} type="button">
-          <Plus className="h-4 w-4" />
+        <Button onClick={addSkill} type="button">
+          <Plus />
         </Button>
       </div>
       <div className="flex flex-wrap gap-2">
