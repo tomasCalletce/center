@@ -36,7 +36,7 @@ export default async function ProfilePage() {
           {/* Secondary Content - Skills & Education */}
           <div className="xl:col-span-4 space-y-8">
             <div className="sticky top-8 space-y-6">
-              <ProfileSkills skills={userProfile.skills as any} />
+              <ProfileSkills />
               <ProfileEducation education={userProfile.education as any} />
             </div>
           </div>

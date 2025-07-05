@@ -1,6 +1,6 @@
 import { Badge } from "~/components/ui/badge";
 import { Briefcase } from "lucide-react";
-import { type EmploymentType } from "~/server/db/schemas/users";
+import { type User, type UserExperience } from "~/server/db/schemas/users";
 
 const formatDate = (dateString: string | null) => {
   if (!dateString) return "";
@@ -24,8 +24,12 @@ const formatEmploymentType = (type: string) => {
     .join("-");
 };
 
-export const ExperienceView = ({ experience }: ExperienceViewProps) => {
-  if (experience.length === 0) {
+interface ExperienceViewProps {
+  user: User;
+}
+
+export const ExperienceView: React.FC<ExperienceViewProps> = ({ user }) => {
+  if (!user || !user.experience || user.experience.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-3">
@@ -43,10 +47,10 @@ export const ExperienceView = ({ experience }: ExperienceViewProps) => {
 
   return (
     <div className="space-y-8">
-      {experience.map((exp, index) => (
+      {user.experience.map((exp, index) => (
         <div key={index} className="relative group">
           {/* Timeline line */}
-          {index < experience.length - 1 && (
+          {index < (user.experience?.length ?? 0) - 1 && (
             <div className="absolute left-5 top-12 bottom-0 w-px bg-gradient-to-b from-slate-300 to-slate-200" />
           )}
 

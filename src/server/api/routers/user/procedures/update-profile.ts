@@ -10,7 +10,12 @@ export const updateProfile = protectedProcedure
     const [updatedUser] = await db
       .update(users)
       .set({
-        ...input,
+        skills: input.skills,
+        current_title: input.current_title,
+        location: input.location,
+        display_name: input.display_name,
+        experience: input.experience,
+        education: input.education,
         updated_at: new Date(),
       })
       .where(eq(users._clerk, ctx.auth.userId))

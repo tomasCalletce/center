@@ -1,12 +1,13 @@
 import { Badge } from "~/components/ui/badge";
 import { Code2 } from "lucide-react";
+import { type User } from "~/server/db/schemas/users";
 
 interface SkillsViewProps {
-  skills: string[];
+  user: User;
 }
 
-export const SkillsView = ({ skills }: SkillsViewProps) => {
-  if (skills.length === 0) {
+export const SkillsView: React.FC<SkillsViewProps> = ({ user }) => {
+  if (!user || !user.skills || user.skills.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3">
@@ -20,8 +21,8 @@ export const SkillsView = ({ skills }: SkillsViewProps) => {
     );
   }
 
-  const primarySkills = skills.slice(0, 8);
-  const secondarySkills = skills.slice(8);
+  const primarySkills = user.skills.slice(0, 8);
+  const secondarySkills = user.skills.slice(8);
 
   return (
     <div className="space-y-4">
@@ -53,4 +54,4 @@ export const SkillsView = ({ skills }: SkillsViewProps) => {
       )}
     </div>
   );
-}; 
+};
