@@ -5,12 +5,12 @@ import {
 import { type User } from "~/server/db/schemas/users";
 
 interface ProfileHeaderEditProps {
-  data: User;
+  user: User;
   onChange: (data: User) => void;
 }
 
 export const ProfileHeaderEdit = ({
-  data,
+  user,
   onChange,
 }: ProfileHeaderEditProps) => {
   return (
@@ -19,8 +19,8 @@ export const ProfileHeaderEdit = ({
         <div>
           <label className="text-sm font-medium mb-2 block">Display Name</label>
           <TextField
-            value={data.display_name || ""}
-            onChange={(value) => onChange({ ...data, display_name: value })}
+            value={user.display_name || "ACC Competitor"}
+            onChange={(value) => onChange({ ...user, display_name: value })}
             placeholder="Your full name"
           />
         </div>
@@ -29,8 +29,8 @@ export const ProfileHeaderEdit = ({
             Current Title
           </label>
           <TextField
-            value={data.current_title || ""}
-            onChange={(value) => onChange({ ...data, current_title: value })}
+            value={user.current_title || ""}
+            onChange={(value) => onChange({ ...user, current_title: value })}
             placeholder="e.g., Senior Software Engineer"
           />
         </div>
@@ -39,8 +39,8 @@ export const ProfileHeaderEdit = ({
       <div>
         <label className="text-sm font-medium mb-2 block">Location</label>
         <TextField
-          value={data.location || ""}
-          onChange={(value) => onChange({ ...data, location: value })}
+          value={user.location || ""}
+          onChange={(value) => onChange({ ...user, location: value })}
           placeholder="e.g., San Francisco, CA"
         />
       </div>
@@ -48,9 +48,9 @@ export const ProfileHeaderEdit = ({
       <div>
         <label className="text-sm font-medium mb-2 block">Social Links</label>
         <SocialLinksField
-          socialLinks={data.social_links || []}
+          socialLinks={user.social_links || []}
           onChange={(socialLinks) =>
-            onChange({ ...data, social_links: socialLinks })
+            onChange({ ...user, social_links: socialLinks })
           }
         />
       </div>

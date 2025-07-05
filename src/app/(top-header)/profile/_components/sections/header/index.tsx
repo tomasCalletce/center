@@ -1,11 +1,11 @@
 "use client";
 
 import { User as UserIcon } from "lucide-react";
-import { EditableSection } from "~/app/(top-header)/profile/_components/editable-section";
 import { toast } from "sonner";
+import { type User } from "~/server/db/schemas/users";
+import { EditableSection } from "~/app/(top-header)/profile/_components/editable-section";
 import { ProfileHeaderEdit } from "~/app/(top-header)/profile/_components/sections/header/header-edit";
 import { ProfileHeaderView } from "~/app/(top-header)/profile/_components/sections/header/header-view";
-import { type User } from "~/server/db/schemas/users";
 import { api } from "~/trpc/react";
 
 export const ProfileHeader = () => {
@@ -30,13 +30,11 @@ export const ProfileHeader = () => {
 
   return (
     <EditableSection
-      title={userProfile.data.display_name ?? "ACC Cracked Competitor"}
+      title={userProfile.data.display_name ?? "ACC Competitor"}
       data={userProfile.data}
-      renderView={(data) => (
-        <ProfileHeaderView data={data} experience={data.experience} />
-      )}
+      renderView={(data) => <ProfileHeaderView user={data} />}
       renderEdit={(data, onChange) => (
-        <ProfileHeaderEdit data={data} onChange={onChange} />
+        <ProfileHeaderEdit user={data} onChange={onChange} />
       )}
       onSave={handleSave}
       icon={<UserIcon className="h-4 w-4" />}
