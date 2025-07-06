@@ -11,7 +11,10 @@ import {
 } from "~/components/ui/select";
 import { X, Plus } from "lucide-react";
 import { useState } from "react";
-import { type UserSocialLink } from "~/server/db/schemas/users";
+import {
+  socialLinkSchema,
+  type UserSocialLink,
+} from "~/server/db/schemas/users";
 
 interface SocialLinksFieldProps {
   socialLinks: UserSocialLink[];
@@ -23,7 +26,7 @@ export const SocialLinksField = ({
   onChange,
 }: SocialLinksFieldProps) => {
   const [newLink, setNewLink] = useState<UserSocialLink>({
-    platform: "linkedin",
+    platform: socialLinkSchema.shape.platform.Values.linkedin,
     url: "",
   });
 
@@ -34,7 +37,10 @@ export const SocialLinksField = ({
         { ...newLink, url: newLink.url.trim() },
       ];
       onChange(updatedLinks);
-      setNewLink({ platform: "linkedin", url: "" });
+      setNewLink({
+        platform: socialLinkSchema.shape.platform.Values.linkedin,
+        url: "",
+      });
     }
   };
 
@@ -56,16 +62,9 @@ export const SocialLinksField = ({
     onChange(updated);
   };
 
-  const platformLabels = {
-    linkedin: "LinkedIn",
-    github: "GitHub",
-    portfolio: "Portfolio",
-    website: "Website",
-  };
-
   return (
     <div className="space-y-3">
-      <div>
+      <div className="flex items-center justify-between">
         <Select
           value={newLink.platform}
           onValueChange={(value) =>
@@ -79,30 +78,32 @@ export const SocialLinksField = ({
             <SelectValue placeholder="Platform" />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(platformLabels).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
+            {Object.entries(socialLinkSchema.shape.platform.Values).map(
+              ([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              )
+            )}
           </SelectContent>
         </Select>
-        <Input
-          value={newLink.url}
-          onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-          placeholder="URL"
-          className="col-span-1"
-        />
-        <Button onClick={addSocialLink} type="button">
-          <Plus className="h-4 w-4" />
-        </Button>
+
+        <div className="flex items-center gap-2">
+          <Input
+            value={newLink.url}
+            onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+            placeholder="URL"
+            className="col-span-1"
+          />
+          <Button onClick={addSocialLink} type="button">
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-2">
         {socialLinks.map((link, index) => (
-          <div
-            key={index}
-            className="flex items-center gap-2 p-2 border rounded"
-          >
+          <div key={index} className="flex items-center gap-2">
             <Select
               value={link.platform}
               onValueChange={(value) =>
@@ -113,11 +114,13 @@ export const SocialLinksField = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(platformLabels).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
+                {Object.entries(socialLinkSchema.shape.platform.Values).map(
+                  ([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  )
+                )}
               </SelectContent>
             </Select>
             <Input

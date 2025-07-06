@@ -32,7 +32,7 @@ const educationSchema = z.object({
 });
 export type UserEducation = z.infer<typeof educationSchema>;
 
-const socialLinkSchema = z.object({
+export const socialLinkSchema = z.object({
   platform: z.enum(["linkedin", "github", "portfolio", "website"]),
   url: z.string().url(),
 });
