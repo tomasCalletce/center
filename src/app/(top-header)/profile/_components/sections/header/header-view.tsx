@@ -1,8 +1,16 @@
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { MapPin, Calendar, Globe } from "lucide-react";
-import { socialIcons } from "~/app/(top-header)/profile/_components/utils";
+import { MapPin, Linkedin, Github, Globe, Folder } from "lucide-react";
 import { type User } from "~/server/db/schemas/users";
+
+export const socialIcons: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
+  linkedin: Linkedin,
+  github: Github,
+  website: Globe,
+  portfolio: Folder,
+};
 
 interface ProfileHeaderViewProps {
   user: User;

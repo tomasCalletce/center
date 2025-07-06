@@ -1,7 +1,6 @@
 "use client";
 
 import { EditableSection } from "~/app/(top-header)/profile/_components/editable-section";
-import { updateProfileSkills } from "~/app/(top-header)/profile/_actions/update-profile";
 import { toast } from "sonner";
 import { Code2 } from "lucide-react";
 import { SkillsView } from "~/app/(top-header)/profile/_components/sections/skills/skills-view";
