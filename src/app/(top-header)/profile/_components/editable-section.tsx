@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Edit2, Check, X } from "lucide-react";
 import { type User } from "~/server/db/schemas/users";
 
-interface EditableSectionProps<> {
+interface EditableSectionProps {
   title: string;
   data: User;
   isEditing?: boolean;
@@ -19,7 +18,7 @@ interface EditableSectionProps<> {
   icon?: React.ReactNode;
 }
 
-export function EditableSection({
+export const EditableSection: React.FC<EditableSectionProps> = ({
   title,
   data,
   isEditing: externalIsEditing,
@@ -30,7 +29,7 @@ export function EditableSection({
   renderEdit,
   className = "",
   icon,
-}: EditableSectionProps) {
+}) => {
   const [internalIsEditing, setInternalIsEditing] = useState(false);
   const [editData, setEditData] = useState<User>(data);
   const [isSaving, setIsSaving] = useState(false);
@@ -70,23 +69,21 @@ export function EditableSection({
   };
 
   return (
-    <Card
-      className={`group relative overflow-hidden border-0 bg-white/70 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 ${className}`}
+    <div
+      className={`group relative overflow-hidden bg-white/70 backdrop-blur-sm border border-slate-200/60 rounded-xl ${className}`}
     >
-      {/* Subtle accent line */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-slate-200 via-slate-400 to-slate-200" />
-
-      <CardHeader className="pb-4">
+      {/* Header */}
+      <div className="px-6 py-3 border-b border-slate-100/60">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Modern icon container */}
+            {/* Icon container */}
             {icon && (
               <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
                 <div className="text-slate-600">{icon}</div>
               </div>
             )}
 
-            {/* Title with refined typography */}
+            {/* Title */}
             <div className="space-y-1">
               <h3 className="text-sm font-semibold tracking-wide text-slate-900 uppercase">
                 {title}
@@ -104,7 +101,7 @@ export function EditableSection({
                   variant="ghost"
                   onClick={handleCancel}
                   disabled={isSaving}
-                  className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                  className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 border-dashed"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -122,17 +119,19 @@ export function EditableSection({
                 size="sm"
                 variant="ghost"
                 onClick={handleEdit}
-                className="h-8 w-8 p-0 hover:bg-slate-100"
+                className="h-8 w-8 p-0 hover:bg-slate-100 border-dashed"
               >
                 <Edit2 className="h-4 w-4" />
               </Button>
             )}
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="pt-0">
+      </div>
+
+      {/* Content */}
+      <div className="px-6 py-4">
         {isEditing ? renderEdit(editData, setEditData) : renderView(data)}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
-}
+};

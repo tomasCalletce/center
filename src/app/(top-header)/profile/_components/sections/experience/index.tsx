@@ -15,6 +15,7 @@ export const ProfileExperience = () => {
   const updateProfileExperienceMutation = api.user.updateProfile.useMutation({
     onSuccess: () => {
       toast.success("Header updated successfully!");
+      userProfile.refetch();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -33,11 +34,9 @@ export const ProfileExperience = () => {
     <EditableSection
       title="Experience"
       data={userProfile.data}
-      renderView={(data) => (
-        <ExperienceView experience={data.experience || []} />
-      )}
+      renderView={(data) => <ExperienceView user={data} />}
       renderEdit={(data, onChange) => (
-        <ExperienceEdit experience={data} onChange={onChange} />
+        <ExperienceEdit user={data} onChange={onChange} />
       )}
       onSave={handleSave}
       icon={<Briefcase className="h-4 w-4" />}

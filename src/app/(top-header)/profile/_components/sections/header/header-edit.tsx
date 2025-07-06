@@ -1,16 +1,14 @@
-import {
-  TextField,
-  SocialLinksField,
-} from "~/app/(top-header)/profile/_components/form-controls";
+import { Input } from "~/components/ui/input";
 import { type User } from "~/server/db/schemas/users";
+import { SocialLinksField } from "~/app/(top-header)/profile/_components/sections/header/social-links-field";
 
 interface ProfileHeaderEditProps {
-  data: User;
+  user: User;
   onChange: (data: User) => void;
 }
 
 export const ProfileHeaderEdit = ({
-  data,
+  user,
   onChange,
 }: ProfileHeaderEditProps) => {
   return (
@@ -18,9 +16,11 @@ export const ProfileHeaderEdit = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Display Name</label>
-          <TextField
-            value={data.display_name || ""}
-            onChange={(value) => onChange({ ...data, display_name: value })}
+          <Input
+            value={user.display_name || "ACC Competitor"}
+            onChange={(e) =>
+              onChange({ ...user, display_name: e.target.value })
+            }
             placeholder="Your full name"
           />
         </div>
@@ -28,9 +28,11 @@ export const ProfileHeaderEdit = ({
           <label className="text-sm font-medium mb-2 block">
             Current Title
           </label>
-          <TextField
-            value={data.current_title || ""}
-            onChange={(value) => onChange({ ...data, current_title: value })}
+          <Input
+            value={user.current_title || ""}
+            onChange={(e) =>
+              onChange({ ...user, current_title: e.target.value })
+            }
             placeholder="e.g., Senior Software Engineer"
           />
         </div>
@@ -38,9 +40,9 @@ export const ProfileHeaderEdit = ({
 
       <div>
         <label className="text-sm font-medium mb-2 block">Location</label>
-        <TextField
-          value={data.location || ""}
-          onChange={(value) => onChange({ ...data, location: value })}
+        <Input
+          value={user.location || ""}
+          onChange={(e) => onChange({ ...user, location: e.target.value })}
           placeholder="e.g., San Francisco, CA"
         />
       </div>
@@ -48,9 +50,9 @@ export const ProfileHeaderEdit = ({
       <div>
         <label className="text-sm font-medium mb-2 block">Social Links</label>
         <SocialLinksField
-          socialLinks={data.social_links || []}
+          socialLinks={user.social_links || []}
           onChange={(socialLinks) =>
-            onChange({ ...data, social_links: socialLinks })
+            onChange({ ...user, social_links: socialLinks })
           }
         />
       </div>

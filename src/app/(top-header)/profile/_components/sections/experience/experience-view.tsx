@@ -1,31 +1,13 @@
 import { Badge } from "~/components/ui/badge";
 import { Briefcase } from "lucide-react";
-import { type EmploymentType } from "~/server/db/schemas/users";
+import { type User } from "~/server/db/schemas/users";
 
-const formatDate = (dateString: string | null) => {
-  if (!dateString) return "";
-  if (dateString.toLowerCase() === "present") return "Present";
+interface ExperienceViewProps {
+  user: User;
+}
 
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-    });
-  } catch {
-    return dateString;
-  }
-};
-
-const formatEmploymentType = (type: string) => {
-  return type
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join("-");
-};
-
-export const ExperienceView = ({ experience }: ExperienceViewProps) => {
-  if (experience.length === 0) {
+export const ExperienceView: React.FC<ExperienceViewProps> = ({ user }) => {
+  if (!user || !user.experience || user.experience.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-3">
@@ -43,10 +25,10 @@ export const ExperienceView = ({ experience }: ExperienceViewProps) => {
 
   return (
     <div className="space-y-8">
-      {experience.map((exp, index) => (
+      {user.experience.map((exp, index) => (
         <div key={index} className="relative group">
           {/* Timeline line */}
-          {index < experience.length - 1 && (
+          {index < (user.experience?.length ?? 0) - 1 && (
             <div className="absolute left-5 top-12 bottom-0 w-px bg-gradient-to-b from-slate-300 to-slate-200" />
           )}
 
@@ -69,13 +51,12 @@ export const ExperienceView = ({ experience }: ExperienceViewProps) => {
                   <span className="font-medium">{exp.company}</span>
                   {exp.employment_type && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
-                      {formatEmploymentType(exp.employment_type)}
+                      {exp.employment_type}
                     </span>
                   )}
                 </div>
                 <div className="text-sm text-slate-500 font-medium">
-                  {formatDate(exp.start_date || null)} —{" "}
-                  {formatDate(exp.end_date || null)}
+                  {exp.start_date} — {exp.end_date}
                 </div>
               </div>
 
@@ -89,7 +70,7 @@ export const ExperienceView = ({ experience }: ExperienceViewProps) => {
               {/* Skills */}
               {exp.skills_used && exp.skills_used.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  {exp.skills_used.slice(0, 5).map((skill, skillIndex) => (
+                  {exp.skills_used.map((skill, skillIndex) => (
                     <Badge
                       key={skillIndex}
                       variant="secondary"
@@ -98,14 +79,6 @@ export const ExperienceView = ({ experience }: ExperienceViewProps) => {
                       {skill}
                     </Badge>
                   ))}
-                  {exp.skills_used.length > 5 && (
-                    <Badge
-                      variant="secondary"
-                      className="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 border-slate-200"
-                    >
-                      +{exp.skills_used.length - 5} more
-                    </Badge>
-                  )}
                 </div>
               )}
             </div>

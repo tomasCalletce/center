@@ -5,19 +5,19 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Plus, X } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
-import type { User } from "~/server/db/schemas/users";
+import type { UserExperience } from "~/server/db/schemas/users";
 
 interface SkillsEditProps {
-  user: User;
-  onChange: (user: User) => void;
+  experience: UserExperience;
+  onUpdateSkills: (skills: string[]) => void;
 }
 
-export const SkillsEdit = ({ user, onChange }: SkillsEditProps) => {
+export const SkillsEdit = ({ experience, onUpdateSkills }: SkillsEditProps) => {
   const [newSkill, setNewSkill] = useState("");
-  const skills = user.skills ?? [];
+  const skills = experience.skills_used ?? [];
 
   const updateSkills = (newSkills: string[]) => {
-    onChange({ ...user, skills: newSkills });
+    onUpdateSkills(newSkills);
   };
 
   const addSkill = () => {
@@ -34,11 +34,12 @@ export const SkillsEdit = ({ user, onChange }: SkillsEditProps) => {
 
   return (
     <div className="space-y-3">
+      <div className="text-sm font-medium text-gray-700">Skills Used</div>
       <div className="flex gap-2">
         <Input
           value={newSkill}
           onChange={(e) => setNewSkill(e.target.value)}
-          placeholder="Add a skill..."
+          placeholder="Add a skill used in this role..."
         />
         <Button onClick={addSkill} type="button">
           <Plus />
