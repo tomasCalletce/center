@@ -12,7 +12,7 @@ export const imageToMarkdownTask = schemaTask({
     userId: z.string(),
   }),
   run: async ({ image, userId }) => {
-    logger.log("Converting PDF to images", {
+    logger.log("Converting image to markdown", {
       imageUrl: image.url,
       userId: userId,
     });

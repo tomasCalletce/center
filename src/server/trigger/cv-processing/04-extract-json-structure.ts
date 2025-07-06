@@ -3,63 +3,24 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { openai } from "@ai-sdk/openai";
 import { db } from "~/server/db/connection";
-import { users } from "~/server/db/schemas/users";
-
-const EmploymentTypeEnum = z.enum([
-  "full-time",
-  "part-time",
-  "freelance",
-  "internship",
-]);
+import {
+  educationSchema,
+  experienceSchema,
+  socialLinkSchema,
+  users,
+} from "~/server/db/schemas/users";
+import { clerkClient } from "@clerk/nextjs/server";
+import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 const userProfileSchema = z.object({
-  // Essential Information (matches database schema)
   display_name: z.string().nullable(),
   email: z.string().email().nullable(),
   location: z.string().nullable(),
   current_title: z.string().nullable(),
-
-  // Experience History
-  experience: z
-    .array(
-      z.object({
-        company: z.string().nullable(),
-        title: z.string().nullable(),
-        employment_type: EmploymentTypeEnum.nullable(),
-        start_date: z.string().nullable(), // Format: "YYYY-MM" or "YYYY"
-        end_date: z.string().nullable(), // Format: "YYYY-MM" or "YYYY" or "present"
-        description: z.string().nullable(),
-        skills_used: z.array(z.string()).default([]),
-      })
-    )
-    .default([]),
-
-  // Education History
-  education: z
-    .array(
-      z.object({
-        institution: z.string().nullable(),
-        degree: z.string().nullable(),
-        field_of_study: z.string().nullable(),
-        start_date: z.string().nullable(), // Format: "YYYY"
-        end_date: z.string().nullable(), // Format: "YYYY" or "present"
-        gpa: z.string().nullable(),
-        relevant_coursework: z.array(z.string()).default([]),
-      })
-    )
-    .default([]),
-
-  // Skills (core matching criteria)
+  experience: z.array(experienceSchema).default([]),
+  education: z.array(educationSchema).default([]),
   skills: z.array(z.string()).default([]),
-
-  // Social Links
-  social_links: z.array(z.object({
-      platform: z.enum(["linkedin", "github", "portfolio", "website"]),
-      url: z.string().url(),
-    })
-  )
-    .default([])
-    .nullable(),
+  social_links: z.array(socialLinkSchema).default([]),
 });
 
 export const extractJsonStructureTask = schemaTask({

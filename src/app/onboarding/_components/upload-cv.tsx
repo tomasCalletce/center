@@ -13,16 +13,21 @@ import {
 import { Button } from "~/components/ui/button";
 import { saveCv } from "~/app/onboarding/_actions/save-cv";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { ONBOARDING_STATUS } from "~/types/onboarding";
 
-export const UploadCV = () => {
+interface UploadCVProps {
+  onComplete: (triggerTask: {
+    publicAccessToken: string;
+    runId: string;
+  }) => void;
+}
+
+export const UploadCV = ({ onComplete }: UploadCVProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
   const { user } = useUser();
-  const router = useRouter();
 
   const handleFileChange = (file: File | null) => {
     if (file && file.type === "application/pdf") {
@@ -40,16 +45,18 @@ export const UploadCV = () => {
     try {
       const response = await saveCv(formData);
 
+      if (!response.documentMutation) {
+        throw new Error("Failed to get public access token");
+      }
+
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
 
-      if (
-        response.publicMetadata?.onboardingStatus ===
-        ONBOARDING_STATUS.COMPLETED
-      ) {
-        await user?.reload();
-        router.push("/");
-      }
+      onComplete({
+        publicAccessToken:
+          response.documentMutation.triggerTask.publicAccessToken,
+        runId: response.documentMutation.triggerTask.id,
+      });
     } catch (error) {
       console.error("Upload failed:", error);
     } finally {
