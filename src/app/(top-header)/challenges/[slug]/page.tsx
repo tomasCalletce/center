@@ -1,7 +1,6 @@
 import { HydrateClient } from "~/trpc/server";
 import { ChallengeDetails } from "~/app/(top-header)/challenges/[slug]/_components/challenge-details";
 import { ChallengeMarkdown } from "~/app/(top-header)/challenges/[slug]/_components/challenge-markdown";
-import { ChallengeSubmissions } from "~/app/(top-header)/challenges/[slug]/_components/challenge-submissions";
 import { RecentSubmissionsPreview } from "~/app/(top-header)/challenges/[slug]/_components/recent-submissions-preview";
 
 export default async function ChallengePage({
@@ -17,7 +16,6 @@ export default async function ChallengePage({
         <div className="space-y-6">
           <ChallengeDetails slug={slug} />
           <RecentSubmissionsPreview slug={slug} />
-          {/* <ChallengeSubmissions slug={slug} /> */}
           <ChallengeMarkdown slug={slug} />
         </div>
       </div>
