@@ -15,6 +15,7 @@ export const ProfileExperience = () => {
   const updateProfileExperienceMutation = api.user.updateProfile.useMutation({
     onSuccess: () => {
       toast.success("Header updated successfully!");
+      userProfile.refetch();
     },
     onError: (error) => {
       toast.error(error.message);

@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { SkillsField } from "~/app/(top-header)/profile/_components/form-controls/skills-field";
+import { SkillsEdit } from "~/app/(top-header)/profile/_components/sections/experience/skills-edit";
 
 interface ExperienceEditProps {
   user: User;
@@ -127,9 +127,9 @@ export const ExperienceEdit = ({ user, onChange }: ExperienceEditProps) => {
             placeholder="Job Description"
             rows={3}
           />
-          <SkillsField
-            skills={exp.skills_used || []}
-            onChange={(skills) =>
+          <SkillsEdit
+            experience={exp}
+            onUpdateSkills={(skills) =>
               updateExperience(index, "skills_used", skills)
             }
           />

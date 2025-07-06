@@ -15,6 +15,7 @@ export const ProfileEducation = () => {
   const updateProfileHeaderMutation = api.user.updateProfile.useMutation({
     onSuccess: () => {
       toast.success("Header updated successfully!");
+      userProfile.refetch();
     },
     onError: (error) => {
       toast.error(error.message);

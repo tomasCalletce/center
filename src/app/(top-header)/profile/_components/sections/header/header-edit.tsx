@@ -1,5 +1,6 @@
 import { Input } from "~/components/ui/input";
 import { type User } from "~/server/db/schemas/users";
+import { SocialLinksField } from "~/app/(top-header)/profile/_components/sections/header/social-links-field";
 
 interface ProfileHeaderEditProps {
   user: User;
@@ -48,12 +49,12 @@ export const ProfileHeaderEdit = ({
 
       <div>
         <label className="text-sm font-medium mb-2 block">Social Links</label>
-        {/* <SocialLinksField
+        <SocialLinksField
           socialLinks={user.social_links || []}
           onChange={(socialLinks) =>
             onChange({ ...user, social_links: socialLinks })
           }
-        /> */}
+        />
       </div>
     </div>
   );

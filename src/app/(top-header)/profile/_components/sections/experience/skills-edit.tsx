@@ -5,37 +5,44 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Plus, X } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
+import type { UserExperience } from "~/server/db/schemas/users";
 
-interface SkillsFieldProps {
-  skills: string[];
-  onChange: (skills: string[]) => void;
+interface SkillsEditProps {
+  experience: UserExperience;
+  onUpdateSkills: (skills: string[]) => void;
 }
 
-export const SkillsField = ({ skills, onChange }: SkillsFieldProps) => {
+export const SkillsEdit = ({ experience, onUpdateSkills }: SkillsEditProps) => {
   const [newSkill, setNewSkill] = useState("");
+  const skills = experience.skills_used ?? [];
+
+  const updateSkills = (newSkills: string[]) => {
+    onUpdateSkills(newSkills);
+  };
 
   const addSkill = () => {
     const trimmed = newSkill.trim();
     if (trimmed && !skills.includes(trimmed)) {
-      onChange([...skills, trimmed]);
+      updateSkills([...skills, trimmed]);
       setNewSkill("");
     }
   };
 
   const removeSkill = (skillToRemove: string) => {
-    onChange(skills.filter((skill) => skill !== skillToRemove));
+    updateSkills(skills.filter((skill) => skill !== skillToRemove));
   };
 
   return (
     <div className="space-y-3">
+      <div className="text-sm font-medium text-gray-700">Skills Used</div>
       <div className="flex gap-2">
         <Input
           value={newSkill}
           onChange={(e) => setNewSkill(e.target.value)}
-          placeholder="Add a skill..."
+          placeholder="Add a skill used in this role..."
         />
-        <Button onClick={addSkill} type="button" size="sm">
-          <Plus className="h-4 w-4" />
+        <Button onClick={addSkill} type="button">
+          <Plus />
         </Button>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -49,7 +56,6 @@ export const SkillsField = ({ skills, onChange }: SkillsFieldProps) => {
             <button
               onClick={() => removeSkill(skill)}
               className="ml-1 hover:text-destructive cursor-pointer"
-              type="button"
             >
               <X className="h-3 w-3" />
             </button>
