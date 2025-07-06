@@ -28,7 +28,7 @@ export default async function ProfilePage() {
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           <div className="xl:col-span-8 space-y-8">
-            {/* <ProfileExperience /> */}
+            <ProfileExperience />
           </div>
 
           {/* Secondary Content - Skills & Education */}

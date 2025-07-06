@@ -1,28 +1,6 @@
 import { Badge } from "~/components/ui/badge";
 import { Briefcase } from "lucide-react";
-import { type User, type UserExperience } from "~/server/db/schemas/users";
-
-const formatDate = (dateString: string | null) => {
-  if (!dateString) return "";
-  if (dateString.toLowerCase() === "present") return "Present";
-
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-    });
-  } catch {
-    return dateString;
-  }
-};
-
-const formatEmploymentType = (type: string) => {
-  return type
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join("-");
-};
+import { type User } from "~/server/db/schemas/users";
 
 interface ExperienceViewProps {
   user: User;
@@ -73,13 +51,12 @@ export const ExperienceView: React.FC<ExperienceViewProps> = ({ user }) => {
                   <span className="font-medium">{exp.company}</span>
                   {exp.employment_type && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
-                      {formatEmploymentType(exp.employment_type)}
+                      {exp.employment_type}
                     </span>
                   )}
                 </div>
                 <div className="text-sm text-slate-500 font-medium">
-                  {formatDate(exp.start_date || null)} —{" "}
-                  {formatDate(exp.end_date || null)}
+                  {exp.start_date} — {exp.end_date}
                 </div>
               </div>
 
@@ -93,7 +70,7 @@ export const ExperienceView: React.FC<ExperienceViewProps> = ({ user }) => {
               {/* Skills */}
               {exp.skills_used && exp.skills_used.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  {exp.skills_used.slice(0, 5).map((skill, skillIndex) => (
+                  {exp.skills_used.map((skill, skillIndex) => (
                     <Badge
                       key={skillIndex}
                       variant="secondary"
@@ -102,14 +79,6 @@ export const ExperienceView: React.FC<ExperienceViewProps> = ({ user }) => {
                       {skill}
                     </Badge>
                   ))}
-                  {exp.skills_used.length > 5 && (
-                    <Badge
-                      variant="secondary"
-                      className="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 border-slate-200"
-                    >
-                      +{exp.skills_used.length - 5} more
-                    </Badge>
-                  )}
                 </div>
               )}
             </div>
