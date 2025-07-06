@@ -19,52 +19,8 @@ export const RecentSubmissionsPreview: React.FC<
       limit: 5,
     });
 
-  if (recentSubmissionsQuery.isLoading) {
-    return (
-      <div className="w-full">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
-            <FileText className="h-6 w-6" />
-            Latest Builds
-          </h2>
-        </div>
-        <div className="flex gap-4 overflow-x-auto pb-2 px-4">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 w-56 p-4 rounded-xl border bg-white shadow-sm"
-            >
-              <div className="h-24 w-full bg-muted rounded-lg mb-3 animate-pulse" />
-              <div className="space-y-2">
-                <div className="h-4 w-3/4 bg-muted rounded animate-pulse" />
-                <div className="h-3 w-1/2 bg-muted rounded animate-pulse" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (
-    !recentSubmissionsQuery.data ||
-    recentSubmissionsQuery.data.length === 0
-  ) {
-    return (
-      <div className="w-full">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
-            <FileText className="h-6 w-6" />
-            Latest Builds
-          </h2>
-        </div>
-        <div className="text-center py-12 text-muted-foreground">
-          <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p className="text-sm">No builds yet</p>
-        </div>
-      </div>
-    );
-  }
+  if (!recentSubmissionsQuery.data || recentSubmissionsQuery.data.length < 5)
+    return null;
 
   return (
     <div className="space-y-4">
