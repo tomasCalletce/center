@@ -2,18 +2,12 @@ import { pgTable, timestamp, varchar, uuid, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const employmentTypeEnum = z.enum([
-  "full-time",
-  "part-time",
-  "freelance",
-  "internship",
-]);
-export type UserEmploymentType = z.infer<typeof employmentTypeEnum>;
-
-const experienceSchema = z.object({
+export const experienceSchema = z.object({
   company: z.string().nullable(),
   title: z.string().nullable(),
-  employment_type: employmentTypeEnum.nullable(),
+  employment_type: z
+    .enum(["full-time", "part-time", "freelance", "internship"])
+    .nullable(),
   start_date: z.string().nullable(),
   end_date: z.string().nullable(),
   description: z.string().nullable(),

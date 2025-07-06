@@ -1,7 +1,12 @@
-import { employmentTypeEnum, type User } from "~/server/db/schemas/users";
+import {
+  experienceSchema,
+  type User,
+  type UserExperience,
+} from "~/server/db/schemas/users";
 import { Button } from "~/components/ui/button";
-import { Plus, X } from "lucide-react";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Plus, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -16,49 +21,31 @@ interface ExperienceEditProps {
 }
 
 export const ExperienceEdit = ({ user, onChange }: ExperienceEditProps) => {
-  const employmentTypes = employmentTypeEnum.options;
-  const defaultEmploymentType = employmentTypes[0];
-
-  const formatEmploymentType = (type: string) => {
-    return type
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("-");
-  };
+  const experience = user.experience ?? [];
 
   const addExperience = () => {
-    const newExperience: ExperienceItem = {
-      title: "",
-      company: "",
-      employment_type: defaultEmploymentType,
-      start_date: "",
-      end_date: "",
-      description: "",
-      skills_used: [],
-    };
-    const updatedExperience = [newExperience];
-    experience.forEach((exp) => updatedExperience.push(exp));
-    onChange(updatedExperience);
+    onChange({
+      ...user,
+      experience: [experienceSchema.parse({}), ...experience],
+    });
   };
 
   const updateExperience = (
     index: number,
-    field: keyof ExperienceItem,
-    value: any
+    field: keyof UserExperience,
+    value: string | string[]
   ) => {
     const updated = experience.map((exp, i) => {
       if (i === index) {
-        const updatedExp = Object.assign({}, exp);
-        (updatedExp as any)[field] = value;
-        return updatedExp;
+        return { ...exp, [field]: value };
       }
       return exp;
     });
-    onChange(updated);
+    onChange({ ...user, experience: updated });
   };
 
   const removeExperience = (index: number) => {
-    onChange(experience.filter((_, i) => i !== index));
+    onChange({ ...user, experience: experience.filter((_, i) => i !== index) });
   };
 
   return (
@@ -82,60 +69,69 @@ export const ExperienceEdit = ({ user, onChange }: ExperienceEditProps) => {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <TextField
-              value={exp.title || ""}
-              onChange={(value) => updateExperience(index, "title", value)}
+            <Input
+              value={exp.title ?? ""}
+              onChange={(e) => updateExperience(index, "title", e.target.value)}
               placeholder="Job Title"
             />
-            <TextField
-              value={exp.company || ""}
-              onChange={(value) => updateExperience(index, "company", value)}
+            <Input
+              value={exp.company ?? ""}
+              onChange={(e) =>
+                updateExperience(index, "company", e.target.value)
+              }
               placeholder="Company"
             />
-            <div>
-              <Select
-                value={exp.employment_type || defaultEmploymentType}
-                onValueChange={(value) =>
-                  updateExperience(index, "employment_type", value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Employment Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {employmentTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {formatEmploymentType(type)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <TextField
-              value={exp.start_date || ""}
-              onChange={(value) => updateExperience(index, "start_date", value)}
+            <Input
+              value={exp.start_date ?? ""}
+              onChange={(e) =>
+                updateExperience(index, "start_date", e.target.value)
+              }
               placeholder="Start Date"
             />
-            <TextField
-              value={exp.end_date || ""}
-              onChange={(value) => updateExperience(index, "end_date", value)}
+            <Input
+              value={exp.end_date ?? ""}
+              onChange={(e) =>
+                updateExperience(index, "end_date", e.target.value)
+              }
               placeholder="End Date"
             />
           </div>
 
-          <TextField
-            value={exp.description || ""}
-            onChange={(value) => updateExperience(index, "description", value)}
+          <div>
+            <Select
+              value={exp.employment_type ?? undefined}
+              onValueChange={(value) =>
+                updateExperience(index, "employment_type", value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Employment Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {experienceSchema.shape.employment_type
+                  .unwrap()
+                  .options.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Textarea
+            value={exp.description ?? ""}
+            onChange={(e) =>
+              updateExperience(index, "description", e.target.value)
+            }
             placeholder="Job Description"
-            multiline
+            rows={3}
           />
-
-          <SkillsField
+          {/* <SkillsField
             skills={exp.skills_used || []}
             onChange={(skills) =>
               updateExperience(index, "skills_used", skills)
             }
-          />
+          /> */}
         </div>
       ))}
     </div>
