@@ -25,9 +25,18 @@ export const ExperienceEdit = ({ user, onChange }: ExperienceEditProps) => {
   const experience = user.experience ?? [];
 
   const addExperience = () => {
+    const newExperience = {
+      company: null,
+      title: null,
+      employment_type: null,
+      start_date: null,
+      end_date: null,
+      description: null,
+      skills_used: [],
+    };
     onChange({
       ...user,
-      experience: [experienceSchema.parse({}), ...experience],
+      experience: [newExperience, ...experience],
     });
   };
 
