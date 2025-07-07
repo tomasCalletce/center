@@ -43,13 +43,18 @@ export const createCV = protectedProcedure
       return { newAsset, newCV };
     });
 
-    const triggerTask = await mainOnboardingTask.trigger({
-      cv: {
-        id: result.newCV.id,
-        url: input.verifyAssetsSchema.url,
+    const triggerTask = await mainOnboardingTask.trigger(
+      {
+        cv: {
+          id: result.newCV.id,
+          url: input.verifyAssetsSchema.url,
+        },
+        userId: ctx.auth.userId,
       },
-      userId: ctx.auth.userId,
-    });
+      {
+        tags: [ctx.auth.userId],
+      }
+    );
     if (!triggerTask) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

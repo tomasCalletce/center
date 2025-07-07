@@ -17,13 +17,19 @@ export const mainOnboardingTask = schemaTask({
   run: async ({ cv, userId }) => {
     const splitPdfToImages = await tasks.triggerAndWait<
       typeof splitPdfToImagesTask
-    >("onboarding.split-pdf-to-images", {
-      cv: {
-        id: cv.id,
-        url: cv.url,
+    >(
+      "onboarding.split-pdf-to-images",
+      {
+        cv: {
+          id: cv.id,
+          url: cv.url,
+        },
+        userId,
       },
-      userId,
-    });
+      {
+        tags: [userId],
+      }
+    );
     if (!splitPdfToImages.ok) {
       throw new Error(`Task failed: ${splitPdfToImages.error}`);
     }
@@ -39,6 +45,7 @@ export const mainOnboardingTask = schemaTask({
           },
           userId,
         },
+        tags: [userId],
       }))
     );
     const markdownContent = imageToMarkdownResults.runs.map((run) => {
@@ -50,26 +57,38 @@ export const mainOnboardingTask = schemaTask({
 
     const consolidatedMarkdown = await tasks.triggerAndWait<
       typeof consolidatedMarkdownTask
-    >("onboarding.consolidated-markdown", {
-      cv: {
-        id: cv.id,
-        url: cv.url,
+    >(
+      "onboarding.consolidated-markdown",
+      {
+        cv: {
+          id: cv.id,
+          url: cv.url,
+        },
+        markdownContents: markdownContent,
+        userId,
       },
-      markdownContents: markdownContent,
-      userId,
-    });
+      {
+        tags: [userId],
+      }
+    );
     if (!consolidatedMarkdown.ok) {
       throw new Error(`Consolidation failed: ${consolidatedMarkdown.error}`);
     }
 
     const extractJsonStructure = await tasks.triggerAndWait<
       typeof extractJsonStructureTask
-    >("onboarding.extract-json-structure", {
-      markdown: {
-        content: consolidatedMarkdown.output.rawMarkdown,
+    >(
+      "onboarding.extract-json-structure",
+      {
+        markdown: {
+          content: consolidatedMarkdown.output.rawMarkdown,
+        },
+        userId,
       },
-      userId,
-    });
+      {
+        tags: [userId],
+      }
+    );
     if (!extractJsonStructure.ok) {
       throw new Error(`Extraction failed: ${extractJsonStructure.error}`);
     }
