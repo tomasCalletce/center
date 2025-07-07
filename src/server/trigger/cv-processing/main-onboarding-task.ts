@@ -16,7 +16,7 @@ export const mainOnboardingTask = schemaTask({
     userId: z.string(),
   }),
   run: async ({ cv, userId }) => {
-    metadata.set("progress", "converting pdf to images");
+    metadata.set("status", "converting pdf to images");
     const splitPdfToImages = await tasks.triggerAndWait<
       typeof splitPdfToImagesTask
     >(
@@ -36,7 +36,7 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Task failed: ${splitPdfToImages.error}`);
     }
 
-    metadata.set("progress", "converting images to markdown");
+    metadata.set("status", "converting images to markdown");
     const imageToMarkdownResults = await tasks.batchTriggerAndWait<
       typeof imageToMarkdownTask
     >(
@@ -58,7 +58,7 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Task failed: ${run.error}`);
     });
 
-    metadata.set("progress", "consolidating markdown");
+    metadata.set("status", "consolidating markdown");
     const consolidatedMarkdown = await tasks.triggerAndWait<
       typeof consolidatedMarkdownTask
     >(
@@ -79,10 +79,7 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Consolidation failed: ${consolidatedMarkdown.error}`);
     }
 
-    metadata.set(
-      "progress",
-      "extracting json structure and saving to database"
-    );
+    metadata.set("status", "extracting json structure and saving to database");
     const extractJsonStructure = await tasks.triggerAndWait<
       typeof extractJsonStructureTask
     >(
