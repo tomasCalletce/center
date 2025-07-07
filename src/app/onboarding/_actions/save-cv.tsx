@@ -28,9 +28,8 @@ export async function saveCv(formData: FormData) {
     },
     type: documentTypeValues.CV,
   });
-
   if (!documentMutation) {
-    throw new Error("Failed to create document in database.");
+    throw new Error("Failed to create document mutation.");
   }
 
   const client = await clerkClient();

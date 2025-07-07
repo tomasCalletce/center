@@ -4,6 +4,8 @@ import { splitPdfToImagesTask } from "~/server/trigger/cv-processing/01-split-pd
 import { imageToMarkdownTask } from "~/server/trigger/cv-processing/02-image-to-markdown";
 import { consolidatedMarkdownTask } from "~/server/trigger/cv-processing/03-consolidated-markdown";
 import { extractJsonStructureTask } from "~/server/trigger/cv-processing/04-extract-json-structure";
+import { metadata } from "@trigger.dev/sdk/v3";
+import { ONBOARDING_PROGRESS } from "~/types/onboarding";
 
 export const mainOnboardingTask = schemaTask({
   id: "onboarding.main",
@@ -15,19 +17,27 @@ export const mainOnboardingTask = schemaTask({
     userId: z.string(),
   }),
   run: async ({ cv, userId }) => {
+    metadata.set("status", ONBOARDING_PROGRESS.CONVERTING_PDF_TO_IMAGES);
     const splitPdfToImages = await tasks.triggerAndWait<
       typeof splitPdfToImagesTask
-    >("onboarding.split-pdf-to-images", {
-      cv: {
-        id: cv.id,
-        url: cv.url,
+    >(
+      "onboarding.split-pdf-to-images",
+      {
+        cv: {
+          id: cv.id,
+          url: cv.url,
+        },
+        userId,
       },
-      userId,
-    });
+      {
+        tags: [userId],
+      }
+    );
     if (!splitPdfToImages.ok) {
       throw new Error(`Task failed: ${splitPdfToImages.error}`);
     }
 
+    metadata.set("status", ONBOARDING_PROGRESS.CONVERTING_IMAGES_TO_MARKDOWN);
     const imageToMarkdownResults = await tasks.batchTriggerAndWait<
       typeof imageToMarkdownTask
     >(
@@ -39,6 +49,7 @@ export const mainOnboardingTask = schemaTask({
           },
           userId,
         },
+        tags: [userId],
       }))
     );
     const markdownContent = imageToMarkdownResults.runs.map((run) => {
@@ -48,28 +59,45 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Task failed: ${run.error}`);
     });
 
+    metadata.set("status", ONBOARDING_PROGRESS.CONSOLIDATING_MARKDOWN);
     const consolidatedMarkdown = await tasks.triggerAndWait<
       typeof consolidatedMarkdownTask
-    >("onboarding.consolidated-markdown", {
-      cv: {
-        id: cv.id,
-        url: cv.url,
+    >(
+      "onboarding.consolidated-markdown",
+      {
+        cv: {
+          id: cv.id,
+          url: cv.url,
+        },
+        markdownContents: markdownContent,
+        userId,
       },
-      markdownContents: markdownContent,
-      userId,
-    });
+      {
+        tags: [userId],
+      }
+    );
     if (!consolidatedMarkdown.ok) {
       throw new Error(`Consolidation failed: ${consolidatedMarkdown.error}`);
     }
 
+    metadata.set(
+      "status",
+      ONBOARDING_PROGRESS.EXTRACTING_JSON_STRUCTURE_AND_SAVING_TO_DATABASE
+    );
     const extractJsonStructure = await tasks.triggerAndWait<
       typeof extractJsonStructureTask
-    >("onboarding.extract-json-structure", {
-      markdown: {
-        content: consolidatedMarkdown.output.rawMarkdown,
+    >(
+      "onboarding.extract-json-structure",
+      {
+        markdown: {
+          content: consolidatedMarkdown.output.rawMarkdown,
+        },
+        userId,
       },
-      userId,
-    });
+      {
+        tags: [userId],
+      }
+    );
     if (!extractJsonStructure.ok) {
       throw new Error(`Extraction failed: ${extractJsonStructure.error}`);
     }

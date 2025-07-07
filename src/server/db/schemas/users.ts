@@ -15,7 +15,7 @@ export const experienceSchema = z.object({
 });
 export type UserExperience = z.infer<typeof experienceSchema>;
 
-const educationSchema = z.object({
+export const educationSchema = z.object({
   institution: z.string().nullable(),
   degree: z.string().nullable(),
   field_of_study: z.string().nullable(),
