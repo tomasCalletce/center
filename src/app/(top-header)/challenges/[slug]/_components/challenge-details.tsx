@@ -48,8 +48,8 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
   }).format(challenge.price_pool);
 
   return (
-    <div className="grid grid-cols-4 gap-4 overflow-hidden">
-      <div className="col-span-3 relative">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 overflow-hidden">
+      <div className="md:col-span-3 relative h-64 md:h-auto">
         <Image
           src={challenge.image.url}
           alt={challenge.image.alt}
@@ -63,7 +63,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           </div>
         </div>
       </div>
-      <div className="col-span-1 flex flex-col bg-card rounded-xl border">
+      <div className="md:col-span-1 flex flex-col bg-card rounded-xl border">
         <div className="p-6 border-b">
           <h1 className="font-bold text-2xl leading-tight">
             {challenge.title}

@@ -5,6 +5,7 @@ import { Badge } from "~/components/ui/badge";
 import { Clock, Users, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
+import { useIsMobile } from "~/hooks/use-mobile";
 
 interface RecentSubmissionsPreviewProps {
   slug: string;
@@ -13,6 +14,7 @@ interface RecentSubmissionsPreviewProps {
 export const RecentSubmissionsPreview: React.FC<
   RecentSubmissionsPreviewProps
 > = ({ slug }) => {
+  const isMobile = useIsMobile();
   const recentSubmissionsQuery =
     api.public.challenge.recentSubmissions.useQuery({
       challenge_slug: slug,
@@ -21,6 +23,9 @@ export const RecentSubmissionsPreview: React.FC<
 
   if (!recentSubmissionsQuery.data || recentSubmissionsQuery.data.length < 5)
     return null;
+
+  // Hide on mobile devices
+  if (isMobile) return null;
 
   return (
     <div className="space-y-4">
