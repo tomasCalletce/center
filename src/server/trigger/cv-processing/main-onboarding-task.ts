@@ -5,6 +5,7 @@ import { imageToMarkdownTask } from "~/server/trigger/cv-processing/02-image-to-
 import { consolidatedMarkdownTask } from "~/server/trigger/cv-processing/03-consolidated-markdown";
 import { extractJsonStructureTask } from "~/server/trigger/cv-processing/04-extract-json-structure";
 import { metadata } from "@trigger.dev/sdk/v3";
+import { ONBOARDING_PROGRESS } from "~/types/onboarding";
 
 export const mainOnboardingTask = schemaTask({
   id: "onboarding.main",
@@ -16,7 +17,7 @@ export const mainOnboardingTask = schemaTask({
     userId: z.string(),
   }),
   run: async ({ cv, userId }) => {
-    metadata.set("status", "converting pdf to images");
+    metadata.set("status", ONBOARDING_PROGRESS.CONVERTING_PDF_TO_IMAGES);
     const splitPdfToImages = await tasks.triggerAndWait<
       typeof splitPdfToImagesTask
     >(
@@ -36,7 +37,7 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Task failed: ${splitPdfToImages.error}`);
     }
 
-    metadata.set("status", "converting images to markdown");
+    metadata.set("status", ONBOARDING_PROGRESS.CONVERTING_IMAGES_TO_MARKDOWN);
     const imageToMarkdownResults = await tasks.batchTriggerAndWait<
       typeof imageToMarkdownTask
     >(
@@ -58,7 +59,7 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Task failed: ${run.error}`);
     });
 
-    metadata.set("status", "consolidating markdown");
+    metadata.set("status", ONBOARDING_PROGRESS.CONSOLIDATING_MARKDOWN);
     const consolidatedMarkdown = await tasks.triggerAndWait<
       typeof consolidatedMarkdownTask
     >(
@@ -79,7 +80,10 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Consolidation failed: ${consolidatedMarkdown.error}`);
     }
 
-    metadata.set("status", "extracting json structure and saving to database");
+    metadata.set(
+      "status",
+      ONBOARDING_PROGRESS.EXTRACTING_JSON_STRUCTURE_AND_SAVING_TO_DATABASE
+    );
     const extractJsonStructure = await tasks.triggerAndWait<
       typeof extractJsonStructureTask
     >(
