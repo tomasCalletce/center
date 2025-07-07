@@ -4,7 +4,7 @@ import { buttonVariants } from "~/components/ui/button";
 export const Companies = () => {
   return (
     <section>
-      <div className="container mx-auto">
+      <div className="container mx-auto my-16 mb-20">
         <div className="max-w-4xl mx-auto text-center">
           <div className="space-y-8">
             <div className="space-y-6">
