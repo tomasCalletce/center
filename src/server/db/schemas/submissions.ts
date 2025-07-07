@@ -45,7 +45,6 @@ export const submissions = pgTable("submissions", {
 export const verifySubmissionsSchema = createInsertSchema(submissions)
   .omit({
     id: true,
-    _team: true,
     _logo_image: true,
     submitted_by: true,
     created_at: true,

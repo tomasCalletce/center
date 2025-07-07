@@ -30,11 +30,13 @@ const schema = formSubmissionSchema.pick({
 interface SubmissionDetailsStepProps {
   handleOnSubmit: (data: DetailsData) => void;
   initialData?: DetailsData | null;
+  onBack?: () => void;
 }
 
 export function SubmissionDetailsStep({
   handleOnSubmit,
   initialData,
+  onBack,
 }: SubmissionDetailsStepProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -348,8 +350,20 @@ export function SubmissionDetailsStep({
           </div>
 
           <div className="flex justify-between items-center pt-6 border-t border-dashed">
-            <div className="text-xs text-slate-500">
-              Step 1 of 2 • Project Information
+            <div className="flex items-center gap-4">
+              {onBack && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onBack}
+                  className="cursor-pointer"
+                >
+                  Back to Team
+                </Button>
+              )}
+              <div className="text-xs text-slate-500">
+                Step 2 of 3 • Project Information
+              </div>
             </div>
             <Button
               type="submit"

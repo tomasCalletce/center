@@ -13,11 +13,13 @@ import { api } from "~/trpc/react";
 import { SubmissionMarkdownStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-markdown-step";
 import { SubmissionResultStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-result-step";
 import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-details-step";
+import { SubmissionTeamStep, type TeamData } from "~/app/(top-header)/challenges/[slug]/_components/submission-team-step";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { submissionVisibilityValues } from "~/server/db/schemas/submissions";
 import { z } from "zod";
 
 export enum SUBMISSION_STEPS {
+  TEAM = "team",
   DETAILS = "details",
   MARKDOWN = "markdown",
   SUCCESS = "success",
@@ -49,12 +51,18 @@ export function SubmissionDialog({
   children,
 }: SubmissionDialogProps) {
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState(SUBMISSION_STEPS.DETAILS);
+  const [step, setStep] = useState(SUBMISSION_STEPS.TEAM);
+  const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
 
   const utils = api.useUtils();
 
   const userSubmissionQuery = api.submission.getUserSubmission.useQuery(
+    { challengeId: _challenge },
+    { enabled: open }
+  );
+
+  const userTeamsQuery = api.team.getUserTeams.useQuery(
     { challengeId: _challenge },
     { enabled: open }
   );
@@ -82,7 +90,12 @@ export function SubmissionDialog({
   });
 
   const resetDialogState = () => {
-    setStep(SUBMISSION_STEPS.DETAILS);
+    if (userTeamsQuery.data && userTeamsQuery.data.length > 0 && !isEditMode) {
+      setStep(SUBMISSION_STEPS.DETAILS);
+    } else {
+      setStep(SUBMISSION_STEPS.TEAM);
+      setTeamData(null);
+    }
     setDetailsData(null);
   };
 
@@ -109,6 +122,27 @@ export function SubmissionDialog({
     }
   }, [isEditMode, userSubmissionQuery.data, detailsData]);
 
+  useEffect(() => {
+    if (open && userTeamsQuery.data && userTeamsQuery.data.length > 0 && !teamData) {
+      const existingTeam = userTeamsQuery.data[0];
+      if (existingTeam) {
+        setTeamData({
+          teamId: existingTeam.id,
+          teamName: existingTeam.name,
+          memberCount: 1,
+        });
+        if (!isEditMode) {
+          setStep(SUBMISSION_STEPS.DETAILS);
+        }
+      }
+    }
+  }, [open, userTeamsQuery.data, teamData, isEditMode]);
+
+  const handleTeamSubmit = (data: TeamData) => {
+    setTeamData(data);
+    setStep(SUBMISSION_STEPS.DETAILS);
+  };
+
   const handleDetailsSubmit = (data: DetailsData) => {
     setDetailsData({
       title: data.title,
@@ -120,10 +154,11 @@ export function SubmissionDialog({
   };
 
   const handleMarkdownSubmit = (data: MarkdownData) => {
-    if (!detailsData) return;
+    if (!detailsData || !teamData) return;
 
     const submissionData = {
       _challenge: _challenge,
+      _team: teamData.teamId,
       title: detailsData.title,
       demo_url: detailsData.demo_url,
       repository_url: detailsData.repository_url,
@@ -151,18 +186,22 @@ export function SubmissionDialog({
   const handleBack = () => {
     if (step === SUBMISSION_STEPS.MARKDOWN) {
       setStep(SUBMISSION_STEPS.DETAILS);
+    } else if (step === SUBMISSION_STEPS.DETAILS) {
+      setStep(SUBMISSION_STEPS.TEAM);
     }
   };
 
   const getStepNumber = () => {
     switch (step) {
-      case SUBMISSION_STEPS.DETAILS:
+      case SUBMISSION_STEPS.TEAM:
         return 1;
-      case SUBMISSION_STEPS.MARKDOWN:
+      case SUBMISSION_STEPS.DETAILS:
         return 2;
+      case SUBMISSION_STEPS.MARKDOWN:
+        return 3;
       case SUBMISSION_STEPS.SUCCESS:
       case SUBMISSION_STEPS.ERROR:
-        return 3;
+        return 4;
       default:
         return 1;
     }
@@ -189,9 +228,10 @@ export function SubmissionDialog({
           <div className="relative">
             <div className="flex items-center justify-between max-w-xs mx-auto">
               {[
-                { num: 1, label: "Details", icon: "📝" },
-                { num: 2, label: "Description", icon: "📋" },
-                { num: 3, label: isEditMode ? "Update" : "Submit", icon: "🚀" },
+                { num: 1, label: "Team", icon: "👥" },
+                { num: 2, label: "Details", icon: "📝" },
+                { num: 3, label: "Description", icon: "📋" },
+                { num: 4, label: isEditMode ? "Update" : "Submit", icon: "🚀" },
               ].map((step) => (
                 <div
                   key={step.num}
@@ -241,7 +281,9 @@ export function SubmissionDialog({
                       getStepNumber() === 1
                         ? "w-0"
                         : getStepNumber() === 2
-                        ? "w-1/2"
+                        ? "w-1/3"
+                        : getStepNumber() === 3
+                        ? "w-2/3"
                         : "w-full"
                     }
                   `}
@@ -251,13 +293,21 @@ export function SubmissionDialog({
           </div>
         </DialogHeader>
         <div>
+          {step === SUBMISSION_STEPS.TEAM && (
+            <SubmissionTeamStep
+              challengeId={_challenge}
+              onNext={handleTeamSubmit}
+              initialData={teamData ?? undefined}
+            />
+          )}
           {step === SUBMISSION_STEPS.DETAILS && (
             <SubmissionDetailsStep 
               handleOnSubmit={handleDetailsSubmit}
               initialData={detailsData}
+              onBack={handleBack}
             />
           )}
-          {step === "markdown" && (
+          {step === SUBMISSION_STEPS.MARKDOWN && (
             <SubmissionMarkdownStep
               handleOnSubmit={handleMarkdownSubmit}
               onBack={handleBack}
