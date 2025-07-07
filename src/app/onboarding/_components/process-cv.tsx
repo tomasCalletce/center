@@ -2,21 +2,17 @@
 
 import Link from "next/link";
 import { useRealtimeRun } from "@trigger.dev/react-hooks";
-import { Button } from "~/components/ui/button";
 import {
   Loader2,
   Brain,
   FileText,
-  SkipForward,
   AlertCircle,
+  ArrowRight,
 } from "lucide-react";
 import { mainOnboardingTask } from "~/server/trigger/cv-processing/main-onboarding-task";
 import { ONBOARDING_PROGRESS } from "~/types/onboarding";
-
-interface ProcessCVProps {
-  publicAccessToken: string;
-  runId: string;
-}
+import { buttonVariants } from "~/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const getProgressIcon = (status: string) => {
   switch (status) {
@@ -32,6 +28,11 @@ const getProgressIcon = (status: string) => {
       return "⚡";
   }
 };
+
+interface ProcessCVProps {
+  publicAccessToken: string;
+  runId: string;
+}
 
 const getProgressMessage = (status: string) => {
   switch (status) {
@@ -49,8 +50,12 @@ const getProgressMessage = (status: string) => {
 };
 
 export const ProcessCV = ({ publicAccessToken, runId }: ProcessCVProps) => {
+  const router = useRouter();
   const { run, error } = useRealtimeRun<typeof mainOnboardingTask>(runId, {
     accessToken: publicAccessToken,
+    onComplete: () => {
+      router.push("/");
+    },
   });
 
   if (error) {
@@ -73,12 +78,16 @@ export const ProcessCV = ({ publicAccessToken, runId }: ProcessCVProps) => {
           </p>
         </div>
 
-        <Button asChild variant="outline" className="w-full">
-          <Link href="/">
-            <SkipForward className="w-4 h-4 mr-2" />
-            Skip to Dashboard
-          </Link>
-        </Button>
+        <Link
+          className={buttonVariants({
+            variant: "outline",
+            className: "w-full",
+          })}
+          href="/"
+        >
+          Skip to Dashboard
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
     );
   }
@@ -105,12 +114,16 @@ export const ProcessCV = ({ publicAccessToken, runId }: ProcessCVProps) => {
           </p>
         </div>
 
-        <Button asChild variant="outline" className="w-full">
-          <Link href="/">
-            <SkipForward className="w-4 h-4 mr-2" />
-            Skip
-          </Link>
-        </Button>
+        <Link
+          className={buttonVariants({
+            variant: "outline",
+            className: "w-full",
+          })}
+          href="/"
+        >
+          Skip
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
     );
   }
@@ -148,9 +161,16 @@ export const ProcessCV = ({ publicAccessToken, runId }: ProcessCVProps) => {
           </p>
         </div>
 
-        <Button asChild className="w-full">
-          <Link href="/">Continue to Dashboard</Link>
-        </Button>
+        <Link
+          className={buttonVariants({
+            variant: "default",
+            className: "w-full",
+          })}
+          href="/"
+        >
+          Continue to Challenges
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
     );
   }
@@ -192,12 +212,13 @@ export const ProcessCV = ({ publicAccessToken, runId }: ProcessCVProps) => {
         </p>
       </div>
 
-      <Button asChild variant="outline" className="w-full">
-        <Link href="/">
-          <SkipForward className="w-4 h-4 mr-2" />
-          Skip
-        </Link>
-      </Button>
+      <Link
+        className={buttonVariants({ variant: "outline", className: "w-full" })}
+        href="/"
+      >
+        Skip
+        <ArrowRight className="w-4 h-4" />
+      </Link>
     </div>
   );
 };
