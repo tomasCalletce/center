@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Users, FileText, Clipboard, Rocket } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -228,10 +229,10 @@ export function SubmissionDialog({
           <div className="relative">
             <div className="flex items-center justify-between max-w-xs mx-auto">
               {[
-                { num: 1, label: "Team", icon: "👥" },
-                { num: 2, label: "Details", icon: "📝" },
-                { num: 3, label: "Description", icon: "📋" },
-                { num: 4, label: isEditMode ? "Update" : "Submit", icon: "🚀" },
+                { num: 1, label: "Team", icon: <Users className="w-5 h-5" /> },
+                { num: 2, label: "Details", icon: <FileText className="w-5 h-5" /> },
+                { num: 3, label: "Description", icon: <Clipboard className="w-5 h-5" /> },
+                { num: 4, label: isEditMode ? "Update" : "Submit", icon: <Rocket className="w-5 h-5" /> },
               ].map((step) => (
                 <div
                   key={step.num}
@@ -250,13 +251,13 @@ export function SubmissionDialog({
                       }
                     `}
                   >
-                    <span className="text-lg leading-none">
+                    <div className="flex items-center justify-center text-lg leading-none">
                       {step.num < getStepNumber()
                         ? "✓"
                         : step.num === getStepNumber()
                         ? step.icon
                         : step.num}
-                    </span>
+                    </div>
                   </div>
                   <div
                     className={`
