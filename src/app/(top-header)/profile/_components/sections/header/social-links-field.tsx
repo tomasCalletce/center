@@ -64,7 +64,7 @@ export const SocialLinksField = ({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2 max-w-md">
         <Select
           value={newLink.platform}
           onValueChange={(value) =>
@@ -88,17 +88,15 @@ export const SocialLinksField = ({
           </SelectContent>
         </Select>
 
-        <div className="flex items-center gap-2">
-          <Input
-            value={newLink.url}
-            onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-            placeholder="URL"
-            className="col-span-1"
-          />
-          <Button onClick={addSocialLink} type="button">
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
+        <Input
+          value={newLink.url}
+          onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+          placeholder="URL"
+          className="col-span-1"
+        />
+        <Button onClick={addSocialLink} type="button">
+          <Plus className="h-4 w-4" />
+        </Button>
       </div>
 
       <div className="space-y-2">
