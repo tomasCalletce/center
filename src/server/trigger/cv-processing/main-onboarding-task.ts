@@ -4,6 +4,7 @@ import { splitPdfToImagesTask } from "~/server/trigger/cv-processing/01-split-pd
 import { imageToMarkdownTask } from "~/server/trigger/cv-processing/02-image-to-markdown";
 import { consolidatedMarkdownTask } from "~/server/trigger/cv-processing/03-consolidated-markdown";
 import { extractJsonStructureTask } from "~/server/trigger/cv-processing/04-extract-json-structure";
+import { metadata } from "@trigger.dev/sdk/v3";
 
 export const mainOnboardingTask = schemaTask({
   id: "onboarding.main",
@@ -15,6 +16,7 @@ export const mainOnboardingTask = schemaTask({
     userId: z.string(),
   }),
   run: async ({ cv, userId }) => {
+    metadata.set("progress", "converting pdf to images");
     const splitPdfToImages = await tasks.triggerAndWait<
       typeof splitPdfToImagesTask
     >(
@@ -34,6 +36,7 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Task failed: ${splitPdfToImages.error}`);
     }
 
+    metadata.set("progress", "converting images to markdown");
     const imageToMarkdownResults = await tasks.batchTriggerAndWait<
       typeof imageToMarkdownTask
     >(
@@ -55,6 +58,7 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Task failed: ${run.error}`);
     });
 
+    metadata.set("progress", "consolidating markdown");
     const consolidatedMarkdown = await tasks.triggerAndWait<
       typeof consolidatedMarkdownTask
     >(
@@ -75,6 +79,10 @@ export const mainOnboardingTask = schemaTask({
       throw new Error(`Consolidation failed: ${consolidatedMarkdown.error}`);
     }
 
+    metadata.set(
+      "progress",
+      "extracting json structure and saving to database"
+    );
     const extractJsonStructure = await tasks.triggerAndWait<
       typeof extractJsonStructureTask
     >(
