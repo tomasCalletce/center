@@ -1,13 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  useUser,
-} from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "~/components/ui/button";
 import {
   NavigationMenu,
@@ -16,8 +11,13 @@ import {
 } from "~/components/ui/navigation-menu";
 import { UserMenu } from "./user-menu";
 import { InvitationNotifications } from "./invitation-notifications";
+import { Home, User } from "lucide-react";
 
 export function Header() {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const isProfilePage = pathname === "/profile";
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center px-4">
@@ -28,10 +28,25 @@ export function Header() {
         </Link>
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link href="/">
+                <Button
+                  variant="ghost"
+                  className={`cursor-pointer flex items-center gap-2 ${isHomePage ? "border-b-2 border-slate-900 rounded-t-md rounded-b-none" : ""}`}
+                >
+                  <Home className="h-4 w-4" />
+                  Home
+                </Button>
+              </Link>
+            </NavigationMenuItem>
             <SignedIn>
               <NavigationMenuItem>
                 <Link href="/profile">
-                  <Button variant="ghost" className="cursor-pointer">
+                  <Button
+                    variant="ghost"
+                    className={`cursor-pointer flex items-center gap-2 ${isProfilePage ? "border-b-2 border-slate-900 rounded-t-md rounded-b-none" : ""}`}
+                  >
+                    <User className="h-4 w-4" />
                     Profile
                   </Button>
                 </Link>

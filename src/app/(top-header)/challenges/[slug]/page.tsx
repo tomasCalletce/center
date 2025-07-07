@@ -12,7 +12,7 @@ export default async function ChallengePage({
 
   return (
     <HydrateClient>
-      <div className="w-full px-6 py-6">
+      <div className="w-full  py-6">
         <div className="space-y-6">
           <ChallengeDetails slug={slug} />
           <RecentSubmissionsPreview slug={slug} />

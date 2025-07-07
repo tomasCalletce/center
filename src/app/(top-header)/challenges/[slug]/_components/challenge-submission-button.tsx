@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { ArrowRight, Bell, Check, Edit } from "lucide-react";
+import { ArrowRight, Bell, Check, Edit, Monitor } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { SubmissionDialog } from "./submission-dialog";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
+import { useIsMobile } from "~/hooks/use-mobile";
 
 interface ChallengeSubmissionButtonProps {
   challengeId: string;
@@ -17,6 +18,7 @@ export const ChallengeSubmissionButton: React.FC<
   ChallengeSubmissionButtonProps
 > = ({ challengeId, isSubmissionOpen }) => {
   const { isSignedIn, isLoaded } = useUser();
+  const isMobile = useIsMobile();
 
   const challengeDetailsQuery = api.public.challenge.details.useQuery({
     _challenge: challengeId,
@@ -91,11 +93,7 @@ export const ChallengeSubmissionButton: React.FC<
 
   if (isDeadlinePassed) {
     return (
-      <Button
-        className="w-full cursor-pointer"
-        variant="outline"
-        disabled
-      >
+      <Button className="w-full cursor-pointer" variant="outline" disabled>
         Submission Closed
         <Check className="ml-2 h-4 w-4" />
       </Button>
@@ -105,14 +103,20 @@ export const ChallengeSubmissionButton: React.FC<
   if (hasSubmitted) {
     return (
       <SubmissionDialog _challenge={challengeId}>
-        <Button
-          className="w-full cursor-pointer"
-          variant="secondary"
-        >
+        <Button className="w-full cursor-pointer" variant="secondary">
           Edit Submission
           <Edit className="ml-2 h-4 w-4" />
         </Button>
       </SubmissionDialog>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <Button className="w-full cursor-pointer" variant="secondary" disabled>
+        <Monitor className="mr-2 h-4 w-4" />
+        Open on desktop to submit
+      </Button>
     );
   }
 
