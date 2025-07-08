@@ -1,15 +1,8 @@
-import Link from "next/link";
 import Image from "next/image";
 import { api } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import {
-  Clock,
-  Users,
-  MapPin,
-  Trophy,
-  Calendar,
-} from "lucide-react";
+import { Clock, Users, MapPin, Trophy, Calendar } from "lucide-react";
 import { ChallengeSubmissionButton } from "./challenge-submission-button";
 import { ChallengeStats } from "./challenge-stats";
 
@@ -26,21 +19,16 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
 
   const formattedDeadlineDate = format(challenge.deadline_at, "MMM dd, yyyy");
   const formattedOpenDate = format(challenge.open_at, "MMM dd, yyyy");
-
   const timeLeft = formatDistanceToNow(challenge.deadline_at, {
     addSuffix: true,
   });
-
   const openTimeLeft = formatDistanceToNow(new Date(challenge.open_at), {
     addSuffix: true,
   });
-
   const isSubmissionOpen = challenge.open_at
     ? new Date() >= challenge.open_at
     : false;
-
   const isDeadlinePassed = new Date() > challenge.deadline_at;
-
   const pricePool = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: challenge.price_pool_currency,
@@ -98,11 +86,21 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
                 {formattedOpenDate}
               </div>
               <Badge
-                variant={isDeadlinePassed ? "destructive" : isSubmissionOpen ? "default" : "secondary"}
+                variant={
+                  isDeadlinePassed
+                    ? "destructive"
+                    : isSubmissionOpen
+                      ? "default"
+                      : "secondary"
+                }
                 className="text-xs font-medium"
               >
                 <Calendar className="h-3 w-3 mr-1" />
-                {isDeadlinePassed ? "Closed" : isSubmissionOpen ? "Open now" : openTimeLeft}
+                {isDeadlinePassed
+                  ? "Closed"
+                  : isSubmissionOpen
+                    ? "Open now"
+                    : openTimeLeft}
               </Badge>
             </div>
           </div>
@@ -114,7 +112,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
               <div className="text-sm font-medium text-foreground">
                 {formattedDeadlineDate}
               </div>
-              <Badge 
+              <Badge
                 variant={isDeadlinePassed ? "destructive" : "default"}
                 className="text-xs font-medium"
               >

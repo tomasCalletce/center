@@ -19,77 +19,29 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({ slug }) => {
     return null;
   }
 
-  if (statsQuery.isLoading || !statsQuery.data) {
-    return (
-      <div className="p-3">
-        <div className="flex gap-3">
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 bg-yellow-500/20 rounded-lg animate-pulse" />
-            <div className="space-y-1">
-              <div className="h-3 w-6 bg-white/20 rounded animate-pulse" />
-              <div className="h-2 w-8 bg-white/10 rounded animate-pulse" />
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 bg-blue-500/20 rounded-lg animate-pulse" />
-            <div className="space-y-1">
-              <div className="h-3 w-6 bg-white/20 rounded animate-pulse" />
-              <div className="h-2 w-8 bg-white/10 rounded animate-pulse" />
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 bg-green-500/20 rounded-lg animate-pulse" />
-            <div className="space-y-1">
-              <div className="h-3 w-6 bg-white/20 rounded animate-pulse" />
-              <div className="h-2 w-8 bg-white/10 rounded animate-pulse" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  if (!statsQuery.data) {
+    return null;
   }
 
-  const { total_submissions, recent_submissions, total_participants } =
-    statsQuery.data;
-
   return (
-    <div className="p-3">
-      <div className="flex gap-3">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-yellow-500/20">
-            <Trophy className="h-3 w-3 text-yellow-300" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-white">
-              {total_submissions}
-            </div>
-            <div className="text-xs text-white/70">Submissions</div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-500/20">
-            <Users className="h-3 w-3 text-blue-300" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-white">
-              {total_participants}
-            </div>
-            <div className="text-xs text-white/70">Participants</div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-green-500/20">
-            <Calendar className="h-3 w-3 text-green-300" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-white">
-              {recent_submissions}
-            </div>
-            <div className="text-xs text-white/70">This week</div>
-          </div>
-        </div>
+    <div className="flex gap-6 text-sm text-muted-foreground px-4 py-1">
+      <div className="flex items-center gap-2">
+        <Trophy className="h-4 w-4" />
+        <span className="font-medium">
+          {statsQuery.data.total_submissions} submissions
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Users className="h-4 w-4" />
+        <span className="font-medium">
+          {statsQuery.data.total_participants} participants
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Calendar className="h-4 w-4" />
+        <span className="font-medium">
+          {statsQuery.data.recent_submissions} submissions this week
+        </span>
       </div>
     </div>
   );
