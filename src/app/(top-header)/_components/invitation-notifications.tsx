@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Bell, Check, X, Users } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
+import { format } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +17,8 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { teamInvitationStatusValues } from "~/server/db/schemas/team-invitations";
 
-export function InvitationNotifications() {
+export const InvitationNotifications: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const utils = api.useUtils();
 
   const invitationsQuery = api.team.getInvitations.useQuery(undefined, {
     refetchInterval: 5000,
@@ -28,23 +28,23 @@ export function InvitationNotifications() {
   const respondToInvitationMutation = api.team.respondToInvitation.useMutation({
     onSuccess: () => {
       toast.success("Invitation response sent!");
-      utils.team.getInvitations.invalidate();
+      invitationsQuery.refetch();
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: () => {
+      toast.error("Failed to respond to invitation");
     },
   });
 
   const handleAcceptInvitation = (invitationId: string) => {
     respondToInvitationMutation.mutate({
-      invitationId,
+      _invitation: invitationId,
       response: teamInvitationStatusValues.ACCEPTED,
     });
   };
 
   const handleDeclineInvitation = (invitationId: string) => {
     respondToInvitationMutation.mutate({
-      invitationId,
+      _invitation: invitationId,
       response: teamInvitationStatusValues.DECLINED,
     });
   };
@@ -83,7 +83,7 @@ export function InvitationNotifications() {
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
                         <AvatarFallback>
-                          {invitation.inviter.display_name?.charAt(0) || "?"}
+                          {invitation.inviter.display_name?.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
@@ -110,7 +110,7 @@ export function InvitationNotifications() {
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
                       Expires{" "}
-                      {new Date(invitation.expires_at).toLocaleDateString()}
+                      {format(new Date(invitation.expires_at), "MMM d, yyyy")}
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -140,4 +140,4 @@ export function InvitationNotifications() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
