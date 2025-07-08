@@ -1,5 +1,4 @@
 import { createTRPCRouter } from "~/server/api/trpc";
-import { searchUsers } from "~/server/api/routers/team/procedures/search-users";
 import { createTeam } from "~/server/api/routers/team/procedures/create-team";
 import { sendInvitation } from "~/server/api/routers/team/procedures/send-invitation";
 import { getInvitations } from "~/server/api/routers/team/procedures/get-invitations";
@@ -11,7 +10,6 @@ import { updateTeam } from "~/server/api/routers/team/procedures/update-team";
 import { deleteTeam } from "~/server/api/routers/team/procedures/delete-team";
 
 export const teamRouter = createTRPCRouter({
-  searchUsers,
   createTeam,
   sendInvitation,
   getInvitations,
