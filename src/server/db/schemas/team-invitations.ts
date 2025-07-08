@@ -39,11 +39,13 @@ export const teamInvitations = pgTable("team_invitations", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const verifyTeamInvitationsSchema = createInsertSchema(teamInvitations).omit({
+export const verifyTeamInvitationsSchema = createInsertSchema(
+  teamInvitations
+).omit({
   id: true,
   _inviter: true,
   status: true,
   responded_at: true,
   created_at: true,
   updated_at: true,
-}); 
+});

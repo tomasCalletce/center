@@ -11,7 +11,7 @@ export const Challenges = () => {
             <div className="from-slate-900/30 via-slate-900/15 border-slate-900/30 relative flex h-8 w-8 items-center justify-center rounded-lg border bg-gradient-to-br to-transparent shadow-lg">
               <Zap className="text-slate-900 h-4 w-4" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
+            <h1 className="text-2xl md:text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
               AI Challenges
             </h1>
           </div>

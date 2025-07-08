@@ -3,7 +3,6 @@ import { protectedProcedure } from "~/server/api/trpc";
 import { dbSocket } from "~/server/db/connection";
 import { teamInvitations } from "~/server/db/schemas/team-invitations";
 import { teamMembers } from "~/server/db/schemas/team-members";
-import { teams } from "~/server/db/schemas/teams";
 import { TRPCError } from "@trpc/server";
 import { eq, and } from "drizzle-orm";
 import { clerkClient } from "~/server/api/auth";
@@ -105,4 +104,4 @@ export const sendInvitation = protectedProcedure
       success: results,
       errors,
     };
-  }); 
+  });

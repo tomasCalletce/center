@@ -3,7 +3,7 @@ import Image from "next/image";
 export const CommunityShowcase = () => {
   return (
     <section className="relative">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center space-y-4">
             <div className="inline-flex items-center justify-center">
@@ -12,7 +12,7 @@ export const CommunityShowcase = () => {
                 Global Developer Community
               </span>
             </div>
-            <h2 className="text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+            <h2 className="text-2xl md:text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
               Where talent meets opportunity
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
