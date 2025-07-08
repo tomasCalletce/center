@@ -40,5 +40,5 @@ export const getUserSubmission = protectedProcedure
       )
       .limit(1);
 
-    return userSubmission.at(0);
+    return userSubmission.at(0) ?? null;
   }); 

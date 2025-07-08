@@ -132,9 +132,6 @@ export function SubmissionDialog({
           teamName: existingTeam.name,
           memberCount: 1,
         });
-        if (!isEditMode) {
-          setStep(SUBMISSION_STEPS.DETAILS);
-        }
       }
     }
   }, [open, userTeamsQuery.data, teamData, isEditMode]);
