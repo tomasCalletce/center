@@ -34,7 +34,11 @@ export const getUserTeams = protectedProcedure
       .where(eq(teamMembers._clerk, ctx.auth.userId));
 
     return userTeams.map((team) => ({
-      ...team,
+      id: team.id,
+      name: team.name,
+      max_members: team.max_members,
+      created_at: team.created_at,
+      memberCount: team.memberCount,
       hasSubmission: !!team.hasSubmission,
     }));
-  }); 
+  });
