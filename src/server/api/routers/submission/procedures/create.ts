@@ -19,16 +19,38 @@ const updateSubmissionSchema = verifySubmissionsSchema.extend({
 export const create = protectedProcedure
   .input(verifySubmissionsSchema)
   .mutation(async ({ input, ctx }) => {
+    if (!input._team) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Team ID is required",
+      });
+    }
+
+    const [userTeamMembership] = await dbSocket
+      .select()
+      .from(teamMembers)
+      .where(
+        and(
+          eq(teamMembers._team, input._team),
+          eq(teamMembers._clerk, ctx.auth.userId)
+        )
+      );
+
+    if (!userTeamMembership) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not a member of this team",
+      });
+    }
+
     if (input._challenge) {
       const [existingSubmission] = await dbSocket
         .select()
         .from(submissions)
-        .innerJoin(teams, eq(submissions._team, teams.id))
-        .innerJoin(teamMembers, eq(teams.id, teamMembers._team))
         .where(
           and(
             eq(submissions._challenge, input._challenge),
-            eq(teamMembers._clerk, ctx.auth.userId)
+            eq(submissions._team, input._team)
           )
         )
         .limit(1);
@@ -36,7 +58,7 @@ export const create = protectedProcedure
       if (existingSubmission) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "You have already submitted to this challenge",
+          message: "This team has already submitted to this challenge",
         });
       }
     }
@@ -72,39 +94,10 @@ export const create = protectedProcedure
         });
       }
 
-      const [newTeam] = await tx
-        .insert(teams)
-        .values({
-          _clerk: ctx.auth.userId,
-          name: "Team",
-        })
-        .returning({ id: teams.id });
-      if (!newTeam) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create team in database.",
-        });
-      }
-
-      const [newTeamMember] = await tx
-        .insert(teamMembers)
-        .values({
-          _team: newTeam.id,
-          _clerk: ctx.auth.userId,
-          role: "ADMIN",
-        })
-        .returning({ id: teamMembers.id });
-      if (!newTeamMember) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create team member in database.",
-        });
-      }
-
       const [newSubmission] = await tx
         .insert(submissions)
         .values({
-          _team: newTeam.id,
+          _team: input._team,
           _logo_image: newImage.id,
           _challenge: input._challenge,
           title: input.title,
@@ -112,6 +105,7 @@ export const create = protectedProcedure
           demo_url: input.demo_url,
           repository_url: input.repository_url,
           status: input.status,
+          submitted_by: ctx.auth.userId,
         })
         .returning({ id: submissions.id });
       if (!newSubmission) {

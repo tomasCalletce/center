@@ -10,6 +10,7 @@ import {
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
 import { UserMenu } from "./user-menu";
+import { InvitationNotifications } from "./invitation-notifications";
 import { Home, User } from "lucide-react";
 
 export function Header() {
@@ -55,6 +56,7 @@ export function Header() {
         </NavigationMenu>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <SignedIn>
+            <InvitationNotifications />
             <UserMenu />
           </SignedIn>
           <SignedOut>
