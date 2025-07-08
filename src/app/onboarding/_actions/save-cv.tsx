@@ -4,8 +4,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { api } from "~/trpc/server";
 import { documentTypeValues } from "~/server/db/schemas/assets-pdf";
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { ONBOARDING_STATUS } from "~/types/onboarding";
+import { auth } from "@clerk/nextjs/server";
 
 export async function saveCv(formData: FormData) {
   const { userId } = await auth();
@@ -32,16 +31,8 @@ export async function saveCv(formData: FormData) {
     throw new Error("Failed to create document mutation.");
   }
 
-  const client = await clerkClient();
-  const metadataResponse = await client.users.updateUser(userId, {
-    publicMetadata: {
-      onboardingStatus: ONBOARDING_STATUS.COMPLETED,
-    },
-  });
-
   return {
     blob: blob,
     documentMutation: documentMutation,
-    publicMetadata: metadataResponse.publicMetadata,
   };
 }

@@ -3,6 +3,7 @@ export enum ONBOARDING_STATUS {
 }
 
 export enum ONBOARDING_PROGRESS {
+  VALIDATING_CV = "validating cv document",
   CONVERTING_PDF_TO_IMAGES = "converting pdf to images",
   CONVERTING_IMAGES_TO_MARKDOWN = "converting images to markdown",
   CONSOLIDATING_MARKDOWN = "consolidating markdown",

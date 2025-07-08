@@ -1,5 +1,6 @@
 import { schemaTask, tasks } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
+import { validateCvTask } from "~/server/trigger/cv-processing/00-validate-cv";
 import { splitPdfToImagesTask } from "~/server/trigger/cv-processing/01-split-pdf-to-images";
 import { imageToMarkdownTask } from "~/server/trigger/cv-processing/02-image-to-markdown";
 import { consolidatedMarkdownTask } from "~/server/trigger/cv-processing/03-consolidated-markdown";
@@ -16,7 +17,28 @@ export const mainOnboardingTask = schemaTask({
     }),
     userId: z.string(),
   }),
+  retry: {
+    maxAttempts: 1,
+  },
   run: async ({ cv, userId }) => {
+    metadata.set("status", ONBOARDING_PROGRESS.VALIDATING_CV);
+    const cvValidation = await tasks.triggerAndWait<typeof validateCvTask>(
+      "onboarding.validate-cv",
+      {
+        cv: {
+          id: cv.id,
+          url: cv.url,
+        },
+        userId,
+      },
+      {
+        tags: [userId],
+      }
+    );
+    if (!cvValidation.ok) {
+      throw new Error(`CV validation failed: ${cvValidation.error}`);
+    }
+
     metadata.set("status", ONBOARDING_PROGRESS.CONVERTING_PDF_TO_IMAGES);
     const splitPdfToImages = await tasks.triggerAndWait<
       typeof splitPdfToImagesTask
