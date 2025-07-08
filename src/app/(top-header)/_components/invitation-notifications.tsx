@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { teamInvitationStatusValues } from "~/server/db/schemas/team-invitations";
 
 export function InvitationNotifications() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,14 +38,14 @@ export function InvitationNotifications() {
   const handleAcceptInvitation = (invitationId: string) => {
     respondToInvitationMutation.mutate({
       invitationId,
-      response: "ACCEPTED",
+      response: teamInvitationStatusValues.ACCEPTED,
     });
   };
 
   const handleDeclineInvitation = (invitationId: string) => {
     respondToInvitationMutation.mutate({
       invitationId,
-      response: "DECLINED",
+      response: teamInvitationStatusValues.DECLINED,
     });
   };
 
