@@ -31,15 +31,22 @@ export function MainOnboardingForm() {
     setTriggerTask(triggerTask);
   };
 
+  const onRetry = () => {
+    setTriggerTask(null);
+  };
+
+  const isOnboardingCompleted = user.publicMetadata.onboardingStatus === ONBOARDING_STATUS.COMPLETED;
+
   return (
     <div>
-      {!triggerTask && user.publicMetadata.onboardingStatus === undefined && (
+      {!triggerTask && !isOnboardingCompleted && (
         <UploadCV onComplete={onComplete} />
       )}
       {triggerTask && (
         <ProcessCV
           publicAccessToken={triggerTask.publicAccessToken}
           runId={triggerTask.runId}
+          onRetry={onRetry}
         />
       )}
     </div>

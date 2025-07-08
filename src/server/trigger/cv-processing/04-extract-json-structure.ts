@@ -110,6 +110,13 @@ export const extractJsonStructureTask = schemaTask({
       throw new Error("Failed to upsert user");
     }
 
+    const client = await clerkClient();
+    await client.users.updateUser(userId, {
+      publicMetadata: {
+        onboardingStatus: ONBOARDING_STATUS.COMPLETED,
+      },
+    });
+
     return {
       userId: updatedUser.id,
     };
