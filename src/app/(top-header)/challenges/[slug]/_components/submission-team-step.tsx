@@ -31,16 +31,15 @@ export function SubmissionTeamStep({
     setShowCreateForm(false);
   };
 
-  // if (showCreateForm) {
-  //   return (
-  //     <SubmissionTeamCreateStep
-  //       challengeId={challengeId}
-  //       onNext={onNext}
-  //       onBack={userTeamsQuery.data?.length ? handleBackToSelect : undefined}
-  //       hasExistingTeams={!!userTeamsQuery.data?.length}
-  //     />
-  //   );
-  // }
+  if (showCreateForm) {
+    return (
+      <SubmissionTeamCreateStep
+        challengeId={challengeId}
+        onNext={onNext}
+        onBack={handleBackToSelect}
+      />
+    );
+  }
 
   return (
     <SubmissionTeamSelectStep
