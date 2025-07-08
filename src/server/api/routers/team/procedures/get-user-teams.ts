@@ -4,7 +4,7 @@ import { dbSocket } from "~/server/db/connection";
 import { teams } from "~/server/db/schemas/teams";
 import { teamMembers } from "~/server/db/schemas/team-members";
 import { submissions } from "~/server/db/schemas/submissions";
-import { eq, and } from "drizzle-orm";
+import { eq, and, count } from "drizzle-orm";
 
 export const getUserTeams = protectedProcedure
   .input(
@@ -19,7 +19,7 @@ export const getUserTeams = protectedProcedure
         name: teams.name,
         max_members: teams.max_members,
         created_at: teams.created_at,
-        memberCount: eq(teamMembers._clerk, ctx.auth.userId),
+        memberCount: count(teamMembers._clerk),
         hasSubmission: submissions.id,
       })
       .from(teams)
@@ -31,7 +31,8 @@ export const getUserTeams = protectedProcedure
           eq(submissions._challenge, input.challengeId)
         )
       )
-      .where(eq(teamMembers._clerk, ctx.auth.userId));
+      .where(eq(teamMembers._clerk, ctx.auth.userId))
+      .groupBy(teams.id, teams.name, teams.max_members, teams.created_at, submissions.id);
 
     return userTeams.map((team) => ({
       id: team.id,

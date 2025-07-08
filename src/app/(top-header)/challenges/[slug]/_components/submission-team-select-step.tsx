@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { Users, Plus } from "lucide-react";
-import { api } from "~/trpc/react";
+import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
 
@@ -20,56 +20,58 @@ export const SubmissionTeamSelectStep: React.FC<
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
 
   const userTeamsQuery = api.team.getUserTeams.useQuery({ challengeId });
-  const teamDetailsQuery = api.team.getTeamDetails.useQuery(
-    { teamId: selectedTeamId! },
-    { enabled: !!selectedTeamId }
-  );
 
-  const handleSelectTeam = (team: any) => {
+  const handleSelectTeam = (
+    team: RouterOutputs["team"]["getUserTeams"][number]
+  ) => {
     if (team.hasSubmission) return;
     setSelectedTeamId(team.id);
   };
 
   const handleNext = () => {
-    if (!selectedTeamId) {
+    if (!selectedTeamId || !userTeamsQuery.data) {
       toast.error("Please select a team first");
       return;
     }
 
-    const currentTeam = teamDetailsQuery.data;
+    const currentTeam = userTeamsQuery.data.find(
+      (team) => team.id === selectedTeamId
+    );
     if (!currentTeam) {
-      toast.error("Unable to load team details");
+      toast.error("Team not found");
       return;
     }
 
     onNext({
       teamId: selectedTeamId,
       teamName: currentTeam.name,
-      memberCount: currentTeam.members.length,
+      memberCount: currentTeam.memberCount,
     });
   };
 
   if (!userTeamsQuery.data || userTeamsQuery.data.length === 0) {
     return (
       <div className="space-y-6">
+        <div className="text-center pb-4">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Create Your First Team
+          </h3>
+          <p className="text-sm text-slate-500">
+            You don't have any teams yet. Create a team to participate in this
+            challenge.
+          </p>
+        </div>
+
         <div className="text-center space-y-4">
           <div className="w-16 h-16 mx-auto rounded-lg bg-slate-100 flex items-center justify-center">
             <Users className="h-8 w-8 text-slate-600" />
           </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">Create Your First Team</h3>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              You don't have any teams yet. Create a team to participate in this
-              challenge.
-            </p>
+          <div className="flex justify-center">
+            <Button onClick={onCreateNew} className="gap-2">
+              <Plus className="h-4 w-4" />
+              Create Team
+            </Button>
           </div>
-        </div>
-
-        <div className="flex justify-center">
-          <Button onClick={onCreateNew} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Create Team
-          </Button>
         </div>
       </div>
     );
@@ -77,9 +79,11 @@ export const SubmissionTeamSelectStep: React.FC<
 
   return (
     <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h3 className="text-lg font-medium">Select Your Team</h3>
-        <p className="text-sm text-muted-foreground">
+      <div>
+        <h3 className="text-lg font-semibold text-slate-900">
+          Select Your Team
+        </h3>
+        <p className="text-sm text-slate-500">
           Choose from your existing teams or create a new one
         </p>
       </div>
@@ -89,7 +93,7 @@ export const SubmissionTeamSelectStep: React.FC<
           <div
             key={team.id}
             className={`
-              p-4 border rounded-lg cursor-pointer transition-colors
+              p-4 border border-dashed rounded-lg cursor-pointer transition-all
               ${
                 team.hasSubmission
                   ? "opacity-50 cursor-not-allowed border-slate-200 bg-slate-50"
@@ -106,8 +110,8 @@ export const SubmissionTeamSelectStep: React.FC<
                   <Users className="h-5 w-5 text-slate-600" />
                 </div>
                 <div>
-                  <div className="font-medium">{team.name}</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="font-medium text-slate-900">{team.name}</div>
+                  <div className="text-sm text-slate-500">
                     Created {new Date(team.created_at).toLocaleDateString()}
                   </div>
                 </div>
@@ -123,17 +127,31 @@ export const SubmissionTeamSelectStep: React.FC<
             </div>
           </div>
         ))}
-      </div>
 
-      <div className="text-center pt-2">
-        <Button variant="outline" onClick={onCreateNew} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Create New Team
-        </Button>
+        <div
+          className="p-4 border border-dashed rounded-lg cursor-pointer transition-all border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+          onClick={onCreateNew}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                <Plus className="h-5 w-5 text-slate-600" />
+              </div>
+              <div>
+                <div className="font-medium text-slate-900">
+                  Create New Team
+                </div>
+                <div className="text-sm text-slate-500">
+                  Start a new team for this challenge
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {selectedTeamId && (
-        <div className="flex justify-end pt-4 border-t">
+        <div className="flex justify-end">
           <Button onClick={handleNext} size="lg">
             Continue with Team
           </Button>

@@ -4,7 +4,6 @@ import {
   varchar,
   uuid,
   integer,
-  boolean,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
