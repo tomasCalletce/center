@@ -14,16 +14,6 @@ export function MainOnboardingForm() {
     runId: string;
   } | null>(null);
 
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center py-6">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!user) return null;
-
   const onComplete = (triggerTask: {
     publicAccessToken: string;
     runId: string;
@@ -35,13 +25,20 @@ export function MainOnboardingForm() {
     setTriggerTask(null);
   };
 
-  const isOnboardingCompleted = user.publicMetadata.onboardingStatus === ONBOARDING_STATUS.COMPLETED;
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center py-6">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+  if (!user) return null;
 
   return (
     <div>
-      {!triggerTask && !isOnboardingCompleted && (
-        <UploadCV onComplete={onComplete} />
-      )}
+      {!triggerTask &&
+        user.publicMetadata.onboardingStatus !==
+          ONBOARDING_STATUS.COMPLETED && <UploadCV onComplete={onComplete} />}
       {triggerTask && (
         <ProcessCV
           publicAccessToken={triggerTask.publicAccessToken}

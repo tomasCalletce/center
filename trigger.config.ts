@@ -2,8 +2,8 @@ import { defineConfig } from "@trigger.dev/sdk/v3";
 import { aptGet } from "@trigger.dev/build/extensions/core";
 
 export default defineConfig({
-  // project: "proj_leqylnldixpsgxochiit",
-    project: "proj_hdbxripwvgojzugjobhx",
+  project: "proj_leqylnldixpsgxochiit",
+  //project: "proj_hdbxripwvgojzugjobhx",
 
   runtime: "node",
   logLevel: "log",
