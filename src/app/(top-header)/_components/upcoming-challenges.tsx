@@ -21,7 +21,7 @@ export const UpcomingChallenges = async () => {
 
   if (upcomingChallenges.length === 0) {
     return (
-      <div className="container mx-auto py-16">
+      <div className="container mx-auto">
         <div className="max-w-md mx-auto text-center space-y-8">
           <div className="w-20 h-20 mx-auto border border-dashed rounded-full flex items-center justify-center">
             <Calendar className="h-8 w-8 text-muted-foreground" />
@@ -40,7 +40,7 @@ export const UpcomingChallenges = async () => {
   }
 
   return (
-    <section className="container mx-auto py-6">
+    <section className="container mx-auto pt-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {upcomingChallenges.map((challenge) => {
           const now = new Date();
