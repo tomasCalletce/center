@@ -64,6 +64,27 @@ export const SubmissionTeamSelectStep: React.FC<
       </div>
       <ScrollArea className="h-[400px]">
         <div className="space-y-3 pr-4">
+          <div
+            className="p-4 border border-dashed rounded-lg cursor-pointer border-slate-200"
+            onClick={onCreateNew}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                  <Plus className="h-5 w-5 text-slate-600" />
+                </div>
+                <div>
+                  <div className="font-medium text-slate-900">
+                    Create New Team
+                  </div>
+                  <div className="text-sm text-slate-500">
+                    Start a new team for this challenge
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {userTeamsQuery.data?.map((team) => (
             <div
               key={team.id}
@@ -110,27 +131,6 @@ export const SubmissionTeamSelectStep: React.FC<
               </div>
             </div>
           ))}
-
-          <div
-            className="p-4 border border-dashed rounded-lg cursor-pointer border-slate-200"
-            onClick={onCreateNew}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                  <Plus className="h-5 w-5 text-slate-600" />
-                </div>
-                <div>
-                  <div className="font-medium text-slate-900">
-                    Create New Team
-                  </div>
-                  <div className="text-sm text-slate-500">
-                    Start a new team for this challenge
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </ScrollArea>
 
