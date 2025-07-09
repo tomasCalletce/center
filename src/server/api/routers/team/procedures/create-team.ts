@@ -21,7 +21,7 @@ export const createTeam = protectedProcedure
           name: input.name,
           max_members: 5,
         })
-        .returning({ id: teams.id });
+        .returning({ id: teams.id, name: teams.name });
 
       if (!newTeam) {
         throw new TRPCError({

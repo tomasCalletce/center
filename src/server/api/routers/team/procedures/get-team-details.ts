@@ -7,6 +7,7 @@ import { teamInvitations } from "~/server/db/schemas/team-invitations";
 import { users } from "~/server/db/schemas/users";
 import { TRPCError } from "@trpc/server";
 import { eq, and } from "drizzle-orm";
+import { clerkClient } from "~/server/api/auth";
 
 export const getTeamDetails = protectedProcedure
   .input(
@@ -49,11 +50,12 @@ export const getTeamDetails = protectedProcedure
       });
     }
 
-    const members = await dbSocket
+    const memberRecords = await dbSocket
       .select({
         id: teamMembers.id,
         role: teamMembers.role,
         joined_at: teamMembers.joined_at,
+        _clerk: teamMembers._clerk,
         user: {
           _clerk: users._clerk,
           display_name: users.display_name,
@@ -61,8 +63,38 @@ export const getTeamDetails = protectedProcedure
         },
       })
       .from(teamMembers)
-      .innerJoin(users, eq(teamMembers._clerk, users._clerk))
+      .leftJoin(users, eq(teamMembers._clerk, users._clerk))
       .where(eq(teamMembers._team, input.teamId));
+
+    const members = await Promise.all(
+      memberRecords.map(async (member) => {
+        if (!member.user?.display_name) {
+          try {
+            const clerkUser = await clerkClient.users.getUser(member._clerk);
+            return {
+              ...member,
+              user: {
+                ...member.user,
+                _clerk: member._clerk,
+                display_name: clerkUser.fullName || clerkUser.firstName || null,
+                current_title: member.user?.current_title || null,
+              },
+            };
+          } catch (error) {
+            return {
+              ...member,
+              user: {
+                ...member.user,
+                _clerk: member._clerk,
+                display_name: null,
+                current_title: member.user?.current_title || null,
+              },
+            };
+          }
+        }
+        return member;
+      })
+    );
 
     const pendingInvitations = await dbSocket
       .select({

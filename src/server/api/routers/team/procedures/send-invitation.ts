@@ -47,7 +47,13 @@ export const sendInvitation = protectedProcedure
           continue;
         }
 
-        const inviteeClerkId = clerkUsers.data[0].id;
+        const inviteeUser = clerkUsers.data[0];
+        if (!inviteeUser) {
+          errors.push(`No user found with email: ${email}`);
+          continue;
+        }
+
+        const inviteeClerkId = inviteeUser.id;
 
         const existingInvitation = await dbSocket
           .select()
@@ -96,7 +102,8 @@ export const sendInvitation = protectedProcedure
 
         results.push({ email, invitation: newInvitation });
       } catch (error) {
-        errors.push(`Failed to send invitation to ${email}: ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        errors.push(`Failed to send invitation to ${email}: ${errorMessage}`);
       }
     }
 

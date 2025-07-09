@@ -7,6 +7,7 @@ import { Users, Plus } from "lucide-react";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
+import { TeamManagementInline } from "~/components/team/team-management-inline";
 
 interface SubmissionTeamSelectStepProps {
   challengeId: string;
@@ -18,6 +19,7 @@ export const SubmissionTeamSelectStep: React.FC<
   SubmissionTeamSelectStepProps
 > = ({ challengeId, onNext, onCreateNew }) => {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
+  const [expandedTeamId, setExpandedTeamId] = useState<string | null>(null);
 
   const userTeamsQuery = api.team.getUserTeams.useQuery({ challengeId });
 
@@ -26,6 +28,10 @@ export const SubmissionTeamSelectStep: React.FC<
   ) => {
     if (team.hasSubmission) return;
     setSelectedTeamId(team.id);
+  };
+
+  const handleToggleTeamManagement = (teamId: string) => {
+    setExpandedTeamId(expandedTeamId === teamId ? null : teamId);
   };
 
   const handleNext = () => {
@@ -93,37 +99,50 @@ export const SubmissionTeamSelectStep: React.FC<
           <div
             key={team.id}
             className={`
-              p-4 border border-dashed rounded-lg cursor-pointer transition-all
+              border border-dashed rounded-lg transition-all
               ${
                 team.hasSubmission
-                  ? "opacity-50 cursor-not-allowed border-slate-200 bg-slate-50"
+                  ? "opacity-50 border-slate-200 bg-slate-50"
                   : selectedTeamId === team.id
                     ? "border-slate-900 bg-slate-50"
                     : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
               }
             `}
-            onClick={() => handleSelectTeam(team)}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                  <Users className="h-5 w-5 text-slate-600" />
-                </div>
-                <div>
-                  <div className="font-medium text-slate-900">{team.name}</div>
-                  <div className="text-sm text-slate-500">
-                    Created {new Date(team.created_at).toLocaleDateString()}
+            <div className="p-4">
+              <div className="flex items-center justify-between">
+                <div 
+                  className="flex items-center gap-3 flex-1 cursor-pointer"
+                  onClick={() => handleSelectTeam(team)}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                    <Users className="h-5 w-5 text-slate-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-slate-900">{team.name}</div>
+                    <div className="text-sm text-slate-500">
+                      {team.memberCount} member{team.memberCount !== 1 ? 's' : ''} • Created {new Date(team.created_at).toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
+                <div className="flex items-center gap-2">
+                  {selectedTeamId === team.id && (
+                    <Badge variant="default">Selected</Badge>
+                  )}
+                  {team.hasSubmission && (
+                    <Badge variant="secondary">Already Submitted</Badge>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                {selectedTeamId === team.id && (
-                  <Badge variant="default">Selected</Badge>
-                )}
-                {team.hasSubmission && (
-                  <Badge variant="secondary">Already Submitted</Badge>
-                )}
-              </div>
+            </div>
+            
+            <div className="px-4 pb-4">
+              <TeamManagementInline
+                teamId={team.id}
+                teamName={team.name}
+                isExpanded={expandedTeamId === team.id}
+                onToggle={() => handleToggleTeamManagement(team.id)}
+              />
             </div>
           </div>
         ))}

@@ -8,6 +8,7 @@ import { Plus, ArrowLeft } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
+import { TeamManagementInline } from "~/components/team/team-management-inline";
 
 interface SubmissionTeamCreateStepProps {
   challengeId: string;
@@ -21,21 +22,19 @@ export function SubmissionTeamCreateStep({
   onBack,
 }: SubmissionTeamCreateStepProps) {
   const [teamName, setTeamName] = useState("");
+  const [createdTeam, setCreatedTeam] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [isManagementExpanded, setIsManagementExpanded] = useState(false);
 
   const utils = api.useUtils();
 
   const createTeamMutation = api.team.createTeam.useMutation({
     onSuccess: (data) => {
       setTeamName("");
+      setCreatedTeam({ id: data.id, name: data.name });
       toast.success("Team created successfully!");
-
-      // Automatically proceed with the new team
-      onNext({
-        teamId: data.id,
-        teamName: data.name,
-        memberCount: 1,
-      });
-
       utils.team.getUserTeams.invalidate();
     },
     onError: (error) => {
@@ -55,11 +54,79 @@ export function SubmissionTeamCreateStep({
     });
   };
 
+  const handleProceedWithTeam = () => {
+    if (!createdTeam) return;
+    
+    onNext({
+      teamId: createdTeam.id,
+      teamName: createdTeam.name,
+      memberCount: 1,
+    });
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && teamName.trim()) {
       handleCreateTeam();
     }
   };
+
+  if (createdTeam) {
+    return (
+      <div className="space-y-6 max-w-xl mx-auto">
+        <div className="text-center pb-4 border-b border-dashed">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Team Created Successfully!
+          </h3>
+          <p className="text-sm text-slate-500">
+            Your team "{createdTeam.name}" is ready. You can invite members or continue with your submission.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto rounded-lg bg-green-100 flex items-center justify-center mb-4">
+              <Plus className="h-8 w-8 text-green-600" />
+            </div>
+            <div className="font-medium text-slate-900 mb-2">{createdTeam.name}</div>
+            <div className="text-sm text-slate-500">1 member (you)</div>
+          </div>
+
+          <div className="space-y-2">
+            <TeamManagementInline
+              teamId={createdTeam.id}
+              teamName={createdTeam.name}
+              isExpanded={isManagementExpanded}
+              onToggle={() => setIsManagementExpanded(!isManagementExpanded)}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center pt-6 border-t border-dashed">
+          <div className="flex items-center gap-4">
+            {onBack && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onBack}
+                className="cursor-pointer"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Teams
+              </Button>
+            )}
+            <div className="text-xs text-slate-500">Step 1 of 3 • Team Setup</div>
+          </div>
+          <Button
+            onClick={handleProceedWithTeam}
+            className="cursor-pointer px-6 shadow-lg"
+            size="lg"
+          >
+            Continue with Team
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-xl mx-auto">

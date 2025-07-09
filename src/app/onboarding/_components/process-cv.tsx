@@ -62,6 +62,9 @@ export const ProcessCV = ({
     accessToken: publicAccessToken,
     onComplete(run, err) {
       if (err) {
+        if (isCvValidationError(err.message)) {
+          return;
+        }
         toast.error(
           "Something went wrong processing your CV. Please try again."
         );
@@ -77,10 +80,15 @@ export const ProcessCV = ({
     setHasGameResults(results !== null);
   };
 
-  if (
-    error &&
-    error.message.includes("This document does not appear to be a CV")
-  ) {
+  const isCvValidationError = (errorMessage?: string) => {
+    if (!errorMessage) return false;
+    return errorMessage.includes("This document does not appear to be a CV") ||
+           errorMessage.includes("CV validation failed");
+  };
+
+  const currentError = error?.message || (run?.status === "FAILED" ? run?.error?.message : undefined);
+
+  if (isCvValidationError(currentError)) {
     return (
       <div className="w-md">
         <div className="mb-4">
