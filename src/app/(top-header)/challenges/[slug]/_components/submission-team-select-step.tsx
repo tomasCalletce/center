@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import { Users, Plus } from "lucide-react";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
@@ -61,75 +62,77 @@ export const SubmissionTeamSelectStep: React.FC<
           Choose from your existing teams or create a new one
         </p>
       </div>
-      <div className="space-y-3">
-        {userTeamsQuery.data?.map((team) => (
-          <div
-            key={team.id}
-            className={`
-              border border-dashed rounded-lg
-              ${
-                team.hasSubmission
-                  ? "opacity-50 border-slate-200 bg-slate-50"
-                  : selectedTeamId === team.id
-                    ? "border-slate-900 bg-slate-50"
-                    : "border-slate-200"
-              }
-            `}
-          >
-            <div className="p-4">
-              <div className="flex items-center justify-between">
-                <div
-                  className="flex items-center gap-3 flex-1 cursor-pointer"
-                  onClick={() => handleSelectTeam(team)}
-                >
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                    <Users className="h-5 w-5 text-slate-600" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-slate-900">
-                      {team.name}
+      <ScrollArea className="h-[400px]">
+        <div className="space-y-3 pr-4">
+          {userTeamsQuery.data?.map((team) => (
+            <div
+              key={team.id}
+              className={`
+                border border-dashed rounded-lg
+                ${
+                  team.hasSubmission
+                    ? "opacity-50 border-slate-200 bg-slate-50"
+                    : selectedTeamId === team.id
+                      ? "border-slate-900 bg-slate-50"
+                      : "border-slate-200"
+                }
+              `}
+            >
+              <div className="p-4">
+                <div className="flex items-center justify-between">
+                  <div
+                    className="flex items-center gap-3 flex-1 cursor-pointer"
+                    onClick={() => handleSelectTeam(team)}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                      <Users className="h-5 w-5 text-slate-600" />
                     </div>
-                    <div className="text-sm text-slate-500">
-                      {team.memberCount} member
-                      {team.memberCount !== 1 ? "s" : ""} • Created{" "}
-                      {new Date(team.created_at).toLocaleDateString()}
+                    <div>
+                      <div className="font-medium text-slate-900">
+                        {team.name}
+                      </div>
+                      <div className="text-sm text-slate-500">
+                        {team.memberCount} member
+                        {team.memberCount !== 1 ? "s" : ""} • Created{" "}
+                        {new Date(team.created_at).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {selectedTeamId === team.id && (
-                    <Badge variant="default">Selected</Badge>
-                  )}
-                  {team.hasSubmission && (
-                    <Badge variant="secondary">Already Submitted</Badge>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {selectedTeamId === team.id && (
+                      <Badge variant="default">Selected</Badge>
+                    )}
+                    {team.hasSubmission && (
+                      <Badge variant="secondary">Already Submitted</Badge>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        <div
-          className="p-4 border border-dashed rounded-lg cursor-pointer border-slate-200"
-          onClick={onCreateNew}
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                <Plus className="h-5 w-5 text-slate-600" />
-              </div>
-              <div>
-                <div className="font-medium text-slate-900">
-                  Create New Team
+          <div
+            className="p-4 border border-dashed rounded-lg cursor-pointer border-slate-200"
+            onClick={onCreateNew}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                  <Plus className="h-5 w-5 text-slate-600" />
                 </div>
-                <div className="text-sm text-slate-500">
-                  Start a new team for this challenge
+                <div>
+                  <div className="font-medium text-slate-900">
+                    Create New Team
+                  </div>
+                  <div className="text-sm text-slate-500">
+                    Start a new team for this challenge
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </ScrollArea>
 
       {selectedTeamId && (
         <div className="flex justify-end">
