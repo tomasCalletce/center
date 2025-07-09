@@ -27,7 +27,7 @@ import { auth } from "@clerk/nextjs/server";
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     ...opts,
-    auth: await auth(),
+   auth: await auth(), 
   };
 };
 

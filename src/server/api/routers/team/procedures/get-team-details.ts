@@ -6,7 +6,7 @@ import { teamMembers } from "~/server/db/schemas/team-members";
 import { teamInvitations } from "~/server/db/schemas/team-invitations";
 import { users } from "~/server/db/schemas/users";
 import { TRPCError } from "@trpc/server";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const getTeamDetails = protectedProcedure
   .input(
@@ -15,28 +15,36 @@ export const getTeamDetails = protectedProcedure
     })
   )
   .query(async ({ input, ctx }) => {
-    const results = await db
+    const [existingTeam] = await db
       .select({
-        teamId: teams.id,
-        teamName: teams.name,
-        memberRole: teamMembers.role,
-        memberClerk: teamMembers._clerk,
-        memberDisplayName: users.display_name,
-        memberCurrentTitle: users.current_title,
-        memberJoinedAt: teamMembers.joined_at,
+        id: teams.id,
+        name: teams.name,
+        max_members: teams.max_members,
+        created_at: teams.created_at,
       })
       .from(teams)
-      .innerJoin(teamMembers, eq(teams.id, teamMembers._team))
-      .leftJoin(users, eq(teamMembers._clerk, users._clerk))
       .where(eq(teams.id, input._team));
-    if (results.length === 0) {
+    if (!existingTeam) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Team not found",
       });
     }
 
-    const userMember = results.find((r) => r.memberClerk === ctx.auth.userId);
+    const teammates = await db
+      .select({
+        _clerk: teamMembers._clerk,
+        role: teamMembers.role,
+        joined_at: teamMembers.joined_at,
+        display_name: users.display_name,
+        current_title: users.current_title,
+      })
+      .from(teamMembers)
+      .leftJoin(users, eq(teamMembers._clerk, users._clerk))
+      .where(eq(teamMembers._team, input._team));
+    const userMember = teammates.find(
+      (member) => member._clerk === ctx.auth.userId
+    );
     if (!userMember) {
       throw new TRPCError({
         code: "FORBIDDEN",
@@ -44,16 +52,17 @@ export const getTeamDetails = protectedProcedure
       });
     }
 
+    const pendingInvitations = await db
+      .select({
+        id: teamInvitations.id,
+        created_at: teamInvitations.created_at,
+      })
+      .from(teamInvitations)
+      .where(eq(teamInvitations._team, input._team));
+
     return {
-      id: results[0]?.teamId,
-      name: results[0]?.teamName,
-      members: results.map((r) => ({
-        _clerk: r.memberClerk,
-        role: r.memberRole,
-        joined_at: r.memberJoinedAt,
-        display_name: r.memberDisplayName,
-        current_title: r.memberCurrentTitle,
-      })),
-      userRole: userMember.memberRole,
+      details: existingTeam,
+      teammates,
+      pendingInvitations,
     };
   });
