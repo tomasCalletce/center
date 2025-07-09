@@ -8,7 +8,7 @@ import { Plus, ArrowLeft } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
-import { TeamManagementInline } from "./team-management-inline";
+import { TeamManagementInline } from "~/app/(top-header)/challenges/[slug]/_components/team-management-inline";
 
 interface SubmissionTeamCreateStepProps {
   challengeId: string;
@@ -62,12 +62,6 @@ export function SubmissionTeamCreateStep({
       teamName: createdTeam.name,
       memberCount: 1,
     });
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && teamName.trim()) {
-      handleCreateTeam();
-    }
   };
 
   if (createdTeam) {
@@ -157,8 +151,6 @@ export function SubmissionTeamCreateStep({
             placeholder="Enter team name"
             value={teamName}
             onChange={(e) => setTeamName(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={createTeamMutation.isPending}
           />
         </div>
 

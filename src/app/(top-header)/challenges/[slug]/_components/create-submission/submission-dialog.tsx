@@ -17,7 +17,7 @@ import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_com
 import {
   SubmissionTeamStep,
   type TeamData,
-} from "~/app/(top-header)/challenges/[slug]/_components/submission-team-step";
+} from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-team-step";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { submissionVisibilityValues } from "~/server/db/schemas/submissions";
 import { z } from "zod";

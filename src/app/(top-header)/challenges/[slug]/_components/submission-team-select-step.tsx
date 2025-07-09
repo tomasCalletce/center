@@ -6,7 +6,7 @@ import { Badge } from "~/components/ui/badge";
 import { Users, Plus } from "lucide-react";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
-import type { TeamData } from "./submission-team-step";
+import type { TeamData } from "./create-submission/submission-team-step";
 
 interface SubmissionTeamSelectStepProps {
   challengeId: string;
@@ -19,7 +19,9 @@ export const SubmissionTeamSelectStep: React.FC<
 > = ({ challengeId, onNext, onCreateNew }) => {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
 
-  const userTeamsQuery = api.team.getUserTeams.useQuery({ challengeId });
+  const userTeamsQuery = api.team.getUserTeams.useQuery({
+    _challenge: challengeId,
+  });
 
   const handleSelectTeam = (
     team: RouterOutputs["team"]["getUserTeams"][number]
@@ -49,34 +51,6 @@ export const SubmissionTeamSelectStep: React.FC<
     });
   };
 
-  if (!userTeamsQuery.data || userTeamsQuery.data.length === 0) {
-    return (
-      <div className="space-y-6">
-        <div className="text-center pb-4">
-          <h3 className="text-lg font-semibold text-slate-900">
-            Create Your First Team
-          </h3>
-          <p className="text-sm text-slate-500">
-            You don't have any teams yet. Create a team to participate in this
-            challenge.
-          </p>
-        </div>
-
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 mx-auto rounded-lg bg-slate-100 flex items-center justify-center">
-            <Users className="h-8 w-8 text-slate-600" />
-          </div>
-          <div className="flex justify-center">
-            <Button onClick={onCreateNew} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Create Team
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div>
@@ -87,19 +61,18 @@ export const SubmissionTeamSelectStep: React.FC<
           Choose from your existing teams or create a new one
         </p>
       </div>
-
       <div className="space-y-3">
-        {userTeamsQuery.data.map((team) => (
+        {userTeamsQuery.data?.map((team) => (
           <div
             key={team.id}
             className={`
-              border border-dashed rounded-lg transition-all
+              border border-dashed rounded-lg
               ${
                 team.hasSubmission
                   ? "opacity-50 border-slate-200 bg-slate-50"
                   : selectedTeamId === team.id
                     ? "border-slate-900 bg-slate-50"
-                    : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                    : "border-slate-200"
               }
             `}
           >
@@ -137,7 +110,7 @@ export const SubmissionTeamSelectStep: React.FC<
         ))}
 
         <div
-          className="p-4 border border-dashed rounded-lg cursor-pointer transition-all border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+          className="p-4 border border-dashed rounded-lg cursor-pointer border-slate-200"
           onClick={onCreateNew}
         >
           <div className="flex items-center justify-between">

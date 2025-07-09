@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SubmissionTeamCreateStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-team-create-step";
+import { SubmissionTeamCreateStep } from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-team-create-step";
 import { SubmissionTeamSelectStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-team-select-step";
 
 export type TeamData = {

@@ -9,7 +9,7 @@ import { eq, and, count } from "drizzle-orm";
 export const getUserTeams = protectedProcedure
   .input(
     z.object({
-      challengeId: z.string().uuid(),
+      _challenge: z.string().uuid(),
     })
   )
   .query(async ({ input, ctx }) => {
@@ -28,11 +28,17 @@ export const getUserTeams = protectedProcedure
         submissions,
         and(
           eq(submissions._team, teams.id),
-          eq(submissions._challenge, input.challengeId)
+          eq(submissions._challenge, input._challenge)
         )
       )
       .where(eq(teamMembers._clerk, ctx.auth.userId))
-      .groupBy(teams.id, teams.name, teams.max_members, teams.created_at, submissions.id);
+      .groupBy(
+        teams.id,
+        teams.name,
+        teams.max_members,
+        teams.created_at,
+        submissions.id
+      );
 
     return userTeams.map((team) => ({
       id: team.id,
