@@ -10,6 +10,11 @@ export type TeamData = {
   memberCount: number;
 };
 
+enum TEAM_STEP {
+  SELECT = "select",
+  CREATE = "create",
+}
+
 interface SubmissionTeamStepProps {
   challengeId: string;
   onNext: (data: TeamData) => void;
@@ -20,31 +25,32 @@ export function SubmissionTeamStep({
   challengeId,
   onNext,
 }: SubmissionTeamStepProps) {
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [step, setStep] = useState(TEAM_STEP.SELECT);
 
   const handleCreateNew = () => {
-    setShowCreateForm(true);
+    setStep(TEAM_STEP.CREATE);
   };
 
   const handleBackToSelect = () => {
-    setShowCreateForm(false);
+    setStep(TEAM_STEP.SELECT);
   };
 
-  if (showCreateForm) {
-    return (
-      <SubmissionTeamCreateStep
-        challengeId={challengeId}
-        onNext={onNext}
-        onBack={handleBackToSelect}
-      />
-    );
-  }
-
   return (
-    <SubmissionTeamSelectStep
-      challengeId={challengeId}
-      onNext={onNext}
-      onCreateNew={handleCreateNew}
-    />
+    <>
+      {step === TEAM_STEP.SELECT && (
+        <SubmissionTeamSelectStep
+          challengeId={challengeId}
+          onNext={onNext}
+          onCreateNew={handleCreateNew}
+        />
+      )}
+      {step === TEAM_STEP.CREATE && (
+        <SubmissionTeamCreateStep
+          challengeId={challengeId}
+          onNext={onNext}
+          onBack={handleBackToSelect}
+        />
+      )}
+    </>
   );
 }

@@ -69,17 +69,8 @@ export function SubmissionDialog({
     },
   });
 
-  const resetDialogState = () => {
-    setStep(SUBMISSION_STEPS.TEAM);
-    setTeamData(null);
-    setDetailsData(null);
-  };
-
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
-    if (!newOpen) {
-      resetDialogState();
-    }
   };
 
   const handleTeamSubmit = (data: TeamData) => {
