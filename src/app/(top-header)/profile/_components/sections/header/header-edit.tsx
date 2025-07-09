@@ -17,6 +17,7 @@ export const ProfileHeaderEdit = ({
         <div>
           <label className="text-sm font-medium mb-2 block">Display Name</label>
           <Input
+            disabled={true}
             value={user.display_name || "ACC Competitor"}
             onChange={(e) =>
               onChange({ ...user, display_name: e.target.value })
