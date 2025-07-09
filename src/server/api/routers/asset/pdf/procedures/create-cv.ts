@@ -55,7 +55,7 @@ export const createCV = protectedProcedure
         tags: [ctx.auth.userId],
       }
     );
-    if (!triggerTask) {
+    if (!triggerTask.id) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to trigger main onboarding task.",
