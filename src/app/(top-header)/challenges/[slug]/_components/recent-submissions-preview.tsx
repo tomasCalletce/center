@@ -1,10 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { api } from "~/trpc/react";
 import { Badge } from "~/components/ui/badge";
 import { Clock, Users, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import Image from "next/image";
 import { useIsMobile } from "~/hooks/use-mobile";
 
 interface RecentSubmissionsPreviewProps {
@@ -21,11 +21,10 @@ export const RecentSubmissionsPreview: React.FC<
       limit: 5,
     });
 
+  if (isMobile) return null;
+
   if (!recentSubmissionsQuery.data || recentSubmissionsQuery.data.length < 5)
     return null;
-
-  // Hide on mobile devices
-  if (isMobile) return null;
 
   return (
     <div className="space-y-4">

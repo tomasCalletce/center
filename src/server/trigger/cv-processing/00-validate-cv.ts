@@ -1,6 +1,4 @@
-import fs from "fs";
 import { logger, schemaTask } from "@trigger.dev/sdk/v3";
-import { execSync } from "child_process";
 import { z } from "zod";
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
@@ -8,7 +6,7 @@ import { generateObject } from "ai";
 const cvValidationSchema = z.object({
   isCV: z.boolean(),
   confidence: z.number().min(0).max(1),
-  reason: z.string()
+  reason: z.string(),
 });
 
 export const validateCvTask = schemaTask({
@@ -29,34 +27,25 @@ export const validateCvTask = schemaTask({
       userId: userId,
     });
 
-    const pdfPath = `/tmp/${cv.id}.pdf`;
-    const outputDir = `/tmp/${cv.id}`;
-    const firstPagePath = `${outputDir}/page-1.png`;
+    const response = await fetch(cv.url);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch CV from URL: ${response.status} ${response.statusText}`
+      );
+    }
+    const pdfBuffer = await response.arrayBuffer();
 
-    try {
-      execSync(`curl -s -o ${pdfPath} ${cv.url}`);
-      fs.mkdirSync(outputDir, { recursive: true });
-      execSync(`mutool convert -o ${outputDir}/page-%d.png ${pdfPath} 1`);
-
-      if (!fs.existsSync(firstPagePath)) {
-        throw new Error("Failed to extract first page from PDF");
-      }
-
-      const imageBuffer = fs.readFileSync(firstPagePath);
-      const base64Image = imageBuffer.toString('base64');
-      const dataUrl = `data:image/png;base64,${base64Image}`;
-
-      const { object } = await generateObject({
-        model: openai("gpt-4o-mini"),
-        schema: cvValidationSchema,
-        temperature: 0.1,
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: `Analyze this document and determine if it's a legitimate CV/resume. 
+    const { object } = await generateObject({
+      model: openai("gpt-4o-mini", { structuredOutputs: true }),
+      schema: cvValidationSchema,
+      temperature: 0.1,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Analyze this document and determine if it's a legitimate CV/resume. 
 
 A legitimate CV/resume typically contains:
 - Personal information (real name, contact details)
@@ -89,43 +78,36 @@ Return your analysis with:
 - confidence: 0.0 to 1.0 representing how confident you are
 - reason: Brief explanation focusing on why it's real or what red flags you found
 
-Be extremely strict - when in doubt, reject it. Only accept CVs that appear to be genuine professional documents.`
-              },
-              {
-                type: "image",
-                image: dataUrl
-              }
-            ]
-          }
-        ]
-      });
+Be extremely strict - when in doubt, reject it. Only accept CVs that appear to be genuine professional documents.`,
+            },
+            {
+              type: "file",
+              data: new Uint8Array(pdfBuffer),
+              mimeType: "application/pdf",
+              filename: `${cv.id}.pdf`,
+            },
+          ],
+        },
+      ],
+    });
 
-      fs.rmSync(outputDir, { recursive: true, force: true });
-      fs.unlinkSync(pdfPath);
-
-      if (!object.isCV) {
-        throw new Error(`This document does not appear to be a CV or resume. ${object.reason}. Please upload a valid CV/resume document.`);
-      }
-
-      logger.log("CV validation successful", {
-        cvId: cv.id,
-        userId: userId,
-        confidence: object.confidence,
-        reason: object.reason
-      });
-
-      return {
-        isValid: true,
-        confidence: object.confidence,
-        reason: object.reason
-      };
-
-    } catch (error) {
-      fs.rmSync(outputDir, { recursive: true, force: true });
-      if (fs.existsSync(pdfPath)) {
-        fs.unlinkSync(pdfPath);
-      }
-      throw error;
+    if (!object.isCV) {
+      throw new Error(
+        `This document does not appear to be a CV or resume. ${object.reason}. Please upload a valid CV/resume document.`
+      );
     }
+
+    logger.log("CV validation successful", {
+      cvId: cv.id,
+      userId: userId,
+      confidence: object.confidence,
+      reason: object.reason,
+    });
+
+    return {
+      isValid: true,
+      confidence: object.confidence,
+      reason: object.reason,
+    };
   },
-}); 
+});

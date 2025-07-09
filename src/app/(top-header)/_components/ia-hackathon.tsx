@@ -24,7 +24,7 @@ export const AiHackathon = () => {
                   </span>
                 </div>
 
-                <h2 className="text-3xl font-bold tracking-tight  bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
+                <h2 className="text-2xl md:text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
                   From the creators of ai-hackathon.co
                 </h2>
               </div>
@@ -66,7 +66,7 @@ export const AiHackathon = () => {
                   Event Highlights
                 </span>
               </div>
-              <h3 className="text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
+              <h3 className="text-2xl md:text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
                 AI Hackathon Recap
               </h3>
               <p className="text-muted-foreground max-w-2xl">

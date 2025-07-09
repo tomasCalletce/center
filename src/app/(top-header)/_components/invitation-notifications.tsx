@@ -3,23 +3,22 @@
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Bell, Check, X, Users } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
+import { format } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { teamInvitationStatusValues } from "~/server/db/schemas/team-invitations";
 
-export function InvitationNotifications() {
+export const InvitationNotifications: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const utils = api.useUtils();
 
   const invitationsQuery = api.team.getInvitations.useQuery(undefined, {
     refetchInterval: 5000,
@@ -29,37 +28,37 @@ export function InvitationNotifications() {
   const respondToInvitationMutation = api.team.respondToInvitation.useMutation({
     onSuccess: () => {
       toast.success("Invitation response sent!");
-      utils.team.getInvitations.invalidate();
+      invitationsQuery.refetch();
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: () => {
+      toast.error("Failed to respond to invitation");
     },
   });
 
   const handleAcceptInvitation = (invitationId: string) => {
     respondToInvitationMutation.mutate({
-      invitationId,
-      response: "ACCEPTED",
+      _invitation: invitationId,
+      response: teamInvitationStatusValues.ACCEPTED,
     });
   };
 
   const handleDeclineInvitation = (invitationId: string) => {
     respondToInvitationMutation.mutate({
-      invitationId,
-      response: "DECLINED",
+      _invitation: invitationId,
+      response: teamInvitationStatusValues.DECLINED,
     });
   };
 
-  const pendingInvitations = invitationsQuery.data || [];
+  if (!invitationsQuery.data) return null;
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="relative">
           <Bell className="h-4 w-4" />
-          {pendingInvitations.length > 0 && (
+          {invitationsQuery.data.length > 0 && (
             <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
-              {pendingInvitations.length}
+              {invitationsQuery.data?.length}
             </Badge>
           )}
         </Button>
@@ -70,21 +69,21 @@ export function InvitationNotifications() {
           Team Invitations
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
-        {pendingInvitations.length === 0 ? (
+
+        {invitationsQuery.data.length === 0 ? (
           <div className="p-4 text-center text-muted-foreground">
             No pending invitations
           </div>
         ) : (
           <div className="max-h-96 overflow-y-auto">
-            {pendingInvitations.map((invitation) => (
+            {invitationsQuery.data.map((invitation) => (
               <div key={invitation.id} className="p-4 border-b last:border-b-0">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
                         <AvatarFallback>
-                          {invitation.inviter.display_name?.charAt(0) || "?"}
+                          {invitation.inviter.display_name?.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
@@ -97,20 +96,21 @@ export function InvitationNotifications() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-sm font-medium">
                     {invitation.team.name}
                   </div>
-                  
+
                   {invitation.message && (
                     <div className="text-sm text-muted-foreground p-2 bg-gray-50 rounded">
                       {invitation.message}
                     </div>
                   )}
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
-                      Expires {new Date(invitation.expires_at).toLocaleDateString()}
+                      Expires{" "}
+                      {format(new Date(invitation.expires_at), "MMM d, yyyy")}
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -140,4 +140,4 @@ export function InvitationNotifications() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-} 
+};

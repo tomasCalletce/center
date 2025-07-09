@@ -16,7 +16,7 @@ export const Companies = () => {
                 <div className="h-1 w-8 bg-slate-900 rounded-full" />
               </div>
 
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+              <h2 className="text-2xl md:text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
                 World class talent for world class startups
               </h2>
             </div>

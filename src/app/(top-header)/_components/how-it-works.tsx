@@ -5,7 +5,7 @@ export const HowItWorks = () => {
     <section id="how-it-works">
       <div className="container border-y py-8 md:py-12 border-dashed mx-auto">
         <div className="max-w-6xl space-y-6 mx-auto">
-          <h2 className="text-3xl font-medium">
+          <h2 className="text-2xl md:text-3xl font-medium tracking-tight">
             How skill-based hiring works?
           </h2>
 

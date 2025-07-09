@@ -5,12 +5,17 @@ import { teamInvitations } from "~/server/db/schemas/team-invitations";
 import { teamMembers } from "~/server/db/schemas/team-members";
 import { TRPCError } from "@trpc/server";
 import { eq, and } from "drizzle-orm";
+import { teamInvitationStatusValues } from "~/server/db/schemas/team-invitations";
+import { teamMemberRoleValues } from "~/server/db/schemas/team-members";
 
 export const respondToInvitation = protectedProcedure
   .input(
     z.object({
-      invitationId: z.string().uuid(),
-      response: z.enum(["ACCEPTED", "DECLINED"]),
+      _invitation: z.string().uuid(),
+      response: z.enum([
+        teamInvitationStatusValues.ACCEPTED,
+        teamInvitationStatusValues.DECLINED,
+      ]),
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -19,12 +24,11 @@ export const respondToInvitation = protectedProcedure
       .from(teamInvitations)
       .where(
         and(
-          eq(teamInvitations.id, input.invitationId),
+          eq(teamInvitations.id, input._invitation),
           eq(teamInvitations._invitee, ctx.auth.userId),
-          eq(teamInvitations.status, "PENDING")
+          eq(teamInvitations.status, teamInvitationStatusValues.PENDING)
         )
       );
-
     if (!invitation) {
       throw new TRPCError({
         code: "NOT_FOUND",
@@ -35,8 +39,8 @@ export const respondToInvitation = protectedProcedure
     if (new Date() > invitation.expires_at) {
       await dbSocket
         .update(teamInvitations)
-        .set({ status: "EXPIRED" })
-        .where(eq(teamInvitations.id, input.invitationId));
+        .set({ status: teamInvitationStatusValues.EXPIRED })
+        .where(eq(teamInvitations.id, input._invitation));
 
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -51,18 +55,34 @@ export const respondToInvitation = protectedProcedure
           status: input.response,
           responded_at: new Date(),
         })
-        .where(eq(teamInvitations.id, input.invitationId))
-        .returning();
+        .where(eq(teamInvitations.id, input._invitation))
+        .returning({
+          id: teamInvitations.id,
+        });
+      if (!updatedInvitation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invitation not updated",
+        });
+      }
 
-      if (input.response === "ACCEPTED") {
+      if (input.response === teamInvitationStatusValues.ACCEPTED) {
         const [newTeamMember] = await tx
           .insert(teamMembers)
           .values({
             _team: invitation._team,
             _clerk: ctx.auth.userId,
-            role: "MEMBER",
+            role: teamMemberRoleValues.MEMBER,
           })
-          .returning();
+          .returning({
+            id: teamMembers.id,
+          });
+        if (!newTeamMember) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Team member not created",
+          });
+        }
 
         return { invitation: updatedInvitation, teamMember: newTeamMember };
       }
@@ -71,4 +91,4 @@ export const respondToInvitation = protectedProcedure
     });
 
     return result;
-  }); 
+  });

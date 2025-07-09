@@ -14,7 +14,10 @@ import { api } from "~/trpc/react";
 import { SubmissionMarkdownStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-markdown-step";
 import { SubmissionResultStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-result-step";
 import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-details-step";
-import { SubmissionTeamStep, type TeamData } from "~/app/(top-header)/challenges/[slug]/_components/submission-team-step";
+import {
+  SubmissionTeamStep,
+  type TeamData,
+} from "~/app/(top-header)/challenges/[slug]/_components/submission-team-step";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { submissionVisibilityValues } from "~/server/db/schemas/submissions";
 import { z } from "zod";
@@ -58,32 +61,14 @@ export function SubmissionDialog({
 
   const utils = api.useUtils();
 
-  const userSubmissionQuery = api.submission.getUserSubmission.useQuery(
-    { challengeId: _challenge },
-    { enabled: open }
-  );
-
   const userTeamsQuery = api.team.getUserTeams.useQuery(
     { challengeId: _challenge },
     { enabled: open }
   );
 
-  const isEditMode = !!userSubmissionQuery.data;
-
   const createMutation = api.submission.create.useMutation({
     onSuccess: () => {
       setStep(SUBMISSION_STEPS.SUCCESS);
-      utils.submission.getUserSubmission.invalidate({ challengeId: _challenge });
-    },
-    onError: () => {
-      setStep(SUBMISSION_STEPS.ERROR);
-    },
-  });
-
-  const updateMutation = api.submission.update.useMutation({
-    onSuccess: () => {
-      setStep(SUBMISSION_STEPS.SUCCESS);
-      utils.submission.getUserSubmission.invalidate({ challengeId: _challenge });
     },
     onError: () => {
       setStep(SUBMISSION_STEPS.ERROR);
@@ -91,12 +76,8 @@ export function SubmissionDialog({
   });
 
   const resetDialogState = () => {
-    if (userTeamsQuery.data && userTeamsQuery.data.length > 0 && !isEditMode) {
-      setStep(SUBMISSION_STEPS.DETAILS);
-    } else {
-      setStep(SUBMISSION_STEPS.TEAM);
-      setTeamData(null);
-    }
+    setStep(SUBMISSION_STEPS.TEAM);
+    setTeamData(null);
     setDetailsData(null);
   };
 
@@ -107,34 +88,6 @@ export function SubmissionDialog({
     }
   };
 
-  useEffect(() => {
-    if (isEditMode && userSubmissionQuery.data && !detailsData) {
-      const submission = userSubmissionQuery.data;
-      setDetailsData({
-        title: submission.title,
-        demo_url: submission.demo_url,
-        repository_url: submission.repository_url,
-        image: {
-          alt: submission.logo_image?.alt || "",
-          url: submission.logo_image?.url || "",
-          pathname: submission.logo_image?.pathname || "",
-        },
-      });
-    }
-  }, [isEditMode, userSubmissionQuery.data, detailsData]);
-
-  useEffect(() => {
-    if (open && userTeamsQuery.data && userTeamsQuery.data.length > 0 && !teamData) {
-      const existingTeam = userTeamsQuery.data[0];
-      if (existingTeam) {
-        setTeamData({
-          teamId: existingTeam.id,
-          teamName: existingTeam.name,
-          memberCount: 1,
-        });
-      }
-    }
-  }, [open, userTeamsQuery.data, teamData, isEditMode]);
 
   const handleTeamSubmit = (data: TeamData) => {
     setTeamData(data);
@@ -171,14 +124,7 @@ export function SubmissionDialog({
       },
     };
 
-    if (isEditMode && userSubmissionQuery.data) {
-      updateMutation.mutate({
-        ...submissionData,
-        id: userSubmissionQuery.data.id,
-      });
-    } else {
-      createMutation.mutate(submissionData);
-    }
+    createMutation.mutate(submissionData);
   };
 
   const handleBack = () => {
@@ -205,31 +151,34 @@ export function SubmissionDialog({
     }
   };
 
-  const initialMarkdownData = isEditMode && userSubmissionQuery.data 
-    ? { markdown: userSubmissionQuery.data.markdown || "" }
-    : undefined;
-
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="!max-w-[1100px] min-h-[700px]">
         <DialogHeader>
-          <DialogTitle>
-            {isEditMode ? "Edit Your Submission" : "Submit Your Build"}
-          </DialogTitle>
+          <DialogTitle>Submit Your Build</DialogTitle>
           <DialogDescription>
-            {isEditMode 
-              ? "Update your project submission for this challenge."
-              : "Submit your project for this challenge."
-            }
+            Submit your project for this challenge.
           </DialogDescription>
           <div className="relative">
             <div className="flex items-center justify-between max-w-xs mx-auto">
               {[
                 { num: 1, label: "Team", icon: <Users className="w-5 h-5" /> },
-                { num: 2, label: "Details", icon: <FileText className="w-5 h-5" /> },
-                { num: 3, label: "Description", icon: <Clipboard className="w-5 h-5" /> },
-                { num: 4, label: isEditMode ? "Update" : "Submit", icon: <Rocket className="w-5 h-5" /> },
+                {
+                  num: 2,
+                  label: "Details",
+                  icon: <FileText className="w-5 h-5" />,
+                },
+                {
+                  num: 3,
+                  label: "Description",
+                  icon: <Clipboard className="w-5 h-5" />,
+                },
+                {
+                  num: 4,
+                  label: "Submit",
+                  icon: <Rocket className="w-5 h-5" />,
+                },
               ].map((step) => (
                 <div
                   key={step.num}
@@ -243,8 +192,8 @@ export function SubmissionDialog({
                         step.num < getStepNumber()
                           ? "bg-slate-900 border-slate-900 text-white shadow-lg scale-105"
                           : step.num === getStepNumber()
-                          ? "bg-slate-900 border-slate-900 text-white shadow-lg scale-105 ring-4 ring-slate-900/20"
-                          : "bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-300"
+                            ? "bg-slate-900 border-slate-900 text-white shadow-lg scale-105 ring-4 ring-slate-900/20"
+                            : "bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-300"
                       }
                     `}
                   >
@@ -252,8 +201,8 @@ export function SubmissionDialog({
                       {step.num < getStepNumber()
                         ? "✓"
                         : step.num === getStepNumber()
-                        ? step.icon
-                        : step.num}
+                          ? step.icon
+                          : step.num}
                     </div>
                   </div>
                   <div
@@ -279,10 +228,10 @@ export function SubmissionDialog({
                       getStepNumber() === 1
                         ? "w-0"
                         : getStepNumber() === 2
-                        ? "w-1/3"
-                        : getStepNumber() === 3
-                        ? "w-2/3"
-                        : "w-full"
+                          ? "w-1/3"
+                          : getStepNumber() === 3
+                            ? "w-2/3"
+                            : "w-full"
                     }
                   `}
                 />
@@ -295,11 +244,10 @@ export function SubmissionDialog({
             <SubmissionTeamStep
               challengeId={_challenge}
               onNext={handleTeamSubmit}
-              initialData={teamData ?? undefined}
             />
           )}
           {step === SUBMISSION_STEPS.DETAILS && (
-            <SubmissionDetailsStep 
+            <SubmissionDetailsStep
               handleOnSubmit={handleDetailsSubmit}
               initialData={detailsData}
               onBack={handleBack}
@@ -309,8 +257,7 @@ export function SubmissionDialog({
             <SubmissionMarkdownStep
               handleOnSubmit={handleMarkdownSubmit}
               onBack={handleBack}
-              isLoading={createMutation.isPending || updateMutation.isPending}
-              initialData={initialMarkdownData}
+              isLoading={createMutation.isPending}
             />
           )}
           {(step === SUBMISSION_STEPS.SUCCESS ||
