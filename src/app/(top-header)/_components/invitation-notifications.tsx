@@ -17,6 +17,75 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { teamInvitationStatusValues } from "~/server/db/schemas/team-invitations";
 
+const AcceptButton: React.FC<{
+  invitationId: string;
+}> = ({ invitationId }) => {
+  const trpcUtils = api.useUtils();
+  const acceptMutation = api.team.respondToInvitation.useMutation({
+    onSuccess: () => {
+      toast.success("Invitation accepted!");
+      trpcUtils.team.getInvitations.invalidate();
+    },
+    onError: () => {
+      toast.error("Failed to accept invitation");
+    },
+  });
+
+  const handleAccept = () => {
+    acceptMutation.mutate({
+      _invitation: invitationId,
+      response: teamInvitationStatusValues.ACCEPTED,
+    });
+  };
+
+  return (
+    <Button
+      size="sm"
+      onClick={handleAccept}
+      disabled={acceptMutation.isPending}
+      isLoading={acceptMutation.isPending}
+    >
+      Accept
+      <Check className="h-3 w-3" />
+    </Button>
+  );
+};
+
+const DeclineButton: React.FC<{
+  invitationId: string;
+}> = ({ invitationId }) => {
+  const trpcUtils = api.useUtils();
+  const declineMutation = api.team.respondToInvitation.useMutation({
+    onSuccess: () => {
+      toast.success("Invitation declined!");
+      trpcUtils.team.getInvitations.invalidate();
+    },
+    onError: () => {
+      toast.error("Failed to decline invitation");
+    },
+  });
+
+  const handleDecline = () => {
+    declineMutation.mutate({
+      _invitation: invitationId,
+      response: teamInvitationStatusValues.DECLINED,
+    });
+  };
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      onClick={handleDecline}
+      disabled={declineMutation.isPending}
+      isLoading={declineMutation.isPending}
+    >
+      Decline
+      <X className="h-3 w-3 mr-1" />
+    </Button>
+  );
+};
+
 export const InvitationNotifications: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,30 +93,6 @@ export const InvitationNotifications: React.FC = () => {
     refetchInterval: 5000,
     refetchOnWindowFocus: true,
   });
-
-  const respondToInvitationMutation = api.team.respondToInvitation.useMutation({
-    onSuccess: () => {
-      toast.success("Invitation response sent!");
-      invitationsQuery.refetch();
-    },
-    onError: () => {
-      toast.error("Failed to respond to invitation");
-    },
-  });
-
-  const handleAcceptInvitation = (invitationId: string) => {
-    respondToInvitationMutation.mutate({
-      _invitation: invitationId,
-      response: teamInvitationStatusValues.ACCEPTED,
-    });
-  };
-
-  const handleDeclineInvitation = (invitationId: string) => {
-    respondToInvitationMutation.mutate({
-      _invitation: invitationId,
-      response: teamInvitationStatusValues.DECLINED,
-    });
-  };
 
   if (!invitationsQuery.data) return null;
 
@@ -101,35 +146,13 @@ export const InvitationNotifications: React.FC = () => {
                     {invitation.team.name}
                   </div>
 
-                  {invitation.message && (
-                    <div className="text-sm text-muted-foreground p-2 bg-gray-50 rounded">
-                      {invitation.message}
-                    </div>
-                  )}
-
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
-                      Expires{" "}
-                      {format(new Date(invitation.expires_at), "MMM d, yyyy")}
+                      Expires {format(invitation.expires_at, "MMM d, yyyy")}
                     </div>
                     <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDeclineInvitation(invitation.id)}
-                        disabled={respondToInvitationMutation.isPending}
-                      >
-                        <X className="h-3 w-3 mr-1" />
-                        Decline
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleAcceptInvitation(invitation.id)}
-                        disabled={respondToInvitationMutation.isPending}
-                      >
-                        <Check className="h-3 w-3 mr-1" />
-                        Accept
-                      </Button>
+                      <DeclineButton invitationId={invitation.id} />
+                      <AcceptButton invitationId={invitation.id} />
                     </div>
                   </div>
                 </div>
