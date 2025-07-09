@@ -6,7 +6,7 @@ import { Badge } from "~/components/ui/badge";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { UserPlus, ArrowLeft, Crown, User } from "lucide-react";
+import { UserPlus, ArrowLeft, Crown, User, Clock } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-team-step";
@@ -47,12 +47,12 @@ export function TeamChooseParticipantsStep({
 
     inviteMutation.mutate({
       _team: teamData.id,
-      emails: email.trim(),
+      emails: email,
     });
   };
 
   const handleProceed = () => {
-    const memberCount = teamDetailsQuery.data?.members.length || 1;
+    const memberCount = teamDetailsQuery.data?.teammates.length || 1;
     onNext({
       teamId: teamData.id,
       teamName: teamData.name,
@@ -104,49 +104,93 @@ export function TeamChooseParticipantsStep({
           </div>
         </div>
 
-        {/* Team Members List */}
+        {/* Current Team Members */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium text-slate-900">Team Members</h4>
+            <h4 className="text-sm font-medium text-slate-900">
+              Current Team Members
+            </h4>
             <Badge variant="outline">
-              {teamDetailsQuery.data?.members.length} members
+              {teamDetailsQuery.data?.teammates.length || 0} members
             </Badge>
           </div>
 
-          <ScrollArea className="h-[200px]">
-            <div className="space-y-2">
-              {teamDetailsQuery.data?.members.map((member) => (
+          <div className="space-y-2">
+            {teamDetailsQuery.data?.teammates.map((member) => (
+              <div
+                key={member._clerk}
+                className="flex items-center justify-between p-3 border border-dashed rounded-lg bg-green-50"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                    <User className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-slate-900 text-sm">
+                      {member.display_name}
+                    </div>
+                  </div>
+                </div>
+                <Badge
+                  variant={member.role === "ADMIN" ? "default" : "secondary"}
+                  className="text-xs"
+                >
+                  {member.role === "ADMIN" ? (
+                    <>
+                      <Crown className="h-3 w-3 mr-1" />
+                      Admin
+                    </>
+                  ) : (
+                    "Member"
+                  )}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pending Invitations */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-medium text-slate-900">
+              Pending Invitations
+            </h4>
+            <Badge variant="outline">
+              {teamDetailsQuery.data?.pendingInvitations.length || 0} pending
+            </Badge>
+          </div>
+
+          <div className="space-y-2">
+            {teamDetailsQuery.data?.pendingInvitations.length === 0 ? (
+              <div className="text-center py-8 text-sm text-slate-500">
+                No pending invitations
+              </div>
+            ) : (
+              teamDetailsQuery.data?.pendingInvitations.map((invitation) => (
                 <div
-                  key={member._clerk}
-                  className="flex items-center justify-between p-3 border border-dashed rounded-lg"
+                  key={invitation.id}
+                  className="flex items-center justify-between p-3 border border-dashed rounded-lg bg-yellow-50"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                      <User className="h-4 w-4 text-slate-600" />
+                    <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                      <Clock className="h-4 w-4 text-yellow-600" />
                     </div>
                     <div>
                       <div className="font-medium text-slate-900 text-sm">
-                        {member.display_name}
+                        Invitation sent
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {new Date(invitation.created_at).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
-                  <Badge
-                    variant={member.role === "ADMIN" ? "default" : "secondary"}
-                    className="text-xs"
-                  >
-                    {member.role === "ADMIN" ? (
-                      <>
-                        <Crown className="h-3 w-3 mr-1" />
-                        Admin
-                      </>
-                    ) : (
-                      "Member"
-                    )}
+                  <Badge variant="secondary" className="text-xs">
+                    Pending
                   </Badge>
                 </div>
-              ))}
-            </div>
-          </ScrollArea>
+              ))
+            )}
+          </div>
         </div>
       </div>
 
