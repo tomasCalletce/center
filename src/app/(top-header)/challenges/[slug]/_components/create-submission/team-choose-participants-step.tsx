@@ -47,7 +47,7 @@ export function TeamChooseParticipantsStep({
 
     inviteMutation.mutate({
       _team: teamData.id,
-      email: email.trim(),
+      emails: email.trim(),
     });
   };
 
@@ -59,23 +59,6 @@ export function TeamChooseParticipantsStep({
       memberCount,
     });
   };
-
-  if (!teamDetailsQuery.data) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-semibold text-slate-900">
-            Loading Team Details...
-          </h3>
-        </div>
-        <div className="flex justify-center py-8">
-          <div className="text-center text-sm text-muted-foreground">
-            Loading team details...
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -126,13 +109,13 @@ export function TeamChooseParticipantsStep({
           <div className="flex items-center justify-between">
             <h4 className="text-sm font-medium text-slate-900">Team Members</h4>
             <Badge variant="outline">
-              {teamDetailsQuery.data.members.length} members
+              {teamDetailsQuery.data?.members.length} members
             </Badge>
           </div>
 
           <ScrollArea className="h-[200px]">
             <div className="space-y-2">
-              {teamDetailsQuery.data.members.map((member) => (
+              {teamDetailsQuery.data?.members.map((member) => (
                 <div
                   key={member._clerk}
                   className="flex items-center justify-between p-3 border border-dashed rounded-lg"
