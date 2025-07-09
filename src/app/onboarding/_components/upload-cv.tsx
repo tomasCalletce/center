@@ -12,8 +12,6 @@ import {
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { saveCv } from "~/app/onboarding/_actions/save-cv";
-import { useUser } from "@clerk/nextjs";
-import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 interface UploadCVProps {
   onComplete: (triggerTask: {
@@ -26,8 +24,6 @@ export const UploadCV = ({ onComplete }: UploadCVProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-
-  const { user } = useUser();
 
   const handleFileChange = (file: File | null) => {
     if (file && file.type === "application/pdf") {

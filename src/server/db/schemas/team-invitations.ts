@@ -1,11 +1,4 @@
-import {
-  pgTable,
-  timestamp,
-  varchar,
-  pgEnum,
-  uuid,
-  text,
-} from "drizzle-orm/pg-core";
+import { pgTable, timestamp, varchar, pgEnum, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { teams } from "~/server/db/schemas/teams";
@@ -31,7 +24,6 @@ export const teamInvitations = pgTable("team_invitations", {
     .references(() => teams.id, { onDelete: "cascade" }),
   _inviter: varchar("_inviter", { length: 32 }).notNull(),
   _invitee: varchar("_invitee", { length: 32 }).notNull(),
-  message: text("message"),
   status: teamInvitationStatusEnumSchema("status").default("PENDING").notNull(),
   expires_at: timestamp("expires_at").notNull(),
   responded_at: timestamp("responded_at"),

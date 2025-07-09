@@ -17,7 +17,7 @@ import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_com
 import {
   SubmissionTeamStep,
   type TeamData,
-} from "~/app/(top-header)/challenges/[slug]/_components/submission-team-step";
+} from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-team-step";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { submissionVisibilityValues } from "~/server/db/schemas/submissions";
 import { z } from "zod";
@@ -31,6 +31,7 @@ export enum SUBMISSION_STEPS {
 }
 
 type SubmissionDetailsSchema = z.infer<typeof formSubmissionSchema>;
+
 export type DetailsData = {
   title: SubmissionDetailsSchema["title"];
   demo_url: SubmissionDetailsSchema["demo_url"];
@@ -59,13 +60,6 @@ export function SubmissionDialog({
   const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
 
-  const utils = api.useUtils();
-
-  const userTeamsQuery = api.team.getUserTeams.useQuery(
-    { challengeId: _challenge },
-    { enabled: open }
-  );
-
   const createMutation = api.submission.create.useMutation({
     onSuccess: () => {
       setStep(SUBMISSION_STEPS.SUCCESS);
@@ -75,19 +69,9 @@ export function SubmissionDialog({
     },
   });
 
-  const resetDialogState = () => {
-    setStep(SUBMISSION_STEPS.TEAM);
-    setTeamData(null);
-    setDetailsData(null);
-  };
-
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
-    if (!newOpen) {
-      resetDialogState();
-    }
   };
-
 
   const handleTeamSubmit = (data: TeamData) => {
     setTeamData(data);
@@ -107,7 +91,7 @@ export function SubmissionDialog({
   const handleMarkdownSubmit = (data: MarkdownData) => {
     if (!detailsData || !teamData) return;
 
-    const submissionData = {
+    createMutation.mutate({
       _challenge: _challenge,
       _team: teamData.teamId,
       title: detailsData.title,
@@ -122,9 +106,7 @@ export function SubmissionDialog({
           url: detailsData.image.url,
         },
       },
-    };
-
-    createMutation.mutate(submissionData);
+    });
   };
 
   const handleBack = () => {
@@ -154,7 +136,7 @@ export function SubmissionDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="!max-w-[1100px] min-h-[700px]">
+      <DialogContent className="!max-w-[1100px] min-h-[700px] flex flex-col">
         <DialogHeader>
           <DialogTitle>Submit Your Build</DialogTitle>
           <DialogDescription>
