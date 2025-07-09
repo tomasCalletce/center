@@ -134,17 +134,6 @@ export const ProcessCV = ({
             Just a sec...
           </p>
         </div>
-
-        <Link
-          className={buttonVariants({
-            variant: "outline",
-            className: "w-full",
-          })}
-          href="/"
-        >
-          Skip
-          <ArrowRight className="w-4 h-4 ml-2" />
-        </Link>
       </div>
     );
   }
@@ -266,14 +255,6 @@ export const ProcessCV = ({
           </p>
         </div>
       </div>
-
-      <Link
-        className={buttonVariants({ variant: "outline", className: "w-full" })}
-        href="/"
-      >
-        Skip
-        <ArrowRight className="w-4 h-4" />
-      </Link>
     </div>
   );
 };
