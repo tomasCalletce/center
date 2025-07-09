@@ -10,7 +10,6 @@ export const getInvitations = protectedProcedure.query(async ({ ctx }) => {
   const invitations = await dbSocket
     .select({
       id: teamInvitations.id,
-      message: teamInvitations.message,
       status: teamInvitations.status,
       expires_at: teamInvitations.expires_at,
       created_at: teamInvitations.created_at,
