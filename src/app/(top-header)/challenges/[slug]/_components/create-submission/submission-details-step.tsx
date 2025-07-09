@@ -14,10 +14,10 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { uploadImage } from "../_actions/upload-image";
+import { uploadImage } from "../../_actions/upload-image";
 import { toast } from "sonner";
 import { Upload, Loader2, ImageIcon, X, ChevronRight } from "lucide-react";
-import type { DetailsData } from "./create-submission/submission-dialog";
+import type { DetailsData } from "./submission-dialog";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { formAssetsImageSchema } from "~/server/db/schemas/assets-images";
 
@@ -29,13 +29,12 @@ const schema = formSubmissionSchema.pick({
 
 interface SubmissionDetailsStepProps {
   handleOnSubmit: (data: DetailsData) => void;
-  initialData?: DetailsData | null;
+
   onBack?: () => void;
 }
 
 export function SubmissionDetailsStep({
   handleOnSubmit,
-  initialData,
   onBack,
 }: SubmissionDetailsStepProps) {
   const [isUploading, setIsUploading] = useState(false);
@@ -48,33 +47,7 @@ export function SubmissionDetailsStep({
   const fileRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      title: initialData?.title || "",
-      demo_url: initialData?.demo_url || "",
-      repository_url: initialData?.repository_url || "",
-    },
   });
-
-  useEffect(() => {
-    if (initialData) {
-      form.reset({
-        title: initialData.title,
-        demo_url: initialData.demo_url,
-        repository_url: initialData.repository_url,
-      });
-
-      if (initialData.image.url) {
-        setPreview(initialData.image.url);
-        setUploadedImage({
-          alt: initialData.image.alt,
-          formAssetsSchema: {
-            url: initialData.image.url,
-            pathname: initialData.image.pathname,
-          },
-        });
-      }
-    }
-  }, [initialData, form]);
 
   const handleFileChange = (file: File | null) => {
     if (!file) return;

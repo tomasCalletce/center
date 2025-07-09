@@ -11,9 +11,9 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { api } from "~/trpc/react";
-import { SubmissionMarkdownStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-markdown-step";
-import { SubmissionResultStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-result-step";
-import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-details-step";
+import { SubmissionMarkdownStep } from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-markdown-step";
+import { SubmissionResultStep } from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-result-step";
+import { SubmissionDetailsStep } from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-details-step";
 import {
   SubmissionTeamStep,
   type TeamData,
@@ -231,7 +231,6 @@ export function SubmissionDialog({
           {step === SUBMISSION_STEPS.DETAILS && (
             <SubmissionDetailsStep
               handleOnSubmit={handleDetailsSubmit}
-              initialData={detailsData}
               onBack={handleBack}
             />
           )}
