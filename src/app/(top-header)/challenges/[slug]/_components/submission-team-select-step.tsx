@@ -7,7 +7,7 @@ import { Users, Plus } from "lucide-react";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
-import { TeamManagementInline } from "~/components/team/team-management-inline";
+import { TeamManagementInline } from "./team-management-inline";
 
 interface SubmissionTeamSelectStepProps {
   challengeId: string;

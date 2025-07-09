@@ -8,7 +8,7 @@ import { Plus, ArrowLeft } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
-import { TeamManagementInline } from "~/components/team/team-management-inline";
+import { TeamManagementInline } from "./team-management-inline";
 
 interface SubmissionTeamCreateStepProps {
   challengeId: string;
