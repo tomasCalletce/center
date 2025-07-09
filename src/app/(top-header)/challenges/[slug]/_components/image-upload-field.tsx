@@ -117,7 +117,7 @@ export function ImageUploadField({
                         Drop image here or click to browse
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        PNG, JPG, WebP • Max 5MB
+                        PNG, JPG, WebP • Max 1MB
                       </p>
                     </div>
                   </div>
