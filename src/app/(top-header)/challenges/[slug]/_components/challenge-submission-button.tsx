@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { ArrowRight, Bell, Check, Edit, Monitor } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
-import { SubmissionDialog } from "./submission-dialog";
+import { SubmissionDialog } from "./create-submission/submission-dialog";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useIsMobile } from "~/hooks/use-mobile";

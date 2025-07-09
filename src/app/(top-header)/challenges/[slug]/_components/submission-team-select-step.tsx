@@ -7,7 +7,6 @@ import { Users, Plus } from "lucide-react";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
-import { TeamManagementInline } from "./team-management-inline";
 
 interface SubmissionTeamSelectStepProps {
   challengeId: string;
@@ -19,7 +18,6 @@ export const SubmissionTeamSelectStep: React.FC<
   SubmissionTeamSelectStepProps
 > = ({ challengeId, onNext, onCreateNew }) => {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
-  const [expandedTeamId, setExpandedTeamId] = useState<string | null>(null);
 
   const userTeamsQuery = api.team.getUserTeams.useQuery({ challengeId });
 
@@ -28,10 +26,6 @@ export const SubmissionTeamSelectStep: React.FC<
   ) => {
     if (team.hasSubmission) return;
     setSelectedTeamId(team.id);
-  };
-
-  const handleToggleTeamManagement = (teamId: string) => {
-    setExpandedTeamId(expandedTeamId === teamId ? null : teamId);
   };
 
   const handleNext = () => {
@@ -111,7 +105,7 @@ export const SubmissionTeamSelectStep: React.FC<
           >
             <div className="p-4">
               <div className="flex items-center justify-between">
-                <div 
+                <div
                   className="flex items-center gap-3 flex-1 cursor-pointer"
                   onClick={() => handleSelectTeam(team)}
                 >
@@ -119,9 +113,13 @@ export const SubmissionTeamSelectStep: React.FC<
                     <Users className="h-5 w-5 text-slate-600" />
                   </div>
                   <div>
-                    <div className="font-medium text-slate-900">{team.name}</div>
+                    <div className="font-medium text-slate-900">
+                      {team.name}
+                    </div>
                     <div className="text-sm text-slate-500">
-                      {team.memberCount} member{team.memberCount !== 1 ? 's' : ''} • Created {new Date(team.created_at).toLocaleDateString()}
+                      {team.memberCount} member
+                      {team.memberCount !== 1 ? "s" : ""} • Created{" "}
+                      {new Date(team.created_at).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
@@ -134,15 +132,6 @@ export const SubmissionTeamSelectStep: React.FC<
                   )}
                 </div>
               </div>
-            </div>
-            
-            <div className="px-4 pb-4">
-              <TeamManagementInline
-                teamId={team.id}
-                teamName={team.name}
-                isExpanded={expandedTeamId === team.id}
-                onToggle={() => handleToggleTeamManagement(team.id)}
-              />
             </div>
           </div>
         ))}

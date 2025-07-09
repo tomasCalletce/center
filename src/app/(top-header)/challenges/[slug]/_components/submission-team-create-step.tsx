@@ -56,7 +56,7 @@ export function SubmissionTeamCreateStep({
 
   const handleProceedWithTeam = () => {
     if (!createdTeam) return;
-    
+
     onNext({
       teamId: createdTeam.id,
       teamName: createdTeam.name,
@@ -78,7 +78,8 @@ export function SubmissionTeamCreateStep({
             Team Created Successfully!
           </h3>
           <p className="text-sm text-slate-500">
-            Your team "{createdTeam.name}" is ready. You can invite members or continue with your submission.
+            Your team "{createdTeam.name}" is ready. You can invite members or
+            continue with your submission.
           </p>
         </div>
 
@@ -87,7 +88,9 @@ export function SubmissionTeamCreateStep({
             <div className="w-16 h-16 mx-auto rounded-lg bg-green-100 flex items-center justify-center mb-4">
               <Plus className="h-8 w-8 text-green-600" />
             </div>
-            <div className="font-medium text-slate-900 mb-2">{createdTeam.name}</div>
+            <div className="font-medium text-slate-900 mb-2">
+              {createdTeam.name}
+            </div>
             <div className="text-sm text-slate-500">1 member (you)</div>
           </div>
 
@@ -114,7 +117,9 @@ export function SubmissionTeamCreateStep({
                 Back to Teams
               </Button>
             )}
-            <div className="text-xs text-slate-500">Step 1 of 3 • Team Setup</div>
+            <div className="text-xs text-slate-500">
+              Step 1 of 3 • Team Setup
+            </div>
           </div>
           <Button
             onClick={handleProceedWithTeam}

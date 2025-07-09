@@ -17,7 +17,7 @@ import { Input } from "~/components/ui/input";
 import { uploadImage } from "../_actions/upload-image";
 import { toast } from "sonner";
 import { Upload, Loader2, ImageIcon, X, ChevronRight } from "lucide-react";
-import type { DetailsData } from "./submission-dialog";
+import type { DetailsData } from "./create-submission/submission-dialog";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { formAssetsImageSchema } from "~/server/db/schemas/assets-images";
 
@@ -113,7 +113,7 @@ export function SubmissionDetailsStep({
   };
 
   const resetImage = () => {
-    if (preview && !preview.startsWith('http')) URL.revokeObjectURL(preview);
+    if (preview && !preview.startsWith("http")) URL.revokeObjectURL(preview);
     setPreview("");
     setSelectedFile(null);
     setUploadedImage(null);
@@ -224,8 +224,8 @@ export function SubmissionDetailsStep({
                     isUploading
                       ? "bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200"
                       : selectedFile || preview
-                      ? "bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200 shadow-lg"
-                      : "bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-dashed border-slate-200 hover:border-slate-900 hover:bg-gradient-to-br hover:from-slate-100 hover:to-gray-100"
+                        ? "bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200 shadow-lg"
+                        : "bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-dashed border-slate-200 hover:border-slate-900 hover:bg-gradient-to-br hover:from-slate-100 hover:to-gray-100"
                   }
                 `}
                 onDragOver={(e) => {
@@ -282,7 +282,7 @@ export function SubmissionDetailsStep({
                       </p>
                     </div>
                   </div>
-                ) : (selectedFile || preview) ? (
+                ) : selectedFile || preview ? (
                   <div className="relative h-64 w-full">
                     <img
                       src={preview}

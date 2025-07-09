@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
-import type { MarkdownData } from "./submission-dialog";
+import type { MarkdownData } from "./create-submission/submission-dialog";
 import { useEffect } from "react";
 
 const schema = formSubmissionSchema.pick({

@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "~/trpc/react";
-import { SubmissionTeamSelectStep } from "./submission-team-select-step";
-import { SubmissionTeamCreateStep } from "./submission-team-create-step";
+import { SubmissionTeamCreateStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-team-create-step";
+import { SubmissionTeamSelectStep } from "~/app/(top-header)/challenges/[slug]/_components/submission-team-select-step";
 
 export type TeamData = {
   teamId: string;

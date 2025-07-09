@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle, XCircle } from "lucide-react";
-import { SUBMISSION_STEPS } from "./submission-dialog";
+import { SUBMISSION_STEPS } from "./create-submission/submission-dialog";
 
 interface SubmissionResultStepProps {
   type: SUBMISSION_STEPS.SUCCESS | SUBMISSION_STEPS.ERROR;
