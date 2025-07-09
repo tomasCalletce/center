@@ -102,12 +102,9 @@ export const ChallengeSubmissionButton: React.FC<
 
   if (hasSubmitted) {
     return (
-      <SubmissionDialog _challenge={challengeId}>
-        <Button className="w-full cursor-pointer" variant="secondary">
-          Edit Submission
-          <Edit className="ml-2 h-4 w-4" />
-        </Button>
-      </SubmissionDialog>
+      <Button className="w-full cursor-pointer" variant="secondary" disabled>
+        Already submitted
+      </Button>
     );
   }
 
