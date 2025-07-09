@@ -6,9 +6,8 @@ import { Badge } from "~/components/ui/badge";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { Users, UserPlus, ArrowLeft, Mail, Crown, User } from "lucide-react";
+import { UserPlus, ArrowLeft, Crown, User } from "lucide-react";
 import { api } from "~/trpc/react";
-import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import type { TeamData } from "~/app/(top-header)/challenges/[slug]/_components/create-submission/submission-team-step";
 
@@ -26,7 +25,7 @@ export function TeamChooseParticipantsStep({
   const [email, setEmail] = useState("");
 
   const teamDetailsQuery = api.team.getTeamDetails.useQuery({
-    teamId: teamData.id,
+    _team: teamData.id,
   });
 
   const inviteMutation = api.team.sendInvitation.useMutation({
@@ -78,8 +77,6 @@ export function TeamChooseParticipantsStep({
     );
   }
 
-  const { members, pendingInvitations, userRole } = teamDetailsQuery.data;
-
   return (
     <div className="space-y-6">
       <div>
@@ -117,8 +114,8 @@ export function TeamChooseParticipantsStep({
                 disabled={!email.trim()}
                 isLoading={inviteMutation.isPending}
               >
-                <UserPlus className="h-4 w-4 mr-2" />
                 Invite
+                <UserPlus className="h-4 w-4 mr-2" />
               </Button>
             </div>
           </div>
@@ -129,15 +126,15 @@ export function TeamChooseParticipantsStep({
           <div className="flex items-center justify-between">
             <h4 className="text-sm font-medium text-slate-900">Team Members</h4>
             <Badge variant="outline">
-              {members.length}/{teamDetailsQuery.data.max_members} members
+              {teamDetailsQuery.data.members.length} members
             </Badge>
           </div>
 
           <ScrollArea className="h-[200px]">
-            <div className="space-y-2 pr-4">
-              {members.map((member) => (
+            <div className="space-y-2">
+              {teamDetailsQuery.data.members.map((member) => (
                 <div
-                  key={member.id}
+                  key={member._clerk}
                   className="flex items-center justify-between p-3 border border-dashed rounded-lg"
                 >
                   <div className="flex items-center gap-3">
@@ -146,10 +143,7 @@ export function TeamChooseParticipantsStep({
                     </div>
                     <div>
                       <div className="font-medium text-slate-900 text-sm">
-                        {member.name}
-                      </div>
-                      <div className="text-xs text-slate-500">
-                        {member.email}
+                        {member.display_name}
                       </div>
                     </div>
                   </div>
@@ -165,30 +159,6 @@ export function TeamChooseParticipantsStep({
                     ) : (
                       "Member"
                     )}
-                  </Badge>
-                </div>
-              ))}
-
-              {teamDetailsQuery.data?.pendingInvitations.map((invitation) => (
-                <div
-                  key={invitation.id}
-                  className="flex items-center justify-between p-3 border border-dashed rounded-lg bg-amber-50"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
-                      <Mail className="h-4 w-4 text-amber-600" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-slate-900 text-sm">
-                        {invitation.email}
-                      </div>
-                      <div className="text-xs text-slate-500">
-                        Invitation sent
-                      </div>
-                    </div>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    Pending
                   </Badge>
                 </div>
               ))}
