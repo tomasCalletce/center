@@ -5,7 +5,7 @@ export const CommunityShowcase = () => {
     <section className="relative">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center space-y-4">
+          <div className="space-y-4">
             <div className="inline-flex items-center justify-center">
               <div className="h-1 w-8 bg-slate-900 rounded-full" />
               <span className="ml-3 text-sm uppercase tracking-wider font-medium text-muted-foreground">
@@ -15,7 +15,7 @@ export const CommunityShowcase = () => {
             <h2 className="text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
               Where talent meets opportunity
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground max-w-2xl leading-relaxed">
               Join thousands of developers showcasing their skills through
               real-world challenges and connecting with innovative companies.
             </p>
