@@ -82,11 +82,15 @@ export const ProcessCV = ({
 
   const isCvValidationError = (errorMessage?: string) => {
     if (!errorMessage) return false;
-    return errorMessage.includes("This document does not appear to be a CV") ||
-           errorMessage.includes("CV validation failed");
+    return (
+      errorMessage.includes("This document does not appear to be a CV") ||
+      errorMessage.includes("CV validation failed")
+    );
   };
 
-  const currentError = error?.message || (run?.status === "FAILED" ? run?.error?.message : undefined);
+  const currentError =
+    error?.message ||
+    (run?.status === "FAILED" ? run?.error?.message : undefined);
 
   if (isCvValidationError(currentError)) {
     return (
@@ -139,7 +143,7 @@ export const ProcessCV = ({
           href="/"
         >
           Skip
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 ml-2" />
         </Link>
       </div>
     );
@@ -229,7 +233,7 @@ export const ProcessCV = ({
           href="/"
         >
           Let's Go
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 ml-2" />
         </Link>
       </div>
     );
