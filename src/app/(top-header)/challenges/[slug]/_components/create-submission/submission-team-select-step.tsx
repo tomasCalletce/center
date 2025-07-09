@@ -7,7 +7,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { Users, Plus } from "lucide-react";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
-import type { TeamData } from "./create-submission/submission-team-step";
+import type { TeamData } from "./submission-team-step";
 
 interface SubmissionTeamSelectStepProps {
   challengeId: string;
