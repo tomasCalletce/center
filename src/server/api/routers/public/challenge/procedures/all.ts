@@ -5,7 +5,7 @@ import {
   challengeVisibilityValues,
 } from "~/server/db/schemas/challenges";
 import { z } from "zod";
-import { asc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { assets } from "~/server/db/schemas/asset";
 import { assetsImages } from "~/server/db/schemas/assets-images";
 
@@ -39,7 +39,7 @@ export const all = publicProcedure
       .where(eq(challenges.visibility, challengeVisibilityValues.VISIBLE))
       .limit(input.limit)
       .offset(input.offset)
-      .orderBy(asc(challenges.deadline_at));
+      .orderBy(desc(challenges.open_at));
 
     return allChallenges;
   });
