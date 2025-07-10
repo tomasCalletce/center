@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { Users, Plus } from "lucide-react";
+import { Users, Plus, ArrowRight } from "lucide-react";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
 import type { TeamData } from "./submission-team-step";
@@ -138,6 +138,7 @@ export const SubmissionTeamSelectStep: React.FC<
         <div className="flex justify-end">
           <Button onClick={handleNext} size="lg">
             Continue with Team
+            <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
       )}
