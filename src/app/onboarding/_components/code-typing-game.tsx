@@ -116,6 +116,10 @@ export const CodeTypingGame = ({
   ]);
 
   useEffect(() => {
+    startGame();
+  }, [startGame]);
+
+  useEffect(() => {
     if (gameActive) {
       const interval = setInterval(calculateStats, 100);
       return () => clearInterval(interval);
@@ -163,28 +167,6 @@ export const CodeTypingGame = ({
     });
   };
 
-  if (!gameActive && stats.timeLeft === 60) {
-    return (
-      <div className="rounded-md bg-white border border-border mb-4">
-        <div className="text-center p-6">
-          <div className="mb-4">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-              <Keyboard className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="text-base font-semibold">
-              While we analyze your CV...
-            </h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Test your coding speed! Type code snippets.
-            </p>
-          </div>
-          <Button onClick={startGame} className="px-6 py-2">
-            Start Typing Challenge
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">

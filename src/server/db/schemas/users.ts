@@ -56,7 +56,7 @@ export const users = pgTable("users", {
 });
 export type User = typeof users.$inferSelect;
 
-export const userProfileSchema = createInsertSchema(users, {
+export const verifyUserProfileSchema = createInsertSchema(users, {
   skills: z.array(z.string()).optional(),
   experience: z.array(experienceSchema).optional(),
   education: z.array(educationSchema).optional(),
@@ -64,6 +64,7 @@ export const userProfileSchema = createInsertSchema(users, {
 }).omit({
   id: true,
   _clerk: true,
+  display_name: true,
   created_at: true,
   updated_at: true,
 });

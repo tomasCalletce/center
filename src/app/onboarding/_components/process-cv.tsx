@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRealtimeRun } from "@trigger.dev/react-hooks";
 import {
   Loader2,
@@ -14,10 +13,11 @@ import {
 import { CodeTypingGame } from "~/app/onboarding/_components/code-typing-game";
 import { mainOnboardingTask } from "~/server/trigger/cv-processing/main-onboarding-task";
 import { ONBOARDING_PROGRESS } from "~/types/onboarding";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
 
 interface ProcessCVProps {
   publicAccessToken: string;
@@ -54,6 +54,7 @@ export const ProcessCV = ({
   runId,
   onRetry,
 }: ProcessCVProps) => {
+  const { user } = useUser();
   const router = useRouter();
   const gameResultsRef = useRef<FinalResults | null>(null);
   const [hasGameResults, setHasGameResults] = useState(false);
@@ -88,6 +89,12 @@ export const ProcessCV = ({
     );
   };
 
+  const handleContinue = async () => {
+    if (!user) return;
+
+    await user.reload();
+    router.push("/");
+  };
   const currentError =
     error?.message ||
     (run?.status === "FAILED" ? run?.error?.message : undefined);
@@ -213,17 +220,15 @@ export const ProcessCV = ({
             </div>
           </div>
         )}
-
-        <Link
-          className={buttonVariants({
-            variant: "default",
-            className: "w-full",
-          })}
-          href="/"
+        <Button
+          variant="default"
+          className="w-full"
+          onClick={handleContinue}
+          disabled={!user}
         >
           Let's Go
           <ArrowRight className="w-4 h-4 ml-2" />
-        </Link>
+        </Button>
       </div>
     );
   }
