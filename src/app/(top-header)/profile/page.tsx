@@ -17,7 +17,9 @@ export default async function ProfilePage() {
               </div>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              We combine this info with your challenge submissions to create a profile that demonstrates your real abilities through actual work, not just claims.
+              We combine this info with your challenge submissions to create a
+              profile that demonstrates your real abilities through actual
+              projects.
             </p>
           </div>
         </div>
