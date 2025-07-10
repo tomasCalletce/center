@@ -82,7 +82,7 @@ export function SubmissionReceivedEmail({
           </Text>
 
           <Text style={{ fontSize: "12px", color: "#666", margin: "0" }}>
-            IA Hackathon Team
+            ACC Team
           </Text>
         </Container>
       </Body>
