@@ -112,7 +112,19 @@ export const ProcessCV = ({
           </p>
         </div>
 
-        <Button onClick={onRetry} className="flex-1" variant="default">
+        <div className="rounded-md bg-destructive/5 p-3 border border-destructive/20 mb-4">
+          <div className="flex items-center justify-center mb-3">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+              <AlertCircle className="w-6 h-6 text-destructive" />
+            </div>
+          </div>
+          <p className="text-center text-sm text-muted-foreground">
+            Please upload a proper resume or CV document so we can analyze your
+            experience and skills.
+          </p>
+        </div>
+
+        <Button onClick={onRetry} className="w-full" variant="default">
           <Upload className="w-4 h-4 mr-2" />
           Try Another CV
         </Button>
