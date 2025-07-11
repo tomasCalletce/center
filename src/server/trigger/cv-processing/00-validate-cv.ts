@@ -1,6 +1,7 @@
 import { logger, schemaTask } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
 import { openai } from "@ai-sdk/openai";
+// import { groq } from "@ai-sdk/groq";
 import { generateObject } from "ai";
 
 const cvValidationSchema = z.object({
@@ -36,7 +37,7 @@ export const validateCvTask = schemaTask({
     const pdfBuffer = await response.arrayBuffer();
 
     const { object } = await generateObject({
-      model: openai("gpt-4o-mini", { structuredOutputs: true }),
+      model: openai("gpt-4o-mini"),
       schema: cvValidationSchema,
       temperature: 0.1,
       messages: [
@@ -48,6 +49,7 @@ export const validateCvTask = schemaTask({
               text: `Analyze this document and determine if it's a legitimate CV/resume. 
 
 A legitimate CV/resume typically contains:
+- Information can be in Spanish, English, or both.
 - Personal information (real name, contact details)
 - Professional experience or work history with specific companies and roles
 - Education background with actual institutions
@@ -61,15 +63,13 @@ RED FLAGS for fake/dummy CVs:
 - Obvious dummy phone numbers like "123-456-7890", "000-000-0000"
 - Fake email addresses like "email@example.com", "yourname@email.com"
 - Generic job descriptions without specific details
-- Unrealistic job titles or experience (e.g., "CEO at multiple companies")
 - Inconsistent formatting suggesting it's a template
 - Lorem ipsum text or other placeholder content
 - Missing crucial details that real CVs would have
 - Overly perfect or suspiciously generic content
-- Multiple identical job descriptions
-- Impossible timelines or overlapping full-time positions
 - Skills sections with random unrelated technologies
 - Education at fake or non-existent institutions
+
 
 CRITICAL: If you detect ANY of these red flags, mark it as NOT a legitimate CV.
 
@@ -78,7 +78,7 @@ Return your analysis with:
 - confidence: 0.0 to 1.0 representing how confident you are
 - reason: Brief explanation focusing on why it's real or what red flags you found
 
-Reject it.  Accept CVs that appear to be genuine professional documents.`,
+Accept CVs that appear to be genuine professional documents.`,
             },
             {
               type: "file",

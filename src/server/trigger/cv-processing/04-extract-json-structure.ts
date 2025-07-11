@@ -1,7 +1,7 @@
 import { schemaTask } from "@trigger.dev/sdk/v3";
 import { generateObject } from "ai";
 import { z } from "zod";
-import { openai } from "@ai-sdk/openai";
+import { groq } from "@ai-sdk/groq";
 import { db } from "~/server/db/connection";
 import {
   educationSchema,
@@ -20,7 +20,7 @@ const userProfileSchema = z.object({
   experience: z.array(experienceSchema).default([]),
   education: z.array(educationSchema).default([]),
   skills: z.array(z.string()).default([]),
-  social_links: z.array(socialLinkSchema).default([]),
+  social_links: z.array(socialLinkSchema).default([]).catch([]),
 });
 
 export const extractJsonStructureTask = schemaTask({
@@ -37,17 +37,18 @@ export const extractJsonStructureTask = schemaTask({
       
       Focus on extracting only these essential details:
       - Display name: Extract a professional title or role description (e.g., "Frontend Developer in React", "Senior Software Engineer", "Full Stack Developer") NOT the person's actual name
+      - Email: Extract the email address if present
       - Location (city, state/country)
       - Current job title (most recent or current position)
       
       Work Experience (extract as structured array):
       - Company name
       - Job title/position
-      - Employment type: full-time, part-time, contract, freelance, internship, volunteer
+      - Employment type: MUST be one of: "full-time", "part-time", "freelance", "internship" (map other types like "contract" to "freelance", "volunteer" to "internship")
       - Start date (YYYY-MM format, or just YYYY if month unknown)
       - End date (YYYY-MM format, or "present" if current, or just YYYY if month unknown)
       - Brief description of role/responsibilities
-      - Skills/technologies used in that role
+      - Skills/technologies used in that role (as array of strings)
       
       Education (extract as structured array):
       - Institution name
@@ -56,30 +57,42 @@ export const extractJsonStructureTask = schemaTask({
       - Start date (YYYY format)
       - End date (YYYY format or "present" if ongoing)
       - GPA (if mentioned)
-      - Relevant coursework (if mentioned)
+      - Relevant coursework (if mentioned, as array of strings)
+      
+      Skills: Extract all technical skills, programming languages, tools, and technologies mentioned throughout the document as an array of strings
+      
+      Social Links: Extract social media/professional links if present. For each link:
+      - Platform must be one of: "linkedin", "github", "portfolio", "website"
+      - URL must be a valid URL
+      - If no social links are found, return empty array
       
       Guidelines:
       - Extract ALL work experiences and education entries, even short-term ones
       - Use "present" for end dates of current positions/studies
       - If information is unclear or missing, set field to null
-      - Extract comprehensive skills from throughout the document
       - For current_title, use the most recent job title or current position
       - For display_name, create a professional title based on their experience and skills (e.g., "React Frontend Developer", "Python Backend Engineer", "Full Stack Developer")
+      - Map employment types strictly to the allowed values
+      - Return empty arrays for experience, education, skills, and social_links if none are found
       
       Document content:
       ${markdown.content}
     `;
 
     const { object } = await generateObject({
-      model: openai("gpt-4o"),
+      model: groq("meta-llama/llama-4-scout-17b-16e-instruct"),
       prompt,
       schema: userProfileSchema,
       temperature: 0.1,
+    }).catch(error => {
+      console.error("Error generating object:", error);
+      console.error("Prompt:", prompt);
+      throw new Error(`Failed to generate structured data: ${error.message}`);
     });
 
     const userData = {
       _clerk: userId,
-      display_name: object.current_title,
+      display_name: object.display_name,
       location: object.location,
       current_title: object.current_title,
       experience: object.experience,
