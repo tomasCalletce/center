@@ -78,7 +78,7 @@ Return your analysis with:
 - confidence: 0.0 to 1.0 representing how confident you are
 - reason: Brief explanation focusing on why it's real or what red flags you found
 
-Be extremely strict - when in doubt, reject it. Only accept CVs that appear to be genuine professional documents.`,
+Reject it.  Accept CVs that appear to be genuine professional documents.`,
             },
             {
               type: "file",
