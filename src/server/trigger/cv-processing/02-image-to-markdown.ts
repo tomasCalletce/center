@@ -1,6 +1,7 @@
 import { logger, schemaTask } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
-import { openai } from "@ai-sdk/openai";
+// import { openai } from "@ai-sdk/openai";
+import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 
 export const imageToMarkdownTask = schemaTask({
@@ -18,7 +19,7 @@ export const imageToMarkdownTask = schemaTask({
     });
 
     const { text } = await generateText({
-      model: openai("gpt-4o-mini"),
+      model: groq("meta-llama/llama-4-scout-17b-16e-instruct"),
       messages: [
         {
           role: "user",
