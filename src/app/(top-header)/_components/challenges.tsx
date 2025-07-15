@@ -12,12 +12,12 @@ export const Challenges = () => {
               <Zap className="text-slate-900 h-4 w-4" />
             </div>
             <h1 className="text-2xl md:text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 text-transparent bg-clip-text">
-              AI Challenges
+              Ship ship ship!
             </h1>
           </div>
-          <p className="text-slate-600 text-sm md:text-base max-w-xl mx-auto">
-            Participate and sign up to ACC IA challenges to showcase your
-            skills.
+          <p className="text-slate-600 text-sm md:text-base max-w-md mx-auto">
+            ACC is a community of builders that have a bias for action. Just
+            ship your product and idea.
           </p>
         </div>
         <div className="max-w-7xl mx-auto">

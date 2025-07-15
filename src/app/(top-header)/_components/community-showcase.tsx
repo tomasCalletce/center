@@ -9,15 +9,15 @@ export const CommunityShowcase = () => {
             <div className="inline-flex items-center justify-center">
               <div className="h-1 w-8 bg-slate-900 rounded-full" />
               <span className="ml-3 text-sm uppercase tracking-wider font-medium text-muted-foreground">
-                Global Developer Community
+                Just ship it bro!
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-medium tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-              Where talent meets opportunity
+              Build, Show, Repeat
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Join thousands of developers showcasing their skills through
-              real-world challenges and connecting with innovative companies.
+              We are a community of latam builders that want to force each other
+              to ship more often. Let's build cool stuff together.
             </p>
           </div>
 
