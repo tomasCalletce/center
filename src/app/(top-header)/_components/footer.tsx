@@ -62,14 +62,17 @@ export const Footer = () => {
             © {new Date().getFullYear()} ACC. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <a href="#" className="text-muted-foreground hover:text-foreground">
+            <a
+              href="https://www.linkedin.com/company/letsacc"
+              className="text-muted-foreground hover:text-foreground"
+            >
               <Linkedin className="w-5 h-5" />
             </a>
             <a href="#" className="text-muted-foreground hover:text-foreground">
-              <Twitter className="w-5 h-5" />
+              {/* <Twitter className="w-5 h-5" /> */}
             </a>
             <a href="#" className="text-muted-foreground hover:text-foreground">
-              <Github className="w-5 h-5" />
+              {/* <Github className="w-5 h-5" /> */}
             </a>
           </div>
         </div>
