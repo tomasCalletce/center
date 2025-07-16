@@ -71,8 +71,13 @@ export const Footer = () => {
             <a href="#" className="text-muted-foreground hover:text-foreground">
               {/* <Twitter className="w-5 h-5" /> */}
             </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground">
-              {/* <Github className="w-5 h-5" /> */}
+            <a
+              href="https://github.com/tomasCalletce/center"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Github className="w-5 h-5" />
             </a>
           </div>
         </div>
