@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { saveCv } from "~/app/onboarding/_actions/save-cv";
+import { toast } from "sonner";
 
 interface UploadCVProps {
   onComplete: (triggerTask: {
@@ -35,10 +36,10 @@ export const UploadCV = ({ onComplete }: UploadCVProps) => {
     if (!selectedFile) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", selectedFile);
 
     try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
       const response = await saveCv(formData);
 
       if (!response.documentMutation) {
@@ -54,6 +55,7 @@ export const UploadCV = ({ onComplete }: UploadCVProps) => {
         runId: response.documentMutation.triggerTask.id,
       });
     } catch (error) {
+      toast.error("Upload failed");
       console.error("Upload failed:", error);
     } finally {
       setIsUploading(false);
