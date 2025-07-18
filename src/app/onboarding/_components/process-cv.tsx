@@ -159,9 +159,7 @@ export const ProcessCV = ({
 
   const isCompleted = run.status === "COMPLETED";
   const statusMessage =
-    typeof run.metadata?.status === "string"
-      ? run.metadata.status
-      : "Getting to know your background...";
+    typeof run.metadata?.status === "string" ? run.metadata.status : "STARTING";
 
   const progressMessage = getProgressMessage(statusMessage);
 
@@ -272,6 +270,21 @@ export const ProcessCV = ({
           </p>
         </div>
       </div>
+
+      {statusMessage !== "STARTING" &&
+        statusMessage !== ONBOARDING_PROGRESS.VALIDATING_CV && (
+          <div className="mb-4">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleContinue}
+              disabled={!user}
+            >
+              Skip
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
     </div>
   );
 };
