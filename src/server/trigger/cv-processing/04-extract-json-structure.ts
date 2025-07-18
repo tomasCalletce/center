@@ -9,8 +9,6 @@ import {
   socialLinkSchema,
   users,
 } from "~/server/db/schemas/users";
-import { clerkClient } from "@clerk/nextjs/server";
-import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 const userProfileSchema = z.object({
   display_name: z.string().nullable(),
@@ -84,7 +82,7 @@ export const extractJsonStructureTask = schemaTask({
       prompt,
       schema: userProfileSchema,
       temperature: 0.1,
-    }).catch(error => {
+    }).catch((error) => {
       console.error("Error generating object:", error);
       console.error("Prompt:", prompt);
       throw new Error(`Failed to generate structured data: ${error.message}`);
@@ -122,13 +120,6 @@ export const extractJsonStructureTask = schemaTask({
     if (!updatedUser) {
       throw new Error("Failed to upsert user");
     }
-
-    const client = await clerkClient();
-    await client.users.updateUser(userId, {
-      publicMetadata: {
-        onboardingStatus: ONBOARDING_STATUS.COMPLETED,
-      },
-    });
 
     return {
       userId: updatedUser.id,

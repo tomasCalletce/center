@@ -1,7 +1,8 @@
 import { logger, schemaTask } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
 import { openai } from "@ai-sdk/openai";
-// import { groq } from "@ai-sdk/groq";
+import { clerkClient } from "@clerk/nextjs/server";
+import { ONBOARDING_STATUS } from "~/types/onboarding";
 import { generateObject } from "ai";
 
 const cvValidationSchema = z.object({
@@ -97,11 +98,11 @@ Accept CVs that appear to be genuine professional documents.`,
       );
     }
 
-    logger.log("CV validation successful", {
-      cvId: cv.id,
-      userId: userId,
-      confidence: object.confidence,
-      reason: object.reason,
+    const client = await clerkClient();
+    await client.users.updateUser(userId, {
+      publicMetadata: {
+        onboardingStatus: ONBOARDING_STATUS.COMPLETED,
+      },
     });
 
     return {
