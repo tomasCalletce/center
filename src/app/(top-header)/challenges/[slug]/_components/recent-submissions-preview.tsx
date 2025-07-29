@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import { Badge } from "~/components/ui/badge";
 import { Clock, Users, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { useIsMobile } from "~/hooks/use-mobile";
 
 interface RecentSubmissionsPreviewProps {
@@ -67,9 +68,13 @@ export const RecentSubmissionsPreview: React.FC<
               </div>
               <Badge variant="outline" className="text-xs w-fit">
                 <Clock className="h-3 w-3 mr-1" />
-                {formatDistanceToNow(new Date(submission.created_at), {
-                  addSuffix: true,
-                })}
+                {formatDistanceToNow(
+                  toZonedTime(
+                    new Date(submission.created_at),
+                    Intl.DateTimeFormat().resolvedOptions().timeZone
+                  ),
+                  { addSuffix: true }
+                )}
               </Badge>
             </div>
           </div>
