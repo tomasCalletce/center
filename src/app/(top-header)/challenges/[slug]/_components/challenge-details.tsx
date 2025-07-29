@@ -2,6 +2,7 @@ import Image from "next/image";
 import { api } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { Clock, Users, MapPin, Trophy, Calendar } from "lucide-react";
 import { ChallengeSubmissionButton } from "./challenge-submission-button";
 import { ChallengeStats } from "./challenge-stats";
@@ -17,12 +18,16 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
     challenge_slug: slug,
   });
 
-  const formattedDeadlineDate = format(challenge.deadline_at, "MMM dd, yyyy");
-  const formattedOpenDate = format(challenge.open_at, "MMM dd, yyyy");
-  const timeLeft = formatDistanceToNow(challenge.deadline_at, {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localDeadlineDate = toZonedTime(challenge.deadline_at, userTimeZone);
+  const localOpenDate = toZonedTime(challenge.open_at, userTimeZone);
+  
+  const formattedDeadlineDate = format(localDeadlineDate, "MMM dd, yyyy");
+  const formattedOpenDate = format(localOpenDate, "MMM dd, yyyy");
+  const timeLeft = formatDistanceToNow(localDeadlineDate, {
     addSuffix: true,
   });
-  const openTimeLeft = formatDistanceToNow(new Date(challenge.open_at), {
+  const openTimeLeft = formatDistanceToNow(localOpenDate, {
     addSuffix: true,
   });
   const isSubmissionOpen = challenge.open_at

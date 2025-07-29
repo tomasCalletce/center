@@ -4,6 +4,7 @@ import { api } from "~/trpc/server";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import {
   Clock,
   ArrowRight,
@@ -44,27 +45,33 @@ export const UpcomingChallenges = async () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {upcomingChallenges.map((challenge) => {
           const now = new Date();
+          const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          
+          // Convert UTC dates to user's local timezone
+          const localOpenDate = toZonedTime(challenge.open_at, userTimeZone);
+          const localDeadlineDate = toZonedTime(challenge.deadline_at, userTimeZone);
+          
           const isSubmissionOpen =
             challenge.open_at && now >= challenge.open_at;
           const hasDeadlinePassed =
             challenge.deadline_at && now >= challenge.deadline_at;
 
-          const submissionOpenTime = formatDistanceToNow(challenge.open_at, {
+          const submissionOpenTime = formatDistanceToNow(localOpenDate, {
             addSuffix: true,
           });
 
           const submissionCloseTime = formatDistanceToNow(
-            challenge.deadline_at,
+            localDeadlineDate,
             { addSuffix: true }
           );
 
           const formattedOpenDate = format(
-            challenge.open_at,
+            localOpenDate,
             "MMM dd, yyyy 'at' HH:mm"
           );
 
           const formattedDeadlineDate = format(
-            challenge.deadline_at,
+            localDeadlineDate,
             "MMM dd, yyyy 'at' HH:mm"
           );
 

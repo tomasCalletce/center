@@ -8,6 +8,7 @@ import { Bell, Check, X, Users } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -148,7 +149,13 @@ export const InvitationNotifications: React.FC = () => {
 
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
-                      Expires {format(invitation.expires_at, "MMM d, yyyy")}
+                      Expires {format(
+                        toZonedTime(
+                          invitation.expires_at,
+                          Intl.DateTimeFormat().resolvedOptions().timeZone
+                        ),
+                        "MMM d, yyyy"
+                      )}
                     </div>
                     <div className="flex gap-2">
                       <DeclineButton invitationId={invitation.id} />
