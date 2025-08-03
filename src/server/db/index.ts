@@ -1,5 +1,6 @@
 export * from "~/server/db/schemas/assets-pdf";
 export * from "~/server/db/schemas/challenges";
+export * from "~/server/db/schemas/blogs";
 export * from "~/server/db/schemas/asset";
 export * from "~/server/db/schemas/assets-images";
 export * from "~/server/db/schemas/submissions";

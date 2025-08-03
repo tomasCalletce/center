@@ -11,12 +11,13 @@ import {
 } from "~/components/ui/navigation-menu";
 import { UserMenu } from "./user-menu";
 import { InvitationNotifications } from "./invitation-notifications";
-import { Home, User } from "lucide-react";
+import { Home, User, BookOpen } from "lucide-react";
 
 export function Header() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const isProfilePage = pathname === "/profile";
+  const isBlogPage = pathname.startsWith("/blog");
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -36,6 +37,17 @@ export function Header() {
                 >
                   <Home className="h-4 w-4" />
                   Home
+                </Button>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/blog">
+                <Button
+                  variant="ghost"
+                  className={`cursor-pointer flex items-center gap-2 ${isBlogPage ? "border-b-2 border-slate-900 rounded-t-md rounded-b-none" : ""}`}
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Blog
                 </Button>
               </Link>
             </NavigationMenuItem>

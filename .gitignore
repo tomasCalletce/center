@@ -50,3 +50,4 @@ _db.sql
 .cursor/
 .trigger
 .tool-versions
+.feat

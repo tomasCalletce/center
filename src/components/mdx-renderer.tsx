@@ -80,16 +80,14 @@ const components = {
   
   // Images
   img: ({ src, alt, ...props }: any) => (
-    <div className="my-6 rounded-lg overflow-hidden">
-      <Image
-        src={src}
-        alt={alt || ''}
-        width={800}
-        height={400}
-        className="w-full h-auto object-cover"
-        {...props}
-      />
-    </div>
+    <Image
+      src={src}
+      alt={alt || ''}
+      width={800}
+      height={400}
+      className="w-full h-auto object-cover my-6 rounded-lg"
+      {...props}
+    />
   ),
   
   // Code blocks
@@ -179,20 +177,65 @@ export async function MDXRenderer({ content }: MDXRendererProps) {
     );
   }
 
-  // Parse frontmatter and extract content
-  const { content: markdownContent, data: frontmatter } = matter(content);
+  try {
+    const { content: markdownContent } = matter(content);
+    
+    const cleanContent = markdownContent
+      .replace(/^import\s+.*$/gm, '')
+      .replace(/^export\s+.*$/gm, '')
+      .replace(/^\s*$/gm, '')
+      .trim();
 
-  return (
-    <div className="prose prose-lg max-w-none">
-      <MDXRemote 
-        source={markdownContent} 
-        components={components}
-        options={{
-          mdxOptions: {
-            remarkPlugins: [remarkGfm],
-          }
-        }}
-      />
-    </div>
-  );
+    if (!cleanContent) {
+      return (
+        <div className="prose prose-lg max-w-none">
+          <p>No content to display.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="prose prose-lg max-w-none">
+        <MDXRemote 
+          source={cleanContent} 
+          components={components}
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+            },
+            parseFrontmatter: false,
+          }}
+        />
+      </div>
+    );
+  } catch (error) {
+    console.error('MDX parsing error:', error);
+    console.error('Content that failed to parse:', content);
+    
+    try {
+      const { content: markdownContent } = matter(content);
+      const simpleContent = markdownContent
+        .replace(/^import\s+.*$/gm, '')
+        .replace(/^export\s+.*$/gm, '')
+        .replace(/^\s*<[^>]*>\s*$/gm, '')
+        .trim();
+      
+      return (
+        <div className="prose prose-lg max-w-none">
+          <div className="whitespace-pre-wrap font-mono text-sm bg-gray-50 p-4 rounded">
+            {simpleContent || 'Content could not be rendered'}
+          </div>
+        </div>
+      );
+    } catch (fallbackError) {
+      console.error('Fallback parsing also failed:', fallbackError);
+      return (
+        <div className="prose prose-lg max-w-none">
+          <div className="text-center py-8 text-red-600">
+            Error rendering content. Please check the console for details.
+          </div>
+        </div>
+      );
+    }
+  }
 } 
