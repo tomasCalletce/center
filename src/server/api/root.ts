@@ -1,5 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { challengeRouter } from "~/server/api/routers/challenge/routes";
+import { blogRouter } from "~/server/api/routers/blog/routes";
 import { assetRouter } from "~/server/api/routers/asset/routes";
 import { submissionRouter } from "~/server/api/routers/submission/routes";
 import { protectedRouter } from "~/server/api/routers/protected/routes";
@@ -13,6 +14,7 @@ import { teamRouter } from "~/server/api/routers/team/routes";
  */
 export const appRouter = createTRPCRouter({
   challenge: challengeRouter,
+  blog: blogRouter,
   submission: submissionRouter,
   protected: protectedRouter,
   public: publicRouter,
