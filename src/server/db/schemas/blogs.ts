@@ -24,7 +24,6 @@ export const blogs = pgTable("blogs", {
   id: uuid("id").primaryKey().defaultRandom(),
   _clerk: varchar("_clerk", { length: 32 }).notNull(),
   _image: uuid("_image")
-    .notNull()
     .references(() => assetsImages.id),
   title: varchar("title").notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),

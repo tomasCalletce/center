@@ -65,11 +65,6 @@ export const BlogForm: React.FC = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    if (!uploadedImageUrl) {
-      toast.error("Please upload a blog image");
-      return;
-    }
-
     createBlogMutation.mutate({
       title: data.title,
       slug: data.slug,
@@ -80,13 +75,13 @@ export const BlogForm: React.FC = () => {
       author_linkedin: data.author_linkedin,
       author_avatar_url: data.author_avatar_url,
       status: data.status,
-      verifyAssetsImageSchema: {
+      verifyAssetsImageSchema: uploadedImageUrl ? {
         alt: data.title,
         verifyAssetsSchema: {
           pathname: uploadedImageUrl,
           url: uploadedImageUrl,
         },
-      },
+      } : undefined,
     });
   };
 
@@ -135,7 +130,7 @@ export const BlogForm: React.FC = () => {
             )}
           />
           <div>
-            <label className="text-sm font-medium">Featured Image</label>
+            <label className="text-sm font-medium">Featured Image <span className="text-gray-400">(Optional)</span></label>
             <ImageUpload
               imageUrl={uploadedImageUrl}
               onImageUploaded={(url) => setUploadedImageUrl(url)}

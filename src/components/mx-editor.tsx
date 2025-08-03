@@ -7,10 +7,12 @@ import {
   quotePlugin,
   markdownShortcutPlugin,
   toolbarPlugin,
+  imagePlugin,
   UndoRedo,
   BoldItalicUnderlineToggles,
   BlockTypeSelect,
   ListsToggle,
+  InsertImage,
   type MDXEditorMethods,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
@@ -28,8 +30,58 @@ const EditorMdx: React.FC<EditorProps> = ({
   editorRef,
   placeholder = "Start writing...",
 }) => {
+  const uploadPastedImage = async (file: File): Promise<{ url: string; alt?: string }> => {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      const response = await fetch('/api/upload-pasted-image', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+      
+      const result = await response.json();
+      return { url: result.url, alt: result.alt || 'Pasted image' };
+    } catch (error) {
+      console.error('Failed to upload pasted image:', error);
+      throw error;
+    }
+  };
+
+  const handlePaste = async (event: React.ClipboardEvent<HTMLDivElement>) => {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item?.type.indexOf('image') !== -1) {
+        event.preventDefault();
+        const file = item?.getAsFile();
+        if (file) {
+          try {
+            const { url, alt } = await uploadPastedImage(file);
+            const imageMarkdown = `![${alt || 'Pasted image'}](${url})`;
+            
+            if (editorRef?.current) {
+              const currentMarkdown = editorRef.current.getMarkdown();
+              const newMarkdown = currentMarkdown + '\n\n' + imageMarkdown + '\n\n';
+              editorRef.current.setMarkdown(newMarkdown);
+              onChange?.(newMarkdown);
+            }
+          } catch (error) {
+            console.error('Failed to upload pasted image:', error);
+          }
+        }
+        break;
+      }
+    }
+  };
   return (
-    <div className="min-h-[400px]">
+    <div className="min-h-[400px]" onPaste={handlePaste}>
       <style jsx>{`
         :global(.mdxeditor h1) {
           font-size: 2rem;
@@ -54,6 +106,12 @@ const EditorMdx: React.FC<EditorProps> = ({
           list-style-type: decimal;
           margin-left: 1.5rem;
         }
+        :global(.mdxeditor img) {
+          max-width: 100%;
+          height: auto;
+          margin: 1rem 0;
+          border-radius: 0.5rem;
+        }
       `}</style>
       <MDXEditor
         onChange={onChange}
@@ -65,6 +123,12 @@ const EditorMdx: React.FC<EditorProps> = ({
           listsPlugin(),
           quotePlugin(),
           markdownShortcutPlugin(),
+          imagePlugin({
+            imageUploadHandler: async (image) => {
+              const { url } = await uploadPastedImage(image);
+              return url;
+            },
+          }),
           toolbarPlugin({
             toolbarContents: () => (
               <>
@@ -72,6 +136,7 @@ const EditorMdx: React.FC<EditorProps> = ({
                 <BoldItalicUnderlineToggles />
                 <BlockTypeSelect />
                 <ListsToggle />
+                <InsertImage />
               </>
             ),
           }),

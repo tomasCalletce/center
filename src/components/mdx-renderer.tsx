@@ -80,16 +80,14 @@ const components = {
   
   // Images
   img: ({ src, alt, ...props }: any) => (
-    <div className="my-6 rounded-lg overflow-hidden">
-      <Image
-        src={src}
-        alt={alt || ''}
-        width={800}
-        height={400}
-        className="w-full h-auto object-cover"
-        {...props}
-      />
-    </div>
+    <Image
+      src={src}
+      alt={alt || ''}
+      width={800}
+      height={400}
+      className="w-full h-auto object-cover my-6 rounded-lg"
+      {...props}
+    />
   ),
   
   // Code blocks
