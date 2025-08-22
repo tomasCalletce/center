@@ -1,6 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { ONBOARDING_STATUS } from "~/types/onboarding";
 
 const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
 const isPublicRoute = createRouteMatcher([
@@ -28,15 +27,8 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   if (!userId && !isPublicRoute(req))
     return redirectToSignIn({ returnBackUrl: req.url });
 
-  // Catch users who do not have `onboardingComplete: true` in their publicMetadata
-  // Redirect them to the /onboarding route to complete onboarding
-  if (
-    userId &&
-    sessionClaims?.metadata?.onboardingStatus !== ONBOARDING_STATUS.COMPLETED
-  ) {
-    const onboardingUrl = new URL("/onboarding", req.url);
-    return NextResponse.redirect(onboardingUrl);
-  }
+  // Skip onboarding - users are logged in directly after signup
+  // CV upload functionality moved to profile section
 
   // If the user is logged in and the route is protected, let them view.
   if (userId && !isPublicRoute(req)) return NextResponse.next();
