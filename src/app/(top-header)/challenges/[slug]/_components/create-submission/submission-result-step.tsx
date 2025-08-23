@@ -5,10 +5,12 @@ import { SUBMISSION_STEPS } from "./submission-dialog";
 
 interface SubmissionResultStepProps {
   type: SUBMISSION_STEPS.SUCCESS | SUBMISSION_STEPS.ERROR;
+  isEdit?: boolean;
 }
 
 export const SubmissionResultStep: React.FC<SubmissionResultStepProps> = ({
   type,
+  isEdit = false,
 }) => {
   return (
     <div className="text-center space-y-8 py-12">
@@ -30,19 +32,23 @@ export const SubmissionResultStep: React.FC<SubmissionResultStepProps> = ({
       <div className="space-y-3">
         <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
           {type === SUBMISSION_STEPS.SUCCESS
-            ? "Submission Successful!"
-            : "Submission Failed"}
+            ? isEdit ? "Update Successful!" : "Submission Successful!"
+            : isEdit ? "Update Failed" : "Submission Failed"}
         </h3>
         <p className="max-w-md mx-auto">
           {type === SUBMISSION_STEPS.SUCCESS ? (
             <span className="text-slate-600">
-              Your project has been submitted successfully! Our team will review
-              it and get back to you soon.
+              {isEdit 
+                ? "Your project has been updated successfully! The changes are now live."
+                : "Your project has been submitted successfully! Our team will review it and get back to you soon."
+              }
             </span>
           ) : (
             <span className="text-slate-600">
-              Something went wrong while submitting your project. Please try
-              again or contact support if the issue persists.
+              {isEdit
+                ? "Something went wrong while updating your project. Please try again or contact support if the issue persists."
+                : "Something went wrong while submitting your project. Please try again or contact support if the issue persists."
+              }
             </span>
           )}
         </p>

@@ -49,20 +49,82 @@ export type MarkdownData = {
 interface SubmissionDialogProps {
   _challenge: string;
   children: React.ReactNode;
+  existingSubmission?: {
+    id: string;
+    title: string;
+    markdown?: string | null;
+    demo_url: string;
+    repository_url: string;
+    status: string;
+    _team: string;
+    logo_image?: {
+      id: string;
+      alt: string;
+      url: string;
+      pathname: string;
+    } | null;
+  } | null;
 }
 
 export function SubmissionDialog({
   _challenge,
   children,
+  existingSubmission = null,
 }: SubmissionDialogProps) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(SUBMISSION_STEPS.TEAM);
   const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
 
+  // Handle existing submission data when it becomes available
+  useEffect(() => {
+    if (existingSubmission) {
+      setStep(SUBMISSION_STEPS.DETAILS);
+      setDetailsData({
+        title: existingSubmission.title,
+        demo_url: existingSubmission.demo_url,
+        repository_url: existingSubmission.repository_url,
+        image: existingSubmission.logo_image ? {
+          alt: existingSubmission.logo_image.alt,
+          url: existingSubmission.logo_image.url,
+          pathname: existingSubmission.logo_image.pathname,
+        } : {
+          alt: '',
+          url: '',
+          pathname: '',
+        }
+      });
+    } else {
+      setStep(SUBMISSION_STEPS.TEAM);
+      setDetailsData(null);
+    }
+  }, [existingSubmission]);
+
+  const utils = api.useUtils();
+
   const createMutation = api.submission.create.useMutation({
     onSuccess: () => {
       setStep(SUBMISSION_STEPS.SUCCESS);
+      // Invalidate relevant queries to refresh the UI
+      utils.submission.getUserSubmission.invalidate({ challengeId: _challenge });
+      utils.public.challenge.allSubmissions.invalidate();
+      utils.public.challenge.stats.invalidate();
+    },
+    onError: () => {
+      setStep(SUBMISSION_STEPS.ERROR);
+    },
+  });
+
+  const updateMutation = api.submission.update.useMutation({
+    onSuccess: () => {
+      // Close the modal immediately after successful update
+      setOpen(false);
+      // Reset step for next time the modal is opened
+      setStep(SUBMISSION_STEPS.DETAILS);
+      // Invalidate relevant queries to refresh the UI
+      utils.submission.getUserSubmission.invalidate({ challengeId: _challenge });
+      utils.public.challenge.allSubmissions.invalidate();
+      utils.public.challenge.stats.invalidate();
     },
     onError: () => {
       setStep(SUBMISSION_STEPS.ERROR);
@@ -71,6 +133,17 @@ export function SubmissionDialog({
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
+    
+    // Reset state when modal is closed
+    if (!newOpen) {
+      if (existingSubmission) {
+        setStep(SUBMISSION_STEPS.DETAILS);
+      } else {
+        setStep(SUBMISSION_STEPS.TEAM);
+        setTeamData(null);
+        setDetailsData(null);
+      }
+    }
   };
 
   const handleTeamSubmit = (data: TeamData) => {
@@ -89,24 +162,46 @@ export function SubmissionDialog({
   };
 
   const handleMarkdownSubmit = (data: MarkdownData) => {
-    if (!detailsData || !teamData) return;
+    if (!detailsData) return;
 
-    createMutation.mutate({
-      _challenge: _challenge,
-      _team: teamData.teamId,
-      title: detailsData.title,
-      demo_url: detailsData.demo_url,
-      repository_url: detailsData.repository_url,
-      markdown: data.markdown,
-      status: submissionVisibilityValues.VISIBLE,
-      verifyAssetsImageSchema: {
-        alt: detailsData.image.alt,
-        verifyAssetsSchema: {
-          pathname: detailsData.image.pathname,
-          url: detailsData.image.url,
+    if (existingSubmission) {
+      updateMutation.mutate({
+        id: existingSubmission.id,
+        _challenge: _challenge,
+        _team: existingSubmission._team,
+        title: detailsData.title,
+        demo_url: detailsData.demo_url,
+        repository_url: detailsData.repository_url,
+        markdown: data.markdown,
+        status: submissionVisibilityValues.VISIBLE,
+        verifyAssetsImageSchema: {
+          alt: detailsData.image.alt,
+          verifyAssetsSchema: {
+            pathname: detailsData.image.pathname,
+            url: detailsData.image.url,
+          },
         },
-      },
-    });
+      });
+    } else {
+      if (!teamData) return;
+      
+      createMutation.mutate({
+        _challenge: _challenge,
+        _team: teamData.teamId,
+        title: detailsData.title,
+        demo_url: detailsData.demo_url,
+        repository_url: detailsData.repository_url,
+        markdown: data.markdown,
+        status: submissionVisibilityValues.VISIBLE,
+        verifyAssetsImageSchema: {
+          alt: detailsData.image.alt,
+          verifyAssetsSchema: {
+            pathname: detailsData.image.pathname,
+            url: detailsData.image.url,
+          },
+        },
+      });
+    }
   };
 
   const handleBack = () => {
@@ -138,9 +233,9 @@ export function SubmissionDialog({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="!max-w-[1100px] min-h-[700px] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Submit Your Build</DialogTitle>
+          <DialogTitle>{existingSubmission ? 'Edit Your Submission' : 'Submit Your Build'}</DialogTitle>
           <DialogDescription>
-            Submit your project for this challenge.
+            {existingSubmission ? 'Update your project submission for this challenge.' : 'Submit your project for this challenge.'}
           </DialogDescription>
           <div className="relative">
             <div className="flex items-center justify-between max-w-xs mx-auto">
@@ -222,28 +317,40 @@ export function SubmissionDialog({
           </div>
         </DialogHeader>
         <div>
-          {step === SUBMISSION_STEPS.TEAM && (
+          {/* Show loading state when editing and data isn't loaded yet */}
+          {existingSubmission && !detailsData && (
+            <div className="flex items-center justify-center p-8">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900 mx-auto"></div>
+                <p className="mt-2 text-sm text-slate-600">Loading submission data...</p>
+              </div>
+            </div>
+          )}
+          
+          {step === SUBMISSION_STEPS.TEAM && !existingSubmission && (
             <SubmissionTeamStep
               challengeId={_challenge}
               onNext={handleTeamSubmit}
             />
           )}
-          {step === SUBMISSION_STEPS.DETAILS && (
+          {step === SUBMISSION_STEPS.DETAILS && (existingSubmission ? detailsData : true) && (
             <SubmissionDetailsStep
               handleOnSubmit={handleDetailsSubmit}
-              onBack={handleBack}
+              onBack={existingSubmission ? undefined : handleBack}
+              initialData={existingSubmission ? detailsData ?? undefined : undefined}
             />
           )}
           {step === SUBMISSION_STEPS.MARKDOWN && (
             <SubmissionMarkdownStep
               handleOnSubmit={handleMarkdownSubmit}
               onBack={handleBack}
-              isLoading={createMutation.isPending}
+              isLoading={createMutation.isPending || updateMutation.isPending}
+              initialData={existingSubmission?.markdown ? { markdown: existingSubmission.markdown } : undefined}
             />
           )}
           {(step === SUBMISSION_STEPS.SUCCESS ||
             step === SUBMISSION_STEPS.ERROR) && (
-            <SubmissionResultStep type={step} />
+            <SubmissionResultStep type={step} isEdit={!!existingSubmission} />
           )}
         </div>
       </DialogContent>

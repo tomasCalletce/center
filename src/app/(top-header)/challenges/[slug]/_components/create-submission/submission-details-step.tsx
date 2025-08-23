@@ -29,12 +29,13 @@ const schema = formSubmissionSchema.pick({
 
 interface SubmissionDetailsStepProps {
   handleOnSubmit: (data: DetailsData) => void;
-
+  initialData?: DetailsData;
   onBack?: () => void;
 }
 
 export function SubmissionDetailsStep({
   handleOnSubmit,
+  initialData,
   onBack,
 }: SubmissionDetailsStepProps) {
   const [isUploading, setIsUploading] = useState(false);
@@ -47,7 +48,25 @@ export function SubmissionDetailsStep({
   const fileRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      title: initialData?.title || "",
+      demo_url: initialData?.demo_url || "",
+      repository_url: initialData?.repository_url || "",
+    },
   });
+
+  useEffect(() => {
+    if (initialData?.image?.url) {
+      setPreview(initialData.image.url);
+      setUploadedImage({
+        alt: initialData.image.alt,
+        formAssetsSchema: {
+          url: initialData.image.url,
+          pathname: initialData.image.pathname,
+        },
+      });
+    }
+  }, [initialData]);
 
   const handleFileChange = (file: File | null) => {
     if (!file) return;

@@ -1,7 +1,6 @@
 import { HydrateClient } from "~/trpc/server";
 import { ChallengeDetails } from "~/app/(top-header)/challenges/[slug]/_components/challenge-details";
-import { ChallengeMarkdown } from "~/app/(top-header)/challenges/[slug]/_components/challenge-markdown";
-import { RecentSubmissionsPreview } from "~/app/(top-header)/challenges/[slug]/_components/recent-submissions-preview";
+import { ChallengeTabs } from "~/app/(top-header)/challenges/[slug]/_components/challenge-tabs";
 
 export default async function ChallengePage({
   params,
@@ -12,11 +11,10 @@ export default async function ChallengePage({
 
   return (
     <HydrateClient>
-      <div className="w-full  py-6">
+      <div className="w-full py-6">
         <div className="space-y-6">
           <ChallengeDetails slug={slug} />
-          <RecentSubmissionsPreview slug={slug} />
-          <ChallengeMarkdown slug={slug} />
+          <ChallengeTabs slug={slug} />
         </div>
       </div>
     </HydrateClient>

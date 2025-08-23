@@ -20,6 +20,7 @@ export const getUserSubmission = protectedProcedure
         repository_url: submissions.repository_url,
         status: submissions.status,
         created_at: submissions.created_at,
+        _team: submissions._team,
         logo_image: {
           id: assetsImages.id,
           alt: assetsImages.alt,
