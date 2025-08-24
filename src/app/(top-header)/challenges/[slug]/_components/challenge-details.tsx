@@ -2,7 +2,7 @@ import Image from "next/image";
 import { api } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import { toZonedTime, zonedTimeToUtc } from "date-fns-tz";
+import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import { Clock, Users, MapPin, Trophy, Calendar } from "lucide-react";
 import { ChallengeSubmissionButton } from "./challenge-submission-button";
 import { ChallengeStats } from "./challenge-stats";
@@ -25,8 +25,8 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
 
   const colombiaTimeZone = "America/Bogota";
   // Interpret DB timestamps as Colombia local time and convert to UTC instants
-  const deadlineUtc = zonedTimeToUtc(challenge.deadline_at, colombiaTimeZone);
-  const openUtc = zonedTimeToUtc(challenge.open_at, colombiaTimeZone);
+  const deadlineUtc = fromZonedTime(challenge.deadline_at, colombiaTimeZone);
+  const openUtc = fromZonedTime(challenge.open_at, colombiaTimeZone);
   // For display, convert the UTC instants to Colombia local time
   const localDeadlineDate = toZonedTime(deadlineUtc, colombiaTimeZone);
   const localOpenDate = toZonedTime(openUtc, colombiaTimeZone);

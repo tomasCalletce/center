@@ -4,7 +4,7 @@ import { api } from "~/trpc/server";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import { toZonedTime, zonedTimeToUtc } from "date-fns-tz";
+import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import {
   Clock,
   ArrowRight,
@@ -46,8 +46,8 @@ export const UpcomingChallenges = async () => {
         {upcomingChallenges.map((challenge) => {
           const colombiaTimeZone = "America/Bogota";
           // Convert timestamps to UTC instants based on Colombia local time
-          const openUtc = zonedTimeToUtc(challenge.open_at, colombiaTimeZone);
-          const deadlineUtc = zonedTimeToUtc(challenge.deadline_at, colombiaTimeZone);
+          const openUtc = fromZonedTime(challenge.open_at, colombiaTimeZone);
+          const deadlineUtc = fromZonedTime(challenge.deadline_at, colombiaTimeZone);
           
           // For display, convert to Colombia timezone
           const localOpenDate = toZonedTime(openUtc, colombiaTimeZone);
