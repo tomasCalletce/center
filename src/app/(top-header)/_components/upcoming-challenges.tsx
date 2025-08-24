@@ -44,17 +44,15 @@ export const UpcomingChallenges = async () => {
     <section className="container mx-auto pt-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {upcomingChallenges.map((challenge) => {
-          const now = new Date();
-          const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          const colombiaTimeZone = "America/Bogota";
+          const nowInColombia = toZonedTime(new Date(), colombiaTimeZone);
           
-          // Convert UTC dates to user's local timezone
-          const localOpenDate = toZonedTime(challenge.open_at, userTimeZone);
-          const localDeadlineDate = toZonedTime(challenge.deadline_at, userTimeZone);
+          // Convert UTC dates to Colombia timezone
+          const localOpenDate = toZonedTime(challenge.open_at, colombiaTimeZone);
+          const localDeadlineDate = toZonedTime(challenge.deadline_at, colombiaTimeZone);
           
-          const isSubmissionOpen =
-            challenge.open_at && now >= challenge.open_at;
-          const hasDeadlinePassed =
-            challenge.deadline_at && now >= challenge.deadline_at;
+          const isSubmissionOpen = challenge.open_at && nowInColombia >= localOpenDate;
+          const hasDeadlinePassed = challenge.deadline_at && nowInColombia >= localDeadlineDate;
 
           const submissionOpenTime = formatDistanceToNow(localOpenDate, {
             addSuffix: true,

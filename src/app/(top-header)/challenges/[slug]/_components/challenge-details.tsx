@@ -23,22 +23,21 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
     }),
   ]);
 
-  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const localDeadlineDate = toZonedTime(challenge.deadline_at, userTimeZone);
-  const localOpenDate = toZonedTime(challenge.open_at, userTimeZone);
+  const colombiaTimeZone = "America/Bogota";
+  const localDeadlineDate = toZonedTime(challenge.deadline_at, colombiaTimeZone);
+  const localOpenDate = toZonedTime(challenge.open_at, colombiaTimeZone);
+  const nowInColombia = toZonedTime(new Date(), colombiaTimeZone);
   
-  const formattedDeadlineDate = format(localDeadlineDate, "MMM dd, yyyy");
-  const formattedOpenDate = format(localOpenDate, "MMM dd, yyyy");
+  const formattedDeadlineDate = format(localDeadlineDate, "MMM dd, yyyy 'at' HH:mm");
+  const formattedOpenDate = format(localOpenDate, "MMM dd, yyyy 'at' HH:mm");
   const timeLeft = formatDistanceToNow(localDeadlineDate, {
     addSuffix: true,
   });
   const openTimeLeft = formatDistanceToNow(localOpenDate, {
     addSuffix: true,
   });
-  const isSubmissionOpen = challenge.open_at
-    ? new Date() >= challenge.open_at
-    : false;
-  const isDeadlinePassed = new Date() > challenge.deadline_at;
+  const isSubmissionOpen = challenge.open_at ? nowInColombia >= localOpenDate : false;
+  const isDeadlinePassed = nowInColombia > localDeadlineDate;
   const pricePool = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: challenge.price_pool_currency,
