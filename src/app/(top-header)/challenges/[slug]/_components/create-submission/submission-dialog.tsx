@@ -36,6 +36,7 @@ type SubmissionDetailsSchema = z.infer<typeof formSubmissionSchema>;
 export type DetailsData = {
   title: SubmissionDetailsSchema["title"];
   demo_url: SubmissionDetailsSchema["demo_url"];
+  video_demo_url: SubmissionDetailsSchema["video_demo_url"];
   repository_url: SubmissionDetailsSchema["repository_url"];
   image: {
     alt: SubmissionDetailsSchema["formAssetsImageSchema"]["alt"];
@@ -55,6 +56,7 @@ interface SubmissionDialogProps {
     title: string;
     markdown?: string | null;
     demo_url: string;
+    video_demo_url: string;
     repository_url: string;
     status: string;
     _team: string;
@@ -85,6 +87,7 @@ export function SubmissionDialog({
       setDetailsData({
         title: existingSubmission.title,
         demo_url: existingSubmission.demo_url,
+        video_demo_url: existingSubmission.video_demo_url,
         repository_url: existingSubmission.repository_url,
         image: existingSubmission.logo_image ? {
           alt: existingSubmission.logo_image.alt || '',
@@ -171,6 +174,7 @@ export function SubmissionDialog({
     setDetailsData({
       title: data.title,
       demo_url: data.demo_url,
+      video_demo_url: data.video_demo_url,
       repository_url: data.repository_url,
       image: data.image,
     });
@@ -187,6 +191,7 @@ export function SubmissionDialog({
         _team: existingSubmission._team,
         title: detailsData.title,
         demo_url: detailsData.demo_url,
+        video_demo_url: detailsData.video_demo_url,
         repository_url: detailsData.repository_url,
         markdown: data.markdown,
         status: submissionVisibilityValues.VISIBLE,
@@ -227,6 +232,7 @@ export function SubmissionDialog({
         _team: teamId,
         title: detailsData.title,
         demo_url: detailsData.demo_url,
+        video_demo_url: detailsData.video_demo_url,
         repository_url: detailsData.repository_url,
         markdown: data.markdown,
         status: submissionVisibilityValues.VISIBLE,
@@ -269,7 +275,7 @@ export function SubmissionDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="!max-w-[1100px] min-h-[700px] flex flex-col">
+      <DialogContent className="!max-w-[1100px] min-h-[700px] max-h-[85vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>{existingSubmission ? 'Edit Your Submission' : 'Submit Your Build'}</DialogTitle>
           <DialogDescription>
@@ -352,7 +358,7 @@ export function SubmissionDialog({
             </div>
           </div>
         </DialogHeader>
-        <div>
+        <div className="flex-1 overflow-y-auto">
           {/* Show loading state when editing and data isn't loaded yet */}
           {existingSubmission && !detailsData && (
             <div className="flex items-center justify-center p-8">

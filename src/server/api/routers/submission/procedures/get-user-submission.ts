@@ -17,6 +17,7 @@ export const getUserSubmission = protectedProcedure
         title: submissions.title,
         markdown: submissions.markdown,
         demo_url: submissions.demo_url,
+        video_demo_url: submissions.video_demo_url,
         repository_url: submissions.repository_url,
         status: submissions.status,
         created_at: submissions.created_at,

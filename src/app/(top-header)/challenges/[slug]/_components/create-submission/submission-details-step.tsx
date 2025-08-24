@@ -24,6 +24,7 @@ import { formAssetsImageSchema } from "~/server/db/schemas/assets-images";
 const schema = formSubmissionSchema.pick({
   title: true,
   demo_url: true,
+  video_demo_url: true,
   repository_url: true,
 });
 
@@ -51,6 +52,7 @@ export function SubmissionDetailsStep({
     defaultValues: {
       title: initialData?.title || "",
       demo_url: initialData?.demo_url || "",
+      video_demo_url: initialData?.video_demo_url || "",
       repository_url: initialData?.repository_url || "",
     },
   });
@@ -121,6 +123,7 @@ export function SubmissionDetailsStep({
     handleOnSubmit({
       title: data.title,
       demo_url: data.demo_url,
+      video_demo_url: data.video_demo_url,
       repository_url: data.repository_url,
       image: {
         alt: uploadedImage.alt,
@@ -171,6 +174,24 @@ export function SubmissionDetailsStep({
                     <FormControl>
                       <Input
                         placeholder="https://your-demo.com"
+                        type="url"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="video_demo_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Video Demo URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://youtube.com/watch?v=..."
                         type="url"
                         {...field}
                       />
