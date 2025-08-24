@@ -5,6 +5,7 @@ import { participants } from "~/server/api/routers/public/challenge/procedures/p
 import { notifyInterest } from "~/server/api/routers/public/challenge/procedures/notify-interest";
 import { stats } from "~/server/api/routers/public/challenge/procedures/stats";
 import { recentSubmissions } from "~/server/api/routers/public/challenge/procedures/recent-submissions";
+import { allSubmissions } from "~/server/api/routers/public/challenge/procedures/all-submissions";
 
 export const challengeRouter = createTRPCRouter({
   all,
@@ -13,4 +14,5 @@ export const challengeRouter = createTRPCRouter({
   notifyInterest,
   stats,
   recentSubmissions,
+  allSubmissions,
 });

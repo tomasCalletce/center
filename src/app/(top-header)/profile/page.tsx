@@ -3,6 +3,7 @@ import { ProfileHeader } from "~/app/(top-header)/profile/_components/sections/h
 import { ProfileSkills } from "~/app/(top-header)/profile/_components/sections/skills";
 import { ProfileExperience } from "~/app/(top-header)/profile/_components/sections/experience";
 import { ProfileEducation } from "~/app/(top-header)/profile/_components/sections/education";
+import { ProfileCVUpload } from "~/app/(top-header)/profile/_components/sections/cv-upload";
 
 export default async function ProfilePage() {
   return (
@@ -34,9 +35,10 @@ export default async function ProfilePage() {
             <ProfileExperience />
           </div>
 
-          {/* Secondary Content - Skills & Education */}
+          {/* Secondary Content - CV Upload, Skills & Education */}
           <div className="xl:col-span-4 space-y-8">
             <div className="sticky top-20 space-y-4">
+              <ProfileCVUpload />
               <ProfileSkills />
               <ProfileEducation />
             </div>

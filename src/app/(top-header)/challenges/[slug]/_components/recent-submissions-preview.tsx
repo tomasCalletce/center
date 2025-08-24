@@ -37,9 +37,9 @@ export const RecentSubmissionsPreview: React.FC<
         {recentSubmissionsQuery.data.map((submission) => (
           <div
             key={submission.id}
-            className="flex-shrink-0 w-56 p-2 rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow"
+            className="flex-shrink-0 flex gap-3 w-64 p-3 rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow"
           >
-            <div className="relative w-full h-24 mb-3 rounded-lg overflow-hidden bg-muted">
+            <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
               {submission.logo_image?.url ? (
                 <Image
                   src={submission.logo_image.url}
@@ -49,11 +49,11 @@ export const RecentSubmissionsPreview: React.FC<
                 />
               ) : (
                 <div className="flex items-center justify-center w-full h-full bg-primary/10">
-                  <FileText className="h-8 w-8 text-primary" />
+                  <FileText className="h-6 w-6 text-primary" />
                 </div>
               )}
             </div>
-            <div className="space-y-2">
+            <div className="flex-1 min-w-0 space-y-1">
               <div className="font-medium text-sm truncate">
                 {submission.title}
               </div>
@@ -64,7 +64,7 @@ export const RecentSubmissionsPreview: React.FC<
                 </span>
               </div>
               <div className="text-xs text-muted-foreground truncate">
-                {submission.submitted_by?.display_name || "Unknown User"}
+                by {submission.submitted_by?.display_name || "Unknown User"}
               </div>
               <Badge variant="outline" className="text-xs w-fit">
                 <Clock className="h-3 w-3 mr-1" />
