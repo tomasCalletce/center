@@ -170,7 +170,7 @@ export function SubmissionDetailsStep({
                 name="demo_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Demo URL</FormLabel>
+                    <FormLabel>Video Pitch URL</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="https://your-demo.com"
