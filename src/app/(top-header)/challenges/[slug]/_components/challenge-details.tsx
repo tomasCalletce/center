@@ -2,7 +2,7 @@ import Image from "next/image";
 import { api } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { toZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import { Clock, Users, MapPin, Trophy, Calendar } from "lucide-react";
 import { ChallengeSubmissionButton } from "./challenge-submission-button";
 import { ChallengeStats } from "./challenge-stats";
@@ -24,20 +24,23 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
   ]);
 
   const colombiaTimeZone = "America/Bogota";
-  const localDeadlineDate = toZonedTime(challenge.deadline_at, colombiaTimeZone);
-  const localOpenDate = toZonedTime(challenge.open_at, colombiaTimeZone);
-  const nowInColombia = toZonedTime(new Date(), colombiaTimeZone);
+  // Interpret DB timestamps as Colombia local time and convert to UTC instants
+  const deadlineUtc = zonedTimeToUtc(challenge.deadline_at, colombiaTimeZone);
+  const openUtc = zonedTimeToUtc(challenge.open_at, colombiaTimeZone);
+  // For display, convert the UTC instants to Colombia local time
+  const localDeadlineDate = toZonedTime(deadlineUtc, colombiaTimeZone);
+  const localOpenDate = toZonedTime(openUtc, colombiaTimeZone);
   
   const formattedDeadlineDate = format(localDeadlineDate, "MMM dd, yyyy 'at' HH:mm");
   const formattedOpenDate = format(localOpenDate, "MMM dd, yyyy 'at' HH:mm");
-  const timeLeft = formatDistanceToNow(localDeadlineDate, {
+  const timeLeft = formatDistanceToNow(deadlineUtc, {
     addSuffix: true,
   });
-  const openTimeLeft = formatDistanceToNow(localOpenDate, {
+  const openTimeLeft = formatDistanceToNow(openUtc, {
     addSuffix: true,
   });
-  const isSubmissionOpen = challenge.open_at ? nowInColombia >= localOpenDate : false;
-  const isDeadlinePassed = nowInColombia > localDeadlineDate;
+  const isSubmissionOpen = new Date() >= openUtc;
+  const isDeadlinePassed = new Date() > deadlineUtc;
   const pricePool = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: challenge.price_pool_currency,

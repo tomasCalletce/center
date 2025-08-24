@@ -4,7 +4,7 @@ import { api } from "~/trpc/server";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { formatDistanceToNow, format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { toZonedTime, zonedTimeToUtc } from "date-fns-tz";
 import {
   Clock,
   ArrowRight,
@@ -45,23 +45,22 @@ export const UpcomingChallenges = async () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {upcomingChallenges.map((challenge) => {
           const colombiaTimeZone = "America/Bogota";
-          const nowInColombia = toZonedTime(new Date(), colombiaTimeZone);
+          // Convert timestamps to UTC instants based on Colombia local time
+          const openUtc = zonedTimeToUtc(challenge.open_at, colombiaTimeZone);
+          const deadlineUtc = zonedTimeToUtc(challenge.deadline_at, colombiaTimeZone);
           
-          // Convert UTC dates to Colombia timezone
-          const localOpenDate = toZonedTime(challenge.open_at, colombiaTimeZone);
-          const localDeadlineDate = toZonedTime(challenge.deadline_at, colombiaTimeZone);
+          // For display, convert to Colombia timezone
+          const localOpenDate = toZonedTime(openUtc, colombiaTimeZone);
+          const localDeadlineDate = toZonedTime(deadlineUtc, colombiaTimeZone);
           
-          const isSubmissionOpen = challenge.open_at && nowInColombia >= localOpenDate;
-          const hasDeadlinePassed = challenge.deadline_at && nowInColombia >= localDeadlineDate;
+          const isSubmissionOpen = challenge.open_at && new Date() >= openUtc;
+          const hasDeadlinePassed = challenge.deadline_at && new Date() >= deadlineUtc;
 
-          const submissionOpenTime = formatDistanceToNow(localOpenDate, {
+          const submissionOpenTime = formatDistanceToNow(openUtc, {
             addSuffix: true,
           });
 
-          const submissionCloseTime = formatDistanceToNow(
-            localDeadlineDate,
-            { addSuffix: true }
-          );
+          const submissionCloseTime = formatDistanceToNow(deadlineUtc, { addSuffix: true });
 
           const formattedOpenDate = format(
             localOpenDate,
