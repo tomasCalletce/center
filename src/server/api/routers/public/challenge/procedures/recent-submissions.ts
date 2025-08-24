@@ -8,6 +8,7 @@ import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 import { z } from "zod";
 import { eq, desc } from "drizzle-orm";
+import { fromZonedTime } from "date-fns-tz";
 import { TRPCError } from "@trpc/server";
 
 export const recentSubmissions = publicProcedure
@@ -30,6 +31,7 @@ export const recentSubmissions = publicProcedure
     const [challenge] = await db
       .select({
         id: challenges.id,
+        deadline_at: challenges.deadline_at,
       })
       .from(challenges)
       .where(whereCondition);
@@ -39,6 +41,16 @@ export const recentSubmissions = publicProcedure
         code: "NOT_FOUND",
         message: "Challenge not found",
       });
+    }
+
+    // If deadline has not passed in Bogotá time, do not expose recent submissions
+    const colombiaTimeZone = "America/Bogota";
+    const now = new Date();
+    const deadlineUtc = challenge.deadline_at
+      ? fromZonedTime(challenge.deadline_at, colombiaTimeZone)
+      : null;
+    if (deadlineUtc && now < deadlineUtc) {
+      return [];
     }
 
     const recentSubmissions = await db

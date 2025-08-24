@@ -8,16 +8,17 @@ import { SubmissionDialog } from "./create-submission/submission-dialog";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useIsMobile } from "~/hooks/use-mobile";
-import { toZonedTime } from "date-fns-tz";
+ 
 
 interface ChallengeSubmissionButtonProps {
   challengeId: string;
   isSubmissionOpen: boolean;
+  isDeadlinePassed: boolean;
 }
 
 export const ChallengeSubmissionButton: React.FC<
   ChallengeSubmissionButtonProps
-> = ({ challengeId, isSubmissionOpen }) => {
+> = ({ challengeId, isSubmissionOpen, isDeadlinePassed }) => {
   const { isSignedIn, isLoaded } = useUser();
   const isMobile = useIsMobile();
 
@@ -86,12 +87,6 @@ export const ChallengeSubmissionButton: React.FC<
   }
 
   const hasSubmitted = userSubmissionQuery.data;
-  const isDeadlinePassed = challengeDetailsQuery.data?.deadline_at
-    ? new Date() > toZonedTime(
-        new Date(challengeDetailsQuery.data.deadline_at),
-        Intl.DateTimeFormat().resolvedOptions().timeZone
-      )
-    : false;
 
   if (isDeadlinePassed) {
     return (
