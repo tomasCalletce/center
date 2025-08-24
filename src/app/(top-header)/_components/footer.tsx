@@ -1,20 +1,20 @@
 import { Github, Twitter, Linkedin } from "lucide-react";
 
 export const Footer = () => {
-  const founders = [
-    {
-      name: "Juan Felipe Gaviria Campo",
-      linkedin: "https://www.linkedin.com/in/juan-felipe-gaviria-campo/",
-    },
-    {
-      name: "Tomas Calle",
-      linkedin: "https://www.linkedin.com/in/tomas-calle/",
-    },
-    {
-      name: "Cristian Camilo Correa",
-      linkedin: "https://www.linkedin.com/in/cristiancamilocorrea/",
-    },
-  ];
+  // const founders = [
+  //   {
+  //     name: "Juan Felipe Gaviria Campo",
+  //     linkedin: "https://www.linkedin.com/in/juan-felipe-gaviria-campo/",
+  //   },
+  //   {
+  //     name: "Tomas Calle",
+  //     linkedin: "https://www.linkedin.com/in/tomas-calle/",
+  //   },
+  //   {
+  //     name: "Cristian Camilo Correa",
+  //     linkedin: "https://www.linkedin.com/in/cristiancamilocorrea/",
+  //   },
+  // ];
 
   return (
     <footer className="relative border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -39,7 +39,7 @@ export const Footer = () => {
             </p>
           </div>
 
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <h4 className="text-sm font-medium">Founders</h4>
             <div className="space-y-2">
               {founders.map((founder, index) => (
@@ -54,7 +54,7 @@ export const Footer = () => {
                 </a>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center mt-12 pt-8 border-t">
