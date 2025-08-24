@@ -78,6 +78,7 @@ export function SubmissionDialog({
   const [step, setStep] = useState(SUBMISSION_STEPS.DETAILS);
   // const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [detailsData, setDetailsData] = useState<DetailsData | null>(null);
+  const [markdownData, setMarkdownData] = useState<MarkdownData | null>(null);
   const { user } = useUser();
 
   // Handle existing submission data when it becomes available
@@ -99,9 +100,11 @@ export function SubmissionDialog({
           pathname: '',
         }
       });
+      setMarkdownData(existingSubmission.markdown ? { markdown: existingSubmission.markdown } : null);
     } else {
       setStep(SUBMISSION_STEPS.DETAILS); // Skip team step for now
       setDetailsData(null);
+      setMarkdownData(null);
     }
   }, [existingSubmission]);
 
@@ -161,6 +164,7 @@ export function SubmissionDialog({
         setStep(SUBMISSION_STEPS.DETAILS); // Skip team step for now
         // setTeamData(null);
         setDetailsData(null);
+        setMarkdownData(null);
       }
     }
   };
@@ -178,6 +182,16 @@ export function SubmissionDialog({
       repository_url: data.repository_url,
       image: data.image,
     });
+
+    // Initialize default template only for brand new submissions and only once
+    if (!existingSubmission) {
+      const current = markdownData?.markdown?.trim() ?? "";
+      if (current.length === 0) {
+        const title = data.title?.trim() || "Project Title";
+        const template = `# ${title}\n\nShort summary of your project in 2-3 sentences.\n\n## Track (choose one)\nMark one with (X) and leave the other as ( ).\n- ( ) Track 1: Best Agentic App in WhatsApp\n- ( ) Track 2: Best AI Product\n\n## Team\n- Team name: \n- Members: Name (role), Name (role)\n\n## Problem\nWhat problem are you solving and why does it matter?\n\n## Solution\nDescribe your approach and how the solution works.\n\n## Features\n- Key feature 1\n- Key feature 2\n- Key feature 3\n\n## Tech Stack\n- Frontend: \n- Backend: \n- AI/Models: \n- Infrastructure/Services: \n\n## Demo\n- Live URL: \n- Video: \n\n## Repository\n- GitHub: \n\n## Challenges\nWhat obstacles did you face and how did you overcome them?\n\n## Learnings\nWhat did your team learn during the hackathon?\n\n## Future Work\nWhat improvements or next steps do you plan?`;
+        setMarkdownData({ markdown: template });
+      }
+    }
     setStep(SUBMISSION_STEPS.MARKDOWN);
   };
 
@@ -388,7 +402,12 @@ export function SubmissionDialog({
               handleOnSubmit={handleMarkdownSubmit}
               onBack={handleBack}
               isLoading={createMutation.isPending || updateMutation.isPending || createTeamMutation.isPending}
-              initialData={existingSubmission?.markdown ? { markdown: existingSubmission.markdown } : undefined}
+              initialData={
+                existingSubmission
+                  ? (existingSubmission.markdown ? { markdown: existingSubmission.markdown } : undefined)
+                  : (markdownData ? { markdown: markdownData.markdown } : undefined)
+              }
+              onMarkdownChange={(value) => setMarkdownData({ markdown: value })}
             />
           )}
           {(step === SUBMISSION_STEPS.SUCCESS ||
