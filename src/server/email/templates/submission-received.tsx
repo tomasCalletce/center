@@ -26,7 +26,7 @@ export function SubmissionReceivedEmail({
   videoDemoUrl,
   repositoryUrl,
 }: SubmissionReceivedEmailProps) {
-  const challengeUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/challenges/${challengeSlug}`;
+  const challengeUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://letsacc.com"}/challenges/${challengeSlug}`;
 
   return (
     <Html>
