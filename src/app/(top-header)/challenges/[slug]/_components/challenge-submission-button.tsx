@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { ArrowRight, Bell, Check, Edit, Monitor } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
+import { useUser, SignInButton } from "@clerk/nextjs";
 import { SubmissionDialog } from "./create-submission/submission-dialog";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
@@ -48,16 +48,14 @@ export const ChallengeSubmissionButton: React.FC<
 
   if (!isSignedIn) {
     return (
-      <Link
-        prefetch={true}
-        className={buttonVariants({
-          variant: "default",
-          className: "w-full cursor-pointer",
-        })}
-        href="/sign-in"
-      >
-        Sign in to submit
-      </Link>
+      <SignInButton>
+        <Button
+          variant="default"
+          className="w-full cursor-pointer"
+        >
+          Sign in to submit
+        </Button>
+      </SignInButton>
     );
   }
 
