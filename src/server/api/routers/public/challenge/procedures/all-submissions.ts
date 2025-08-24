@@ -31,6 +31,7 @@ export const allSubmissions = publicProcedure
     const [challenge] = await db
       .select({
         id: challenges.id,
+        deadline_at: challenges.deadline_at,
       })
       .from(challenges)
       .where(whereCondition);
@@ -40,6 +41,15 @@ export const allSubmissions = publicProcedure
         code: "NOT_FOUND",
         message: "Challenge not found",
       });
+    }
+
+    // Hide submissions publicly until the challenge deadline has passed
+    const now = new Date();
+    if (challenge.deadline_at && now < challenge.deadline_at) {
+      return {
+        submissions: [],
+        totalCount: 0,
+      };
     }
 
     const [submissionCount] = await db
