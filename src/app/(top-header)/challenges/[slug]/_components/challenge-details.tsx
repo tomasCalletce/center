@@ -14,9 +14,14 @@ interface ChallengeDetailsProps {
 export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
   slug,
 }) => {
-  const challenge = await api.public.challenge.details({
-    challenge_slug: slug,
-  });
+  const [challenge, stats] = await Promise.all([
+    api.public.challenge.details({
+      challenge_slug: slug,
+    }),
+    api.public.challenge.stats({
+      challenge_slug: slug,
+    }),
+  ]);
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const localDeadlineDate = toZonedTime(challenge.deadline_at, userTimeZone);
@@ -52,7 +57,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
         />
         <div className="absolute bottom-4 left-4">
           <div className="bg-black/60 backdrop-blur-sm rounded-lg">
-            <ChallengeStats slug={challenge.slug} />
+            <ChallengeStats stats={stats} />
           </div>
         </div>
       </div>

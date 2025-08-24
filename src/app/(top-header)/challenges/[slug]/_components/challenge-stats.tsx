@@ -1,25 +1,20 @@
 "use client";
 
-import { api } from "~/trpc/react";
 import { Users, Trophy, Calendar } from "lucide-react";
 import { useIsMobile } from "~/hooks/use-mobile";
 
 interface ChallengeStatsProps {
-  slug: string;
+  stats: {
+    total_submissions: number;
+    total_participants: number;
+    recent_submissions: number;
+  };
 }
 
-export const ChallengeStats: React.FC<ChallengeStatsProps> = ({ slug }) => {
+export const ChallengeStats: React.FC<ChallengeStatsProps> = ({ stats }) => {
   const isMobile = useIsMobile();
 
-  const statsQuery = api.public.challenge.stats.useQuery({
-    challenge_slug: slug,
-  });
-
   if (isMobile) {
-    return null;
-  }
-
-  if (!statsQuery.data) {
     return null;
   }
 
@@ -28,19 +23,19 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({ slug }) => {
       <div className="flex items-center gap-2">
         <Trophy className="h-4 w-4" />
         <span className="font-medium">
-          {statsQuery.data.total_submissions} submissions
+          {stats.total_submissions} submissions
         </span>
       </div>
       <div className="flex items-center gap-2">
         <Users className="h-4 w-4" />
         <span className="font-medium">
-          {statsQuery.data.total_participants} participants
+          {stats.total_participants} participants
         </span>
       </div>
       <div className="flex items-center gap-2">
         <Calendar className="h-4 w-4" />
         <span className="font-medium">
-          {statsQuery.data.recent_submissions} submissions this week
+          {stats.recent_submissions} submissions this week
         </span>
       </div>
     </div>
