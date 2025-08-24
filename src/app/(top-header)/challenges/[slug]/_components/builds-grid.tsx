@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { api } from "~/trpc/react";
 import { Badge } from "~/components/ui/badge";
-import { Clock, Users, FileText, ExternalLink, Github } from "lucide-react";
+import { Clock, Users, FileText, ExternalLink, Github, Play } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { buttonVariants } from "~/components/ui/button";
@@ -138,7 +138,7 @@ export const BuildsGrid: React.FC<BuildsGridProps> = ({ slug }) => {
                 </span>
               </Badge>
 
-              {(submission.demo_url || submission.repository_url) && (
+              {(submission.demo_url || (submission as any).video_demo_url || submission.repository_url) && (
                 <div className="flex flex-wrap gap-1 pt-1">
                   {submission.demo_url && (
                     <Link
@@ -152,6 +152,20 @@ export const BuildsGrid: React.FC<BuildsGridProps> = ({ slug }) => {
                     >
                       <ExternalLink className="h-2.5 w-2.5" />
                       Demo
+                    </Link>
+                  )}
+                  {(submission as any).video_demo_url && (
+                    <Link
+                      href={(submission as any).video_demo_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        buttonVariants({ variant: "outline", size: "sm" }),
+                        "flex items-center justify-center gap-1 text-xs h-6 px-2"
+                      )}
+                    >
+                      <Play className="h-2.5 w-2.5" />
+                      Video
                     </Link>
                   )}
                   {submission.repository_url && (

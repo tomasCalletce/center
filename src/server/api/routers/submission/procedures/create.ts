@@ -103,6 +103,7 @@ export const create = protectedProcedure
           title: input.title,
           markdown: input.markdown,
           demo_url: input.demo_url,
+          video_demo_url: (input as any).video_demo_url,
           repository_url: input.repository_url,
           status: input.status,
           submitted_by: ctx.auth.userId,
@@ -134,6 +135,7 @@ export const create = protectedProcedure
           challengeTitle: challenge.title,
           challengeSlug: challenge.slug,
           demoUrl: input.demo_url,
+          videoDemoUrl: (input as any).video_demo_url,
           repositoryUrl: input.repository_url,
         });
       }
@@ -211,6 +213,7 @@ export const update = protectedProcedure
           title: input.title,
           markdown: input.markdown,
           demo_url: input.demo_url,
+          video_demo_url: (input as any).video_demo_url,
           repository_url: input.repository_url,
           status: input.status,
           _logo_image: newImage.id,

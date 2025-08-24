@@ -13,6 +13,7 @@ interface SubmissionReceivedEmailProps {
   challengeTitle: string;
   challengeSlug: string;
   demoUrl: string;
+  videoDemoUrl?: string;
   repositoryUrl: string;
 }
 
@@ -22,6 +23,7 @@ export function SubmissionReceivedEmail({
   challengeTitle,
   challengeSlug,
   demoUrl,
+  videoDemoUrl,
   repositoryUrl,
 }: SubmissionReceivedEmailProps) {
   const challengeUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/challenges/${challengeSlug}`;
@@ -64,6 +66,15 @@ export function SubmissionReceivedEmail({
               {demoUrl}
             </Link>
           </Text>
+
+          {videoDemoUrl && (
+            <Text style={{ fontSize: "14px", margin: "0 0 8px 0" }}>
+              Video Demo:{" "}
+              <Link href={videoDemoUrl} style={{ color: "#000" }}>
+                {videoDemoUrl}
+              </Link>
+            </Text>
+          )}
 
           <Text style={{ fontSize: "14px", margin: "0 0 20px 0" }}>
             Code:{" "}

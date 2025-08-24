@@ -9,6 +9,7 @@ interface SendSubmissionReceivedEmailParams {
   challengeTitle: string;
   challengeSlug: string;
   demoUrl: string;
+  videoDemoUrl?: string;
   repositoryUrl: string;
 }
 
@@ -18,6 +19,7 @@ export async function sendSubmissionReceivedEmail({
   challengeTitle,
   challengeSlug,
   demoUrl,
+  videoDemoUrl,
   repositoryUrl,
 }: SendSubmissionReceivedEmailParams) {
   try {
@@ -38,6 +40,7 @@ export async function sendSubmissionReceivedEmail({
         challengeTitle,
         challengeSlug,
         demoUrl,
+        videoDemoUrl,
         repositoryUrl,
       })
     );

@@ -33,6 +33,7 @@ export const submissions = pgTable("submissions", {
   title: varchar("title", { length: 255 }).notNull(),
   markdown: text("markdown"),
   demo_url: text("demo_url").notNull(),
+  video_demo_url: text("video_demo_url").notNull(),
   repository_url: text("repository_url").notNull(),
   status: submissionVisibilityEnumSchema("status").notNull(),
   submitted_by: varchar("submitted_by", { length: 32 })
@@ -61,6 +62,7 @@ export const formSubmissionSchema = createInsertSchema(submissions)
     _challenge: true,
     _logo_image: true,
     demo_url: true,
+    video_demo_url: true,
     repository_url: true,
     submitted_by: true,
     created_at: true,
@@ -69,5 +71,6 @@ export const formSubmissionSchema = createInsertSchema(submissions)
   .extend({
     formAssetsImageSchema,
     demo_url: z.string().url(),
+    video_demo_url: z.string().url(),
     repository_url: z.string().url(),
   });

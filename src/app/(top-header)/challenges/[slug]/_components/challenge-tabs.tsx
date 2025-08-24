@@ -25,7 +25,7 @@ export const ChallengeTabs: React.FC<ChallengeTabsProps> = ({ slug }) => {
             value="builds" 
             className="flex items-center gap-2 px-0 py-1.5 bg-transparent border-0 border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none text-base font-medium hover:text-foreground data-[state=active]:text-foreground text-muted-foreground transition-colors"
           >
-            <span className="truncate">Builds</span>
+            <span className="truncate">Submissions</span>
             <div className="shrink-0 flex items-center gap-1">
               {buildsCount > 0 && (
                 <span className="px-1.5 py-px text-xs font-semibold rounded-full bg-muted text-muted-foreground">

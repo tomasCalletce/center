@@ -57,6 +57,7 @@ export const getSubmissions = protectedProcedure
         id: submissions.id,
         title: submissions.title,
         demo_url: submissions.demo_url,
+        video_demo_url: submissions.video_demo_url,
         repository_url: submissions.repository_url,
         team: {
           id: teams.id,
