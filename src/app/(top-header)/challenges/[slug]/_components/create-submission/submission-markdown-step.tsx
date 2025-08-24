@@ -27,6 +27,7 @@ interface SubmissionMarkdownStepProps {
   onBack: () => void;
   isLoading: boolean;
   initialData?: MarkdownData;
+  onMarkdownChange?: (markdown: string) => void;
 }
 
 export function SubmissionMarkdownStep({
@@ -34,6 +35,7 @@ export function SubmissionMarkdownStep({
   onBack,
   isLoading,
   initialData,
+  onMarkdownChange,
 }: SubmissionMarkdownStepProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -43,12 +45,14 @@ export function SubmissionMarkdownStep({
   });
 
   useEffect(() => {
-    if (initialData) {
-      form.reset({
-        markdown: initialData.markdown,
-      });
+    const incoming = initialData?.markdown;
+    if (typeof incoming === "string") {
+      const current = form.getValues("markdown");
+      if (!current) {
+        form.reset({ markdown: incoming });
+      }
     }
-  }, [initialData, form]);
+  }, [initialData?.markdown, form]);
 
   const onSubmit = (data: z.infer<typeof schema>) => {
     handleOnSubmit({
@@ -90,6 +94,7 @@ export function SubmissionMarkdownStep({
                       onChange={(value) => {
                         field.onChange(value);
                         form.trigger("markdown");
+                        onMarkdownChange?.(value);
                       }}
                       placeholder="Describe your project: What problem does it solve? What are the key features? What technology did you use? What challenges did you overcome?"
                     />
