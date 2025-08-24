@@ -153,6 +153,7 @@ export const ChallengeDetails: React.FC<ChallengeDetailsProps> = async ({
           <ChallengeSubmissionButton
             challengeId={challenge.id}
             isSubmissionOpen={isSubmissionOpen}
+            isDeadlinePassed={isDeadlinePassed}
           />
         </div>
       </div>

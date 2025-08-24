@@ -8,6 +8,7 @@ import { assetsImages } from "~/server/db/schemas/assets-images";
 import { assets } from "~/server/db/schemas/asset";
 import { z } from "zod";
 import { eq, desc, count } from "drizzle-orm";
+import { fromZonedTime } from "date-fns-tz";
 import { TRPCError } from "@trpc/server";
 
 export const allSubmissions = publicProcedure
@@ -43,9 +44,13 @@ export const allSubmissions = publicProcedure
       });
     }
 
-    // Hide submissions publicly until the challenge deadline has passed
+    // Hide submissions publicly until the challenge deadline has passed (Bogotá time)
     const now = new Date();
-    if (challenge.deadline_at && now < challenge.deadline_at) {
+    const colombiaTimeZone = "America/Bogota";
+    const deadlineUtc = challenge.deadline_at
+      ? fromZonedTime(challenge.deadline_at, colombiaTimeZone)
+      : null;
+    if (deadlineUtc && now < deadlineUtc) {
       return {
         submissions: [],
         totalCount: 0,
