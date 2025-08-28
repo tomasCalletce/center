@@ -8,7 +8,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
   title: "ACC - Skill Based Hiring",
-  description: "Build cool products and get hired by top startups.",
+  description: "Let’s Accelerate the future from Latin America",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
