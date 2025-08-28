@@ -7,7 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
-  title: "ACC - Skill Based Hiring",
+  title: "ACC - Show Your Skills, Ship Your Ideas",
   description: "Let’s Accelerate the future from Latin America",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
