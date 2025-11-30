@@ -21,12 +21,16 @@ import type { DetailsData } from "./submission-dialog";
 import { formSubmissionSchema } from "~/server/db/schemas/submissions";
 import { formAssetsImageSchema } from "~/server/db/schemas/assets-images";
 
-const schema = formSubmissionSchema.pick({
-	title: true,
-	demo_url: true,
-	video_demo_url: true,
-	repository_url: true,
-});
+const schema = formSubmissionSchema
+	.pick({
+		title: true,
+		demo_url: true,
+		video_demo_url: true,
+		repository_url: true,
+	})
+	.extend({
+		video_demo_url: z.string().url().or(z.literal("")),
+	});
 
 interface SubmissionDetailsStepProps {
 	handleOnSubmit: (data: DetailsData) => void;
